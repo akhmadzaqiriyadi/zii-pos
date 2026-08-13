@@ -1,4 +1,8 @@
-import { ErrorResponseSchema, registry } from "@/config/openapi-registry";
+import {
+  createErrorResponseSchema,
+  createSuccessResponseSchema,
+  registry,
+} from "@/config/openapi-registry";
 import { z } from "zod";
 
 export const ProductSchema = z
@@ -22,23 +26,28 @@ registry.registerPath({
       description: "200 OK — Katalog produk berhasil diambil",
       content: {
         "application/json": {
-          schema: z.object({
-            success: z.boolean().openapi({ example: true }),
-            message: z
-              .string()
-              .openapi({ example: "Berhasil mengambil katalog produk" }),
-            data: z.array(ProductSchema),
-          }),
+          schema: createSuccessResponseSchema(
+            z.array(ProductSchema),
+            "Berhasil mengambil katalog produk",
+          ),
         },
       },
     },
     401: {
-      description: "401 Unauthorized — Tenant Header missing",
-      content: { "application/json": { schema: ErrorResponseSchema } },
+      description: "401 Unauthorized — Tenant Header (x-tenant-id) missing",
+      content: {
+        "application/json": {
+          schema: createErrorResponseSchema("Header x-tenant-id wajib diisi."),
+        },
+      },
     },
     500: {
       description: "500 Internal Server Error — Kesalahan server",
-      content: { "application/json": { schema: ErrorResponseSchema } },
+      content: {
+        "application/json": {
+          schema: createErrorResponseSchema("Gagal mengambil katalog produk."),
+        },
+      },
     },
   },
 });
