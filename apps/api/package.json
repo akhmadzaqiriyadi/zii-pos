@@ -9,17 +9,18 @@
     "test": "bun test"
   },
   "dependencies": {
+    "@asteasolutions/zod-to-openapi": "^7.3.2",
+    "@scalar/express-api-reference": "latest",
     "@zii/db": "workspace:*",
     "@zii/types": "workspace:*",
-    "@scalar/express-api-reference": "latest",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.3",
     "pino": "^9.6.0",
     "pino-http": "^10.4.0",
     "swagger-jsdoc": "^6.2.8",
-    "zod": "^3.24.2",
-    "@asteasolutions/zod-to-openapi": "^7.3.2"
+    "zod": "^3.24.2"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
