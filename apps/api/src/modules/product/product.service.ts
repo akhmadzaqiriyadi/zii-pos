@@ -5,9 +5,18 @@ import {
   parsePaginationParams,
 } from "../../utils/pagination";
 
+export interface ProductFilterQuery extends PaginationQuery {
+  isService?: string | boolean;
+  lowStock?: string | boolean;
+  minPrice?: string | number;
+  maxPrice?: string | number;
+}
+
 export class ProductService {
-  static async getProducts(tenantId: string, query: PaginationQuery = {}) {
-    const { page, limit, skip, search } = parsePaginationParams(query);
+  static async getProducts(tenantId: string, query: ProductFilterQuery = {}) {
+    const { page, limit, skip, search, sortBy, sortOrder } =
+      parsePaginationParams(query);
+    const { isService, lowStock, minPrice, maxPrice } = query;
 
     const fallbackProducts = [
       {
@@ -39,14 +48,38 @@ export class ProductService {
         tenantId,
         name: "Parfum Sepatu Premium 100ml",
         price: 35000,
-        stock: 15,
+        stock: 3,
         isService: false,
       },
     ];
 
     try {
+      const isServiceBool =
+        typeof isService === "boolean"
+          ? isService
+          : isService === "true"
+            ? true
+            : isService === "false"
+              ? false
+              : undefined;
+
+      const isLowStockBool = lowStock === "true" || lowStock === true;
+
+      const priceFilter =
+        minPrice || maxPrice
+          ? {
+              price: {
+                ...(minPrice ? { gte: Number(minPrice) } : {}),
+                ...(maxPrice ? { lte: Number(maxPrice) } : {}),
+              },
+            }
+          : {};
+
       const whereClause = {
         tenantId,
+        ...(isServiceBool !== undefined ? { isService: isServiceBool } : {}),
+        ...(isLowStockBool ? { isService: false, stock: { lte: 5 } } : {}),
+        ...priceFilter,
         ...(search
           ? {
               name: {
@@ -57,12 +90,17 @@ export class ProductService {
           : {}),
       };
 
+      const validSortFields = ["name", "price", "stock", "createdAt"];
+      const actualSortBy = validSortFields.includes(sortBy)
+        ? sortBy
+        : "createdAt";
+
       const [products, totalItems] = await Promise.all([
         db.product.findMany({
           where: whereClause,
           skip,
           take: limit,
-          orderBy: { createdAt: "desc" },
+          orderBy: { [actualSortBy]: sortOrder },
         }),
         db.product.count({ where: whereClause }),
       ]);
@@ -75,11 +113,39 @@ export class ProductService {
       // Fallback handling when DB is in demo state
     }
 
-    const filtered = search
-      ? fallbackProducts.filter((p) =>
-          p.name.toLowerCase().includes(search.toLowerCase()),
-        )
-      : fallbackProducts;
+    let filtered = fallbackProducts;
+
+    if (isService !== undefined) {
+      const isServiceBool = isService === "true" || isService === true;
+      filtered = filtered.filter((p) => p.isService === isServiceBool);
+    }
+
+    if (lowStock === "true" || lowStock === true) {
+      filtered = filtered.filter((p) => !p.isService && p.stock <= 5);
+    }
+
+    if (minPrice) {
+      filtered = filtered.filter((p) => p.price >= Number(minPrice));
+    }
+
+    if (maxPrice) {
+      filtered = filtered.filter((p) => p.price <= Number(maxPrice));
+    }
+
+    if (search) {
+      filtered = filtered.filter((p) =>
+        p.name.toLowerCase().includes(search.toLowerCase()),
+      );
+    }
+
+    // Sort fallback array
+    filtered.sort((a, b) => {
+      const valA = a[sortBy as keyof typeof a] ?? a.name;
+      const valB = b[sortBy as keyof typeof b] ?? b.name;
+      if (valA < valB) return sortOrder === "asc" ? -1 : 1;
+      if (valA > valB) return sortOrder === "asc" ? 1 : -1;
+      return 0;
+    });
 
     const paginated = filtered.slice(skip, skip + limit);
     const meta = createPaginationMeta(page, limit, filtered.length);

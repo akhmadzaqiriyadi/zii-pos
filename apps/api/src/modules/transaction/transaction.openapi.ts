@@ -63,45 +63,30 @@ registry.registerPath({
         .string()
         .optional()
         .openapi({ example: "1", description: "Nomor halaman (default: 1)" }),
-      limit: z
-        .string()
-        .optional()
-        .openapi({
-          example: "10",
-          description: "Jumlah item per halaman (default: 10)",
-        }),
-      search: z
-        .string()
-        .optional()
-        .openapi({
-          example: "Budi",
-          description: "Filter pencarian ID transaksi/nama/nohp pelanggan",
-        }),
-      startDate: z
-        .string()
-        .optional()
-        .openapi({
-          example: "2026-08-01",
-          description: "Filter tanggal awal (YYYY-MM-DD)",
-        }),
-      endDate: z
-        .string()
-        .optional()
-        .openapi({
-          example: "2026-08-13",
-          description: "Filter tanggal akhir (YYYY-MM-DD)",
-        }),
+      limit: z.string().optional().openapi({
+        example: "10",
+        description: "Jumlah item per halaman (default: 10)",
+      }),
+      search: z.string().optional().openapi({
+        example: "Budi",
+        description: "Filter pencarian ID transaksi/nama/nohp pelanggan",
+      }),
+      startDate: z.string().optional().openapi({
+        example: "2026-08-01",
+        description: "Filter tanggal awal (YYYY-MM-DD)",
+      }),
+      endDate: z.string().optional().openapi({
+        example: "2026-08-13",
+        description: "Filter tanggal akhir (YYYY-MM-DD)",
+      }),
       paymentMethod: z
         .enum(["cash", "qris", "transfer"])
         .optional()
         .openapi({ example: "cash", description: "Filter metode pembayaran" }),
-      status: z
-        .enum(["completed", "pending", "cancelled"])
-        .optional()
-        .openapi({
-          example: "completed",
-          description: "Filter status transaksi",
-        }),
+      status: z.enum(["completed", "pending", "cancelled"]).optional().openapi({
+        example: "completed",
+        description: "Filter status transaksi",
+      }),
     }),
   },
   responses: {

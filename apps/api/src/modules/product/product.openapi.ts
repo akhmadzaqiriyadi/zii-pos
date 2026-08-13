@@ -19,7 +19,7 @@ registry.registerPath({
   method: "get",
   path: "/api/v1/products",
   summary:
-    "Mengambil Katalog Produk & Jasa Merchant (dengan Filter & Paginasi)",
+    "Mengambil Katalog Produk & Jasa Merchant (dengan Filter Tipe, Low-Stock, Harga & Paginasi)",
   tags: ["Products"],
   security: [{ TenantHeader: [] }],
   request: {
@@ -28,14 +28,53 @@ registry.registerPath({
         .string()
         .optional()
         .openapi({ example: "1", description: "Nomor halaman (default: 1)" }),
-      limit: z.string().optional().openapi({
-        example: "10",
-        description: "Jumlah item per halaman (default: 10)",
-      }),
-      search: z.string().optional().openapi({
-        example: "Kaos",
-        description: "Filter pencarian nama produk",
-      }),
+      limit: z
+        .string()
+        .optional()
+        .openapi({
+          example: "10",
+          description: "Jumlah item per halaman (default: 10)",
+        }),
+      search: z
+        .string()
+        .optional()
+        .openapi({
+          example: "Kaos",
+          description: "Filter pencarian nama produk",
+        }),
+      isService: z
+        .enum(["true", "false"])
+        .optional()
+        .openapi({
+          example: "false",
+          description: "Filter jenis produk (true = Jasa, false = Barang)",
+        }),
+      lowStock: z
+        .enum(["true", "false"])
+        .optional()
+        .openapi({
+          example: "true",
+          description: "Filter produk dengan stok menipis (<= 5 item)",
+        }),
+      minPrice: z
+        .string()
+        .optional()
+        .openapi({ example: "50000", description: "Filter harga minimum" }),
+      maxPrice: z
+        .string()
+        .optional()
+        .openapi({ example: "150000", description: "Filter harga maksimum" }),
+      sortBy: z
+        .enum(["name", "price", "stock", "createdAt"])
+        .optional()
+        .openapi({
+          example: "price",
+          description: "Urutkan berdasarkan kolom",
+        }),
+      sortOrder: z
+        .enum(["asc", "desc"])
+        .optional()
+        .openapi({ example: "asc", description: "Arah urutan (asc / desc)" }),
     }),
   },
   responses: {

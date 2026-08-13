@@ -26,4 +26,31 @@ describe("ProductService Unit Tests with Pagination & Search Filter", () => {
     expect(result.data.length).toBeGreaterThan(0);
     expect(result.data[0].name).toContain("Kaos");
   });
+
+  it("should filter products by isService, lowStock, and price range", async () => {
+    const serviceProducts = await ProductService.getProducts("demo-tenant-01", {
+      isService: "true",
+    });
+    expect(serviceProducts.data.every((p) => p.isService)).toBe(true);
+
+    const lowStockProducts = await ProductService.getProducts(
+      "demo-tenant-01",
+      {
+        lowStock: "true",
+      },
+    );
+    expect(
+      lowStockProducts.data.every((p) => !p.isService && p.stock <= 5),
+    ).toBe(true);
+
+    const priceFiltered = await ProductService.getProducts("demo-tenant-01", {
+      minPrice: 50000,
+      maxPrice: 150000,
+      sortBy: "price",
+      sortOrder: "asc",
+    });
+    expect(
+      priceFiltered.data.every((p) => p.price >= 50000 && p.price <= 150000),
+    ).toBe(true);
+  });
 });
