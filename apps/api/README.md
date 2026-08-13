@@ -1,42 +1,78 @@
-# ZII POS — Express TS Backend (`@zii/api`)
+# ZII POS — Express REST API (`apps/api`) ⚡
 
-Backend API REST ZII POS berbasis **Express TS running natively di Bun** dengan pola **Modular Controller-Service-Middleware Architecture**.
+Backend REST API untuk **ZII POS** yang berjalan secara cepat dan ringan menggunakan **TypeScript** pada **Bun Runtime**.
 
 ---
 
-## 📐 Architecture & Structure
+## 🛠️ Features & Stack
 
-```text
-apps/api/src/
-├── config/                  # Environment & OpenAPI Specs Config
-│   ├── env.ts               # Validated env variables
-│   └── swagger.ts           # OpenAPI JSDoc Configuration
-├── middlewares/             # Express Middlewares
-│   ├── tenant.middleware.ts # Multi-Tenant Header Extractor (`x-tenant-id`)
-│   └── error.middleware.ts  # Global Error Handler
-├── modules/                 # Modular Domain Architecture
-│   └── product/             # product.controller.ts, product.service.ts, product.routes.ts
-├── utils/                   # Helper Utilities
-│   ├── api-response.ts      # Standardized JSON Response
-│   └── logger.ts            # High-Performance Pino Logger
-├── app.ts                   # Express Application Router Mount
-└── index.ts                 # Entry Server Listener (Port 4000)
+- **Framework:** Express.js + TypeScript
+- **Runtime:** Bun 1.3+
+- **Logger:** Pino Logger (`pino-http` + `pino-pretty`)
+- **Database:** Prisma ORM v6 + PostgreSQL
+- **Auth:** Bun Native Password Hashing (`Bun.password.hash`) + JWT (`jsonwebtoken`)
+- **Documentation:** Scalar API Reference (`@scalar/express-api-reference`) via Zod Auto OpenAPI Generator
+- **Testing:** Bun Native Test Runner (`bun test`) — 11 Unit Tests PASSED in < 100ms
+
+---
+
+## ⚡ Development Commands
+
+```bash
+# Jalankan Dev Server dengan Bun Watch Mode (Port 4000)
+bun dev
+
+# Tes Kompilasi TypeScript
+bun run build
+
+# Menjalankan 11 Unit Tests
+bun test
 ```
 
 ---
 
-## 📖 API Documentation (Scalar API Reference)
+## 📖 Interactive OpenAPI Docs (Scalar UI)
 
-Dokumentasi API interaktif berbasis OpenAPI v3 dapat diakses saat server berjalan di:
-- **Interactive UI:** [http://localhost:4000/docs](http://localhost:4000/docs)
-- **JSON Specification:** [http://localhost:4000/docs.json](http://localhost:4000/docs.json)
+Buka browser di:
+👉 **`http://localhost:4000/docs`**
+
+Atau ambil format JSON OpenAPI spesifikasi dinamis:
+👉 **`http://localhost:4000/docs.json`**
 
 ---
 
-## 🔒 Multi-Tenant Header Specification
+## 📡 Rincian API Endpoints & Query Filters
 
-Setiap request yang membutuhkan isolasi data merchant wajib menyertakan header:
-```http
-x-tenant-id: <TENANT_UUID>
-```
-*Jika header tidak dikirim saat pengujian development, sistem akan menggunakan fallback `demo-tenant-01`.*
+### 🔐 Auth Domain (`/api/v1/auth`)
+| Method | Endpoint | Deskripsi |
+|:---|:---|:---|
+| `POST` | `/api/v1/auth/register-tenant` | Registrasi Toko/Tenant Baru & Akun Owner |
+| `POST` | `/api/v1/auth/login` | Login Kasir / Owner & Dapatkan JWT Token |
+
+### 🏪 Tenant Domain (`/api/v1/tenants`)
+| Method | Endpoint | Deskripsi |
+|:---|:---|:---|
+| `GET` | `/api/v1/tenants/profile` | Ambil profil merchant & setting White-Label |
+| `PUT` | `/api/v1/tenants/profile` | Update logo, telepon, alamat, & footer struk |
+
+### 🛍️ Products Domain (`/api/v1/products`)
+| Method | Endpoint | Deskripsi & Query Filters |
+|:---|:---|:---|
+| `GET` | `/api/v1/products` | Ambil katalog produk terpaginasi |
+| | | `?page=1&limit=10` : Paginasi halaman |
+| | | `?search=Kaos` : Filter pencarian nama |
+| | | `?isService=true\|false` : Filter jenis (Jasa / Barang) |
+| | | `?lowStock=true` : Filter produk dengan stok <= 5 item |
+| | | `?minPrice=50000&maxPrice=150000` : Filter rentang harga |
+| | | `?sortBy=price&sortOrder=asc` : Sorting kolom |
+
+### 💳 Transactions Domain (`/api/v1/transactions`)
+| Method | Endpoint | Deskripsi & Query Filters |
+|:---|:---|:---|
+| `GET` | `/api/v1/transactions` | Ambil riwayat transaksi terpaginasi |
+| | | `?page=1&limit=10` : Paginasi halaman |
+| | | `?search=Budi` : Filter pencarian nama/nohp/ID |
+| | | `?startDate=2026-08-01&endDate=2026-08-13` : Filter tanggal |
+| | | `?paymentMethod=cash\|qris\|transfer` : Filter pembayaran |
+| | | `?status=completed\|pending\|cancelled` : Filter status |
+| `POST` | `/api/v1/transactions` | Simpan transaksi baru & potong stok otomatis |
