@@ -23,12 +23,9 @@ export const AuthTenantSchema = z.object({
 });
 
 export const AuthResponseSchema = z.object({
-  token: z
-    .string()
-    .openapi({
-      example:
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ1MTIzIn0...",
-    }),
+  token: z.string().openapi({
+    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ1MTIzIn0...",
+  }),
   tenant: AuthTenantSchema,
   user: AuthUserSchema,
 });

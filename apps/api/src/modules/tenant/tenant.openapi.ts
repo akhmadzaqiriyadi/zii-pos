@@ -10,12 +10,9 @@ export const TenantSchema = z
   .object({
     id: z.string().openapi({ example: "demo-tenant-01" }),
     name: z.string().openapi({ example: "ZII Distro & Laundry Studio" }),
-    logoUrl: z
-      .string()
-      .nullable()
-      .openapi({
-        example: "https://placehold.co/120x120/1e293b/ffffff?text=ZII+STORE",
-      }),
+    logoUrl: z.string().nullable().openapi({
+      example: "https://placehold.co/120x120/1e293b/ffffff?text=ZII+STORE",
+    }),
     phone: z.string().nullable().openapi({ example: "0812-9988-7766" }),
     address: z
       .string()
@@ -41,12 +38,9 @@ export const UpdateTenantProfileSchema = z
       .string()
       .optional()
       .openapi({ example: "Jl. Sudirman No. 10, Jakarta" }),
-    receiptFooter: z
-      .string()
-      .optional()
-      .openapi({
-        example: "Garansi resmi 30 hari. Syarat & Ketentuan berlaku.",
-      }),
+    receiptFooter: z.string().optional().openapi({
+      example: "Garansi resmi 30 hari. Syarat & Ketentuan berlaku.",
+    }),
   })
   .openapi("UpdateTenantInput");
 
