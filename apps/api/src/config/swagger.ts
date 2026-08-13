@@ -1,3 +1,7 @@
 import { getOpenApiDocumentation } from "./openapi-registry";
 
-export const swaggerSpec = getOpenApiDocumentation();
+export function getSwaggerSpec() {
+  return getOpenApiDocumentation();
+}
+
+export const swaggerSpec = getSwaggerSpec();

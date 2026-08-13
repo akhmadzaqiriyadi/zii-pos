@@ -48,11 +48,9 @@ registry.registerPath({
               .string()
               .openapi({ example: "Pendaftaran Merchant ZII POS berhasil!" }),
             data: z.object({
-              token: z
-                .string()
-                .openapi({
-                  example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-                }),
+              token: z.string().openapi({
+                example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+              }),
               tenant: z.object({ id: z.string(), name: z.string() }),
               user: z.object({
                 id: z.string(),
@@ -99,11 +97,9 @@ registry.registerPath({
             success: z.boolean().openapi({ example: true }),
             message: z.string().openapi({ example: "Login berhasil!" }),
             data: z.object({
-              token: z
-                .string()
-                .openapi({
-                  example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-                }),
+              token: z.string().openapi({
+                example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+              }),
             }),
           }),
         },

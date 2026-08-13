@@ -3,17 +3,19 @@ import cors from "cors";
 import express from "express";
 import pinoHttp from "pino-http";
 
-import { swaggerSpec } from "./config/swagger";
+// 1. Register All Zod Auto-OpenAPI Specifications First
+import "./modules/auth/auth.openapi";
+import "./modules/product/product.openapi";
+import "./modules/tenant/tenant.openapi";
+import "./modules/transaction/transaction.openapi";
+
+// 2. Import Swagger Spec Generator AFTER All OpenAPI Specs are Registered
+import { getSwaggerSpec } from "./config/swagger";
 import { authRouter } from "./modules/auth/auth.routes";
 import { productRouter } from "./modules/product/product.routes";
 import { tenantRouter } from "./modules/tenant/tenant.routes";
 import { transactionRouter } from "./modules/transaction/transaction.routes";
 import { logger } from "./utils/logger";
-
-// Register Auto OpenAPI Specs via Zod
-import "./modules/auth/auth.openapi";
-import "./modules/tenant/tenant.openapi";
-import "./modules/transaction/transaction.openapi";
 
 export const app = express();
 
@@ -28,24 +30,25 @@ app.use(
   }),
 );
 
-// Scalar API Reference Endpoint (Interactive Auto OpenAPI UI)
+// Dynamic OpenAPI Specification JSON Endpoint
+app.get("/docs.json", (_req, res) => {
+  res.setHeader("Content-Type", "application/json");
+  res.send(getSwaggerSpec());
+});
+
+// Dynamic Scalar API Reference (Interactive OpenAPI UI)
 app.use(
   "/docs",
   apiReference({
     spec: {
-      content: swaggerSpec,
+      content: () => getSwaggerSpec(),
     },
     theme: "purple",
   }),
 );
 
-app.get("/docs.json", (req, res) => {
-  res.setHeader("Content-Type", "application/json");
-  res.send(swaggerSpec);
-});
-
 // Health Check Endpoint
-app.get("/health", (req, res) => {
+app.get("/health", (_req, res) => {
   res.json({
     status: "ok",
     service: "ZII POS Modular Express API",
