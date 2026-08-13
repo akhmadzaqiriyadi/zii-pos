@@ -5,7 +5,8 @@
   "main": "src/index.ts",
   "scripts": {
     "dev": "bun --watch src/index.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "test": "bun test"
   },
   "dependencies": {
     "@zii/db": "workspace:*",

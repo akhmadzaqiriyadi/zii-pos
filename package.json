@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "bun --filter '*' dev",
     "build": "bun --filter '*' build",
+    "test": "bun --filter '*' test",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
     "format": "prettier --write \"**/*.{ts,tsx,json,md}\"",
