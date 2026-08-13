@@ -125,6 +125,6 @@ bun run build
 
 ## 🤝 Foundational Engineering Team
 
-* **Zaqi** — PM Engineer & Backend Lead (Express API, DB Persistence, Scalar Docs, Testing & Seeder)
+* **Zaqi** — PM Engineer, Backend & Integration Lead (Express API, DB Persistence, Thermal Print Driver & WA Integration)
 * **Isyadi** — Frontend Lead (Core POS Kasir UI, Products Catalog, SWR Data Fetching)
-* **Ilham** — Fullstack Lead (Auth & Login UI, JWT Token Handler, Thermal Print & WA Integration)
+* **Ilham** — Fullstack Lead (Auth API, Halaman Login UI, JWT Auth Context & Protected Routes)

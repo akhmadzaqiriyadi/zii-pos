@@ -158,14 +158,14 @@ CREATE TABLE transaction_items (
 
 ## 5. Execution Plan & Task Breakdown (Sprint 1: 1 Minggu)
 
-### 👨‍💻 Zaqi (PM Engineer & Backend Lead)
+### 👨‍💻 Zaqi (PM Engineer, Backend & Integration Lead)
 - [x] Setup Monorepo Bun Workspaces & Directory Structure.
-- [x] Setup Database Schema Prisma ORM 5 Tabel.
+- [x] Setup Database Schema Prisma ORM 5 Tabel & Seeder Script.
 - [x] Implementasi Scalar API Reference Documentation (`/docs`) & Pino Logger.
-- [x] Implementasi Backend Auth (`POST /api/v1/auth/register-tenant` & `POST /api/v1/auth/login`).
-- [x] Implementasi Middleware Multi-Tenant (`x-tenant-id`) & Tenant Settings Profile API.
 - [x] Implementasi CRUD API Products & Transactions DB Persistence (dengan Pagination & Search Filter).
-- [x] Implementasi Bun Unit Testing Suite (6 PASS).
+- [x] Implementasi Bun Unit Testing Suite (11 PASS).
+- [ ] Helper & Driver Cetak Struk Thermal 58mm/80mm (`useThermalPrinter.ts`).
+- [ ] Auto-Send WhatsApp Receipt Integration (`whatsappService.ts`) & Connect Action Buttons di `ReceiptModal.tsx`.
 
 ### 🎨 Isyadi (Frontend Lead — Core POS & Products UI)
 - [x] Setup Project Next.js 16 + Custom Radix UI Primitives + Tailwind CSS.
@@ -175,13 +175,11 @@ CREATE TABLE transaction_items (
 - [ ] Search Bar & Filter Pencarian Produk Real-Time di Layar Kasir.
 - [ ] Modal Form Tambah & Edit Produk Baru di `/products`.
 
-### ⚡ Ilham (Fullstack Lead — Auth UI & Receipt Print/WA)
-- [x] HTML & CSS Thermal Print Layout (58mm/80mm).
-- [x] Preview Modal Struk Thermal & WhatsApp di POS.
+### ⚡ Ilham (Fullstack Lead — Auth API & Auth UI)
+- [x] Endpoint Backend Auth (`POST /api/v1/auth/register-tenant` & `POST /api/v1/auth/login`).
 - [ ] Halaman Login & Register Merchant UI (`/login` & `/register`).
 - [ ] Client Auth Context & LocalStorage / Cookie Token Handler di Next.js.
-- [ ] Helper & Driver Cetak Struk Thermal (Browser / Web Bluetooth Print).
-- [ ] Integrasi WhatsApp Gateway API (Fonnte/Wablas) / Direct Link untuk Pengiriman Struk WA.
+- [ ] Protected Route Middleware untuk Halaman Kasir & Dashboard Owner.
 
 ---
 
