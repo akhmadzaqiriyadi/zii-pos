@@ -34,7 +34,17 @@ sequenceDiagram
 
 ---
 
-## 🛠️ 2. Standar & Aturan Pengerjaan
+## 📋 2. Status & Daftar Tugas (Task List)
+
+Berikut adalah status pengerjaan fitur untuk branch `feature/auth-fullstack`:
+- [x] **Backend Auth API expansion** (`POST /api/v1/auth/register-tenant` & `/login`) — *Selesai (Diimplementasikan oleh Zaqi)*
+- [ ] **Halaman Login & Register Merchant UI** (`/login` & `/register`) — *Belum Mulai (Tugas Ilham)*
+- [ ] **Client Auth Context & LocalStorage / Cookie Token Handler di Next.js** — *Belum Mulai (Tugas Ilham)*
+- [ ] **Protected Route Middleware untuk Halaman Kasir & Dashboard Owner** — *Belum Mulai (Tugas Ilham)*
+
+---
+
+## 🛠️ 3. Standar & Aturan Pengerjaan
 1. **State Management & Fetching**: Menggunakan **TanStack Query (React Query)** untuk fetching API.
 2. **UI & Styling**: Menggunakan **Custom Radix UI Headless Primitives + Tailwind CSS**. Dilarang menggunakan shadcn/ui.
 3. **Validasi Form**: Menggunakan **Zod** untuk validasi skema form input client-side.
@@ -47,7 +57,7 @@ sequenceDiagram
 
 ---
 
-## 📂 3. Struktur Berkas yang Akan Dibuat/Diubah
+## 📂 4. Struktur Berkas yang Akan Dibuat/Diubah
 
 ### [NEW] Berkas Otentikasi
 *   **`apps/web/src/features/auth/`** (Folder Modul Fitur Auth)
@@ -66,7 +76,7 @@ sequenceDiagram
 
 ---
 
-## ⚙️ 4. Detail Langkah Implementasi
+## ⚙️ 5. Detail Langkah Implementasi
 
 ### Langkah A: Client Session & Token Handler (`AuthContext.tsx`)
 1. Buat **`AuthContext`** yang memiliki state:
@@ -145,7 +155,7 @@ export const config = {
 
 ---
 
-## 🧪 5. Rencana Verifikasi & Pengujian
+## 🧪 6. Rencana Verifikasi & Pengujian
 * **Verifikasi Fungsional**:
   * Melakukan registrasi tenant/owner baru -> Pastikan redirect ke `/pos` dan database mencatat user & tenant baru.
   * Logout -> Pastikan cookie & localstorage terhapus, lalu redirect ke `/login`.
