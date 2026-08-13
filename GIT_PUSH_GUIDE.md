@@ -12,9 +12,9 @@ Dokumen ini adalah **Panduan Resmi Git & Push** untuk developer tim ZII (**Zaqi,
 - **`fix/<nama-bug>`** : Cabang perbaikan bug/error.
 
 ### Contoh Penamaan Branch:
-* `feature/pos-cart-ui` (Tugas Isyadi)
-* `feature/auth-tenant-api` (Tugas Zaqi)
-* `feature/receipt-wa-print` (Tugas Ilham)
+* `feature/pos-cart-ui` (Tugas Isyadi — Core POS & Products UI)
+* `feature/auth-tenant-api` (Tugas Zaqi — Backend Auth, DB & OpenAPI Docs)
+* `feature/auth-ui-receipt-print` (Tugas Ilham — Auth UI, Login Page & WA/Thermal Print Integration)
 * `fix/product-stock-reduction`
 
 ---

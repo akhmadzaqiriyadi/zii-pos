@@ -91,6 +91,6 @@ bun dev
 
 ## 🤝 Foundational Engineering Team
 
-* **Zaqi** — PM Engineer & Backend Lead
-* **Isyadi** — Frontend Lead
-* **Ilham** — Fullstack & Integration Lead
+* **Zaqi** — PM Engineer & Backend Lead (Express API, DB Persistence, Scalar Docs, Testing)
+* **Isyadi** — Frontend Lead (Core POS Kasir UI, Products Catalog, SWR Data Fetching)
+* **Ilham** — Fullstack Lead (Auth & Login UI, JWT Token Handler, Thermal Print & WA Integration)

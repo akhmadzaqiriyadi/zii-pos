@@ -27,9 +27,9 @@ Dokumen ini berisi standar koding dan alur kerja (*Code Standard & Operating Pro
 ### Branch Strategy
 - `main` : Production-ready code (hanya digabung lewat PR yang sudah dites).
 - `dev` : Branch pengembangan harian.
-- `feature/pos-cart-ui` (Isyadi) : Branch pengerjaan fitur UI Kasir.
-- `feature/auth-tenant-api` (Zaqi) : Branch pengerjaan API Auth & Tenant.
-- `feature/receipt-wa-print` (Ilham) : Branch pengerjaan Struk WA & Thermal.
+- `feature/pos-cart-ui` (Isyadi) : Branch pengerjaan fitur POS Kasir & Catalog UI.
+- `feature/auth-tenant-api` (Zaqi) : Branch pengerjaan API Auth, Tenant & DB Persistence.
+- `feature/auth-ui-receipt-print` (Ilham) : Branch pengerjaan Halaman Login UI & Struk WA/Thermal Print.
 
 ### Commit Format (Conventional Commits)
 Format: `<type>(<scope>): <short description>`

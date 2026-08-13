@@ -162,22 +162,26 @@ CREATE TABLE transaction_items (
 - [x] Setup Monorepo Bun Workspaces & Directory Structure.
 - [x] Setup Database Schema Prisma ORM 5 Tabel.
 - [x] Implementasi Scalar API Reference Documentation (`/docs`) & Pino Logger.
-- [ ] Implementasi Backend Auth (`POST /api/v1/auth/register-tenant` & `POST /api/v1/auth/login`).
-- [ ] Implementasi Middleware Multi-Tenant (`x-tenant-id`) & Tenant Settings Profile API.
-- [ ] Implementasi CRUD API Products & Transactions DB Persistence.
+- [x] Implementasi Backend Auth (`POST /api/v1/auth/register-tenant` & `POST /api/v1/auth/login`).
+- [x] Implementasi Middleware Multi-Tenant (`x-tenant-id`) & Tenant Settings Profile API.
+- [x] Implementasi CRUD API Products & Transactions DB Persistence (dengan Pagination & Search Filter).
+- [x] Implementasi Bun Unit Testing Suite (6 PASS).
 
-### 🎨 Isyadi (Frontend Lead)
+### 🎨 Isyadi (Frontend Lead — Core POS & Products UI)
 - [x] Setup Project Next.js 16 + Custom Radix UI Primitives + Tailwind CSS.
-- [x] Selesaikan Layout Utama POS (Grid Katalog Produk + Sidebar Keranjang Belanja).
-- [x] Selesaikan Modal Pembayaran (Pilih Tunai / QRIS + Hitung Kembalian).
-- [x] Selesaikan Structure Modular Feature-Driven (`features/pos`, `features/products`, `features/settings`).
-- [ ] Integrasi SWR / React Query untuk fetch data dari Express API.
+- [x] Layout Utama POS (Grid Katalog Produk + Sidebar Keranjang Belanja).
+- [x] Modal Pembayaran (Pilih Tunai / QRIS + Hitung Kembalian).
+- [ ] Integrasi SWR / React Query untuk fetch data Produk & Transaksi dari Express API.
+- [ ] Search Bar & Filter Pencarian Produk Real-Time di Layar Kasir.
+- [ ] Modal Form Tambah & Edit Produk Baru di `/products`.
 
-### ⚡ Ilham (Fullstack & Integration Lead)
-- [x] Selesaikan Komponen Struk Cetak Thermal (HTML Print Layout + CSS Thermal Size 58mm/80mm).
-- [x] Selesaikan Preview Modal Struk Thermal & WhatsApp.
-- [ ] Selesaikan Komponen & Helper Cetak Struk Thermal (Browser / Web Bluetooth Print).
-- [ ] Integrasi WhatsApp Gateway API (Fonnte/Wablas) untuk pengiriman Struk WA otomatis.
+### ⚡ Ilham (Fullstack Lead — Auth UI & Receipt Print/WA)
+- [x] HTML & CSS Thermal Print Layout (58mm/80mm).
+- [x] Preview Modal Struk Thermal & WhatsApp di POS.
+- [ ] Halaman Login & Register Merchant UI (`/login` & `/register`).
+- [ ] Client Auth Context & LocalStorage / Cookie Token Handler di Next.js.
+- [ ] Helper & Driver Cetak Struk Thermal (Browser / Web Bluetooth Print).
+- [ ] Integrasi WhatsApp Gateway API (Fonnte/Wablas) / Direct Link untuk Pengiriman Struk WA.
 
 ---
 
