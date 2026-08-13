@@ -2,9 +2,18 @@ import { apiReference } from "@scalar/express-api-reference";
 import cors from "cors";
 import express from "express";
 import pinoHttp from "pino-http";
+
 import { swaggerSpec } from "./config/swagger";
+import { authRouter } from "./modules/auth/auth.routes";
 import { productRouter } from "./modules/product/product.routes";
+import { tenantRouter } from "./modules/tenant/tenant.routes";
+import { transactionRouter } from "./modules/transaction/transaction.routes";
 import { logger } from "./utils/logger";
+
+// Register Auto OpenAPI Specs via Zod
+import "./modules/auth/auth.openapi";
+import "./modules/tenant/tenant.openapi";
+import "./modules/transaction/transaction.openapi";
 
 export const app = express();
 
@@ -19,7 +28,7 @@ app.use(
   }),
 );
 
-// Scalar API Reference Endpoint (Modern Interactive OpenAPI UI)
+// Scalar API Reference Endpoint (Interactive Auto OpenAPI UI)
 app.use(
   "/docs",
   apiReference({
@@ -35,7 +44,7 @@ app.get("/docs.json", (req, res) => {
   res.send(swaggerSpec);
 });
 
-// Health Check
+// Health Check Endpoint
 app.get("/health", (req, res) => {
   res.json({
     status: "ok",
@@ -47,4 +56,7 @@ app.get("/health", (req, res) => {
 });
 
 // Register Domain Routes
+app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/tenants", tenantRouter);
 app.use("/api/v1/products", productRouter);
+app.use("/api/v1/transactions", transactionRouter);
