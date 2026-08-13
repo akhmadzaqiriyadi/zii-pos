@@ -1,55 +1,35 @@
-# ZII POS — Engineering Code Rules & Guidelines
+# ZII POS — Engineering Code Rules & Conventions 📜
 
-Dokumen ini berisi standar koding dan alur kerja (*Code Standard & Operating Procedures*) untuk seluruh anggota tim pengembang ZII (**Zaqi, Isyadi, dan Ilham**).
-
----
-
-## 📌 1. Prinsip Utama Penggubahan Kode (Core Engineering Rules)
-
-1. **Strict Type Safety:** Selalu gunakan TypeScript. Dilarang keras menggunakan tipe `any`. Manfaatkan tipe data terpusat di `@zii/types`.
-2. **Multi-Tenant First:** Selalu sertakan `tenant_id` pada setiap query database dan route API backend untuk menjamin isolasi data merchant.
-3. **No Direct DOM Mutation:** Pada Frontend, manfaatkan state React atau komponen primitive Radix UI.
-4. **Linting & Formatting Check:** Sebelum membuat *Pull Request* atau *Commit*, pastikan menjalankan `bun run lint:fix`.
+Dokumen ini berisi standar koding, aturan monorepo, dan konvensi pengembangan software untuk tim ZII (**Zaqi, Isyadi, Ilham**).
 
 ---
 
-## 🎨 2. Standard Penamaan (Naming Conventions)
+## 🛠️ Stack & Standards
 
-- **File & Folder Component/Hooks:** `PascalCase` untuk komponen UI (`ProductGrid.tsx`), `camelCase` untuk hooks (`useCart.ts`).
-- **File Controller/Service/Routes (Backend):** `kebab-case` atau `dot.notation` (`product.controller.ts`, `product.service.ts`).
-- **Database Tables & Columns:** `snake_case` di PostgreSQL / Prisma (`tenant_id`, `created_at`).
-- **TypeScript Interfaces & Types:** `PascalCase` (`Tenant`, `Product`, `Transaction`).
-
----
-
-## 🔀 3. Git Branching & Commit Message Strategy
-
-### Branch Strategy
-- `main` : Production-ready code (hanya digabung lewat PR yang sudah dites).
-- `dev` : Branch pengembangan harian.
-- `feature/receipt-wa-print` (Zaqi) : Branch pengerjaan Struk WA & Thermal Print Integration.
-- `feature/pos-cart-ui` (Isyadi) : Branch pengerjaan fitur POS Kasir & Catalog UI.
-- `feature/auth-fullstack` (Ilham) : Branch pengerjaan Auth API, Halaman Login UI & JWT Auth Context.
-
-### Commit Format (Conventional Commits)
-Format: `<type>(<scope>): <short description>`
-
-* Contoh: `feat(pos): tambah fitur filter produk berdasarkan kategori`
-* Contoh: `fix(api): perbaiki bug perhitungan total_amount pada transaction service`
-* Contoh: `docs(readme): perbarui dokumentasi scalar api reference`
+- **Runtime & PM:** Bun Workspaces Monorepo
+- **Linter & Formatter:** Biome JS 1.9+ (`bun run lint:fix`)
+- **Backend Framework:** Express.js TypeScript (Running natively on Bun)
+- **Frontend Framework:** Next.js 16 (App Router + Turbopack + Radix UI + Tailwind CSS)
+- **Database:** Prisma ORM v6 + PostgreSQL (`bun db:seed`)
+- **Testing:** Bun Native Test Runner (`bun test`) — 11 Unit Tests PASSED
 
 ---
 
-## 🧪 4. Check & Verification Checklist
+## 📌 Alokasi Tugas Resmi Tim ZII (Sprint 1)
 
-Sebelum push ke repositori GitHub, pastikan 3 perintah ini berjalan hijau tanpa error:
-```bash
-# 1. Cek Linting & Formatting
-bun run lint
+- **`feature/receipt-wa-print` (Zaqi — Integration & Backend Lead):**
+  - Express REST API, Multi-Tenant Header Middleware, Prisma DB Persistence & Seeder, Scalar OpenAPI Docs & Zod Models, Bun Unit Testing Suite (11 PASS).
+  - Driver Cetak Struk Thermal 58mm/80mm (`useThermalPrinter.ts`).
+  - Auto-Send WhatsApp Receipt Integration (`whatsappService.ts`).
 
-# 2. Cek Kompilasi Backend Express TS
-cd apps/api && bun run build
+- **`feature/pos-cart-ui` (Isyadi — Frontend Lead):**
+  - POS Layar Kasir UI (`/pos`) & Modal Pembayaran (Tunai/QRIS + Hitung Kembalian).
+  - Search Bar & Filter Pencarian Produk Real-Time.
+  - SWR Data Fetching Integration dengan Express REST API.
+  - Modal Form Tambah & Edit Produk Baru di `/products`.
 
-# 3. Cek Kompilasi Frontend Next.js 16
-cd apps/web && bun run build
-```
+- **`feature/auth-fullstack` (Ilham — Fullstack Lead):**
+  - Endpoint Backend Auth (`POST /api/v1/auth/register-tenant` & `/login`).
+  - Halaman Login & Register Merchant UI (`/login` & `/register`).
+  - Client Auth Context & LocalStorage / Cookie Token Handler di Next.js.
+  - Protected Route Middleware untuk Halaman Kasir & Dashboard Owner.
