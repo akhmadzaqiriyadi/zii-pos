@@ -11,7 +11,8 @@
     "lint:fix": "biome check --write .",
     "format": "prettier --write \"**/*.{ts,tsx,json,md}\"",
     "db:push": "bun --filter '@zii/db' db:push",
-    "db:generate": "bun --filter '@zii/db' db:generate"
+    "db:generate": "bun --filter '@zii/db' db:generate",
+    "db:seed": "bun --filter '@zii/db' seed"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",

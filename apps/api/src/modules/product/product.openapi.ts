@@ -28,34 +28,22 @@ registry.registerPath({
         .string()
         .optional()
         .openapi({ example: "1", description: "Nomor halaman (default: 1)" }),
-      limit: z
-        .string()
-        .optional()
-        .openapi({
-          example: "10",
-          description: "Jumlah item per halaman (default: 10)",
-        }),
-      search: z
-        .string()
-        .optional()
-        .openapi({
-          example: "Kaos",
-          description: "Filter pencarian nama produk",
-        }),
-      isService: z
-        .enum(["true", "false"])
-        .optional()
-        .openapi({
-          example: "false",
-          description: "Filter jenis produk (true = Jasa, false = Barang)",
-        }),
-      lowStock: z
-        .enum(["true", "false"])
-        .optional()
-        .openapi({
-          example: "true",
-          description: "Filter produk dengan stok menipis (<= 5 item)",
-        }),
+      limit: z.string().optional().openapi({
+        example: "10",
+        description: "Jumlah item per halaman (default: 10)",
+      }),
+      search: z.string().optional().openapi({
+        example: "Kaos",
+        description: "Filter pencarian nama produk",
+      }),
+      isService: z.enum(["true", "false"]).optional().openapi({
+        example: "false",
+        description: "Filter jenis produk (true = Jasa, false = Barang)",
+      }),
+      lowStock: z.enum(["true", "false"]).optional().openapi({
+        example: "true",
+        description: "Filter produk dengan stok menipis (<= 5 item)",
+      }),
       minPrice: z
         .string()
         .optional()
