@@ -41,11 +41,24 @@ export class TransactionController {
   static async getTransactions(req: AuthenticatedRequest, res: Response) {
     try {
       const tenantId = req.tenantId || "demo-tenant-01";
-      const transactions = await TransactionService.getTransactions(tenantId);
-      return ApiResponse.success(
+      const { page, limit, search, sortBy, sortOrder } = req.query;
+
+      const { data, meta } = await TransactionService.getTransactions(
+        tenantId,
+        {
+          page: page as string,
+          limit: limit as string,
+          search: search as string,
+          sortBy: sortBy as string,
+          sortOrder: sortOrder as "asc" | "desc",
+        },
+      );
+
+      return ApiResponse.paginated(
         res,
         "Berhasil mengambil riwayat transaksi",
-        transactions,
+        data,
+        meta,
       );
     } catch (error: unknown) {
       return ApiResponse.error(

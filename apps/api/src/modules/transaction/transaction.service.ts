@@ -1,4 +1,9 @@
 import { db } from "@zii/db";
+import {
+  type PaginationQuery,
+  createPaginationMeta,
+  parsePaginationParams,
+} from "../../utils/pagination";
 
 export interface CreateTransactionItemInput {
   productId: string;
@@ -109,15 +114,87 @@ export class TransactionService {
     }
   }
 
-  static async getTransactions(tenantId: string) {
+  static async getTransactions(tenantId: string, query: PaginationQuery = {}) {
+    const { page, limit, skip, search } = parsePaginationParams(query);
+
     try {
-      return await db.transaction.findMany({
-        where: { tenantId },
-        include: { items: true },
-        orderBy: { createdAt: "desc" },
-      });
+      const whereClause = {
+        tenantId,
+        ...(search
+          ? {
+              OR: [
+                {
+                  customerName: {
+                    contains: search,
+                    mode: "insensitive" as const,
+                  },
+                },
+                {
+                  customerPhone: {
+                    contains: search,
+                    mode: "insensitive" as const,
+                  },
+                },
+              ],
+            }
+          : {}),
+      };
+
+      const [transactions, totalItems] = await Promise.all([
+        db.transaction.findMany({
+          where: whereClause,
+          include: { items: true },
+          skip,
+          take: limit,
+          orderBy: { createdAt: "desc" },
+        }),
+        db.transaction.count({ where: whereClause }),
+      ]);
+
+      const meta = createPaginationMeta(page, limit, totalItems);
+      return { data: transactions, meta };
     } catch {
-      return [];
+      const demoTransactions = [
+        {
+          id: "trx-1723456789",
+          tenantId,
+          customerName: "Budi",
+          customerPhone: "081234567890",
+          paymentMethod: "cash",
+          totalAmount: 105000,
+          status: "completed",
+          createdAt: new Date(),
+          items: [
+            {
+              productId: "p1",
+              productName: "Kaos Polos Cotton 30s",
+              price: 65000,
+              qty: 1,
+              subtotal: 65000,
+            },
+            {
+              productId: "p3",
+              productName: "Jasa Potong & Styling",
+              price: 40000,
+              qty: 1,
+              subtotal: 40000,
+            },
+          ],
+        },
+      ];
+
+      const filtered = search
+        ? demoTransactions.filter(
+            (t) =>
+              t.customerName.toLowerCase().includes(search.toLowerCase()) ||
+              (t.customerPhone?.includes(search) ?? false),
+          )
+        : demoTransactions;
+
+      const paginated = filtered.slice(skip, skip + limit);
+      const meta = createPaginationMeta(page, limit, filtered.length);
+
+      return { data: paginated, meta };
     }
   }
 }

@@ -1,20 +1,15 @@
 import { db } from "@zii/db";
-import type { Product } from "@zii/types";
+import {
+  type PaginationQuery,
+  createPaginationMeta,
+  parsePaginationParams,
+} from "../../utils/pagination";
 
 export class ProductService {
-  static async getProductsByTenant(tenantId: string) {
-    // Return DB records or fallback seed data if DB connection is initializing
-    try {
-      const products = await db.product.findMany({
-        where: { tenantId },
-        orderBy: { createdAt: "desc" },
-      });
-      if (products.length > 0) return products;
-    } catch {
-      // Graceful fallback for MVP initial testing
-    }
+  static async getProducts(tenantId: string, query: PaginationQuery = {}) {
+    const { page, limit, skip, search } = parsePaginationParams(query);
 
-    return [
+    const fallbackProducts = [
       {
         id: "p1",
         tenantId,
@@ -22,7 +17,6 @@ export class ProductService {
         price: 65000,
         stock: 45,
         isService: false,
-        createdAt: new Date(),
       },
       {
         id: "p2",
@@ -31,7 +25,6 @@ export class ProductService {
         price: 145000,
         stock: 20,
         isService: false,
-        createdAt: new Date(),
       },
       {
         id: "p3",
@@ -40,8 +33,57 @@ export class ProductService {
         price: 40000,
         stock: 999,
         isService: true,
-        createdAt: new Date(),
+      },
+      {
+        id: "p4",
+        tenantId,
+        name: "Parfum Sepatu Premium 100ml",
+        price: 35000,
+        stock: 15,
+        isService: false,
       },
     ];
+
+    try {
+      const whereClause = {
+        tenantId,
+        ...(search
+          ? {
+              name: {
+                contains: search,
+                mode: "insensitive" as const,
+              },
+            }
+          : {}),
+      };
+
+      const [products, totalItems] = await Promise.all([
+        db.product.findMany({
+          where: whereClause,
+          skip,
+          take: limit,
+          orderBy: { createdAt: "desc" },
+        }),
+        db.product.count({ where: whereClause }),
+      ]);
+
+      if (totalItems > 0) {
+        const meta = createPaginationMeta(page, limit, totalItems);
+        return { data: products, meta };
+      }
+    } catch {
+      // Fallback handling when DB is in demo state
+    }
+
+    const filtered = search
+      ? fallbackProducts.filter((p) =>
+          p.name.toLowerCase().includes(search.toLowerCase()),
+        )
+      : fallbackProducts;
+
+    const paginated = filtered.slice(skip, skip + limit);
+    const meta = createPaginationMeta(page, limit, filtered.length);
+
+    return { data: paginated, meta };
   }
 }

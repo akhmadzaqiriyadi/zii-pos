@@ -34,6 +34,18 @@ export const ErrorResponseSchema = z
   })
   .openapi("ErrorResponse");
 
+// Pagination Metadata Schema
+export const PaginationMetaSchema = z
+  .object({
+    page: z.number().int().openapi({ example: 1 }),
+    limit: z.number().int().openapi({ example: 10 }),
+    totalItems: z.number().int().openapi({ example: 45 }),
+    totalPages: z.number().int().openapi({ example: 5 }),
+    hasNextPage: z.boolean().openapi({ example: true }),
+    hasPrevPage: z.boolean().openapi({ example: false }),
+  })
+  .openapi("PaginationMeta");
+
 // Helper to create typed Success Response Schemas for Scalar UI
 export function createSuccessResponseSchema<T extends z.ZodTypeAny>(
   dataSchema: T,
@@ -43,6 +55,19 @@ export function createSuccessResponseSchema<T extends z.ZodTypeAny>(
     success: z.boolean().openapi({ example: true }),
     message: z.string().openapi({ example: messageExample }),
     data: dataSchema,
+  });
+}
+
+// Helper to create Paginated Response Schemas with meta object for Scalar UI
+export function createPaginatedResponseSchema<T extends z.ZodTypeAny>(
+  itemSchema: T,
+  messageExample = "Berhasil mengambil data terpaginasi",
+) {
+  return z.object({
+    success: z.boolean().openapi({ example: true }),
+    message: z.string().openapi({ example: messageExample }),
+    data: z.array(itemSchema),
+    meta: PaginationMetaSchema,
   });
 }
 
@@ -64,7 +89,7 @@ export function getOpenApiDocumentation() {
       title: "ZII POS Express REST API",
       version: "1.0.0-mvp",
       description:
-        "Dokumentasi Resmi ZII POS REST API (Multi-Tenant & White-Label). Setiap status code (200, 201, 400, 401, 403, 404, 500) memiliki skema JSON response lengkap.",
+        "Dokumentasi Resmi ZII POS REST API (Multi-Tenant, Filter, Pagination, & White-Label). Setiap status code (200, 201, 400, 401, 403, 404, 500) memiliki skema JSON response lengkap.",
       contact: {
         name: "ZII Engineering Team (Zaqi, Isyadi, Ilham)",
       },

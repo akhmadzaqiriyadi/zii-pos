@@ -1,5 +1,6 @@
 import {
   createErrorResponseSchema,
+  createPaginatedResponseSchema,
   createSuccessResponseSchema,
   registry,
 } from "@/config/openapi-registry";
@@ -52,16 +53,34 @@ export const CreateTransactionSchema = z
 registry.registerPath({
   method: "get",
   path: "/api/v1/transactions",
-  summary: "Ambil Riwayat Transaksi Penjualan Merchant",
+  summary:
+    "Ambil Riwayat Transaksi Penjualan Merchant (dengan Filter & Paginasi)",
   tags: ["Transactions"],
   security: [{ TenantHeader: [] }],
+  request: {
+    query: z.object({
+      page: z
+        .string()
+        .optional()
+        .openapi({ example: "1", description: "Nomor halaman (default: 1)" }),
+      limit: z.string().optional().openapi({
+        example: "10",
+        description: "Jumlah item per halaman (default: 10)",
+      }),
+      search: z.string().optional().openapi({
+        example: "Budi",
+        description: "Filter pencarian nama/nohp pelanggan",
+      }),
+    }),
+  },
   responses: {
     200: {
-      description: "200 OK — Data riwayat transaksi berhasil diambil",
+      description:
+        "200 OK — Data riwayat transaksi berhasil diambil dengan objek metadata paginasi",
       content: {
         "application/json": {
-          schema: createSuccessResponseSchema(
-            z.array(TransactionSchema),
+          schema: createPaginatedResponseSchema(
+            TransactionSchema,
             "Berhasil mengambil riwayat transaksi",
           ),
         },

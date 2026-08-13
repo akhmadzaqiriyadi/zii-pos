@@ -7,14 +7,29 @@ export class ProductController {
   static async getProducts(req: AuthenticatedRequest, res: Response) {
     try {
       const tenantId = req.tenantId || "demo-tenant-01";
-      const products = await ProductService.getProductsByTenant(tenantId);
-      return ApiResponse.success(
+      const { page, limit, search, sortBy, sortOrder } = req.query;
+
+      const { data, meta } = await ProductService.getProducts(tenantId, {
+        page: page as string,
+        limit: limit as string,
+        search: search as string,
+        sortBy: sortBy as string,
+        sortOrder: sortOrder as "asc" | "desc",
+      });
+
+      return ApiResponse.paginated(
         res,
         "Berhasil mengambil katalog produk",
-        products,
+        data,
+        meta,
       );
-    } catch (error) {
-      return ApiResponse.error(res, "Gagal mengambil data produk", error, 500);
+    } catch (error: unknown) {
+      return ApiResponse.error(
+        res,
+        "Gagal mengambil katalog produk",
+        error,
+        500,
+      );
     }
   }
 }

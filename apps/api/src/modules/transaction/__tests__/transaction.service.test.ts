@@ -31,4 +31,17 @@ describe("TransactionService Unit Tests", () => {
     expect(result).toHaveProperty("totalAmount");
     expect(result.customerName).toBe("Budi Test");
   });
+
+  it("should return paginated transaction history with meta info", async () => {
+    const result = await TransactionService.getTransactions("demo-tenant-01", {
+      page: 1,
+      limit: 10,
+    });
+
+    expect(result).toBeDefined();
+    expect(result).toHaveProperty("data");
+    expect(result).toHaveProperty("meta");
+    expect(result.meta.page).toBe(1);
+    expect(result.meta).toHaveProperty("totalItems");
+  });
 });

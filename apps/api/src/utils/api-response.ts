@@ -1,12 +1,16 @@
 import type { Response } from "express";
 
+export interface PaginationMeta {
+  page: number;
+  limit: number;
+  totalItems: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
+}
+
 export class ApiResponse {
-  static success<T>(
-    res: Response,
-    message: string,
-    data?: T,
-    statusCode = 200,
-  ) {
+  static success<T>(res: Response, message: string, data: T, statusCode = 200) {
     return res.status(statusCode).json({
       success: true,
       message,
@@ -14,16 +18,31 @@ export class ApiResponse {
     });
   }
 
+  static paginated<T>(
+    res: Response,
+    message: string,
+    data: T[],
+    meta: PaginationMeta,
+    statusCode = 200,
+  ) {
+    return res.status(statusCode).json({
+      success: true,
+      message,
+      data,
+      meta,
+    });
+  }
+
   static error(
     res: Response,
     message: string,
-    errors: unknown = null,
+    error: unknown = null,
     statusCode = 400,
   ) {
     return res.status(statusCode).json({
       success: false,
       message,
-      errors,
+      error,
     });
   }
 }

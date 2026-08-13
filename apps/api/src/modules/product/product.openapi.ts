@@ -1,6 +1,6 @@
 import {
   createErrorResponseSchema,
-  createSuccessResponseSchema,
+  createPaginatedResponseSchema,
   registry,
 } from "@/config/openapi-registry";
 import { z } from "zod";
@@ -18,16 +18,34 @@ export const ProductSchema = z
 registry.registerPath({
   method: "get",
   path: "/api/v1/products",
-  summary: "Mengambil Katalog Produk & Jasa Merchant",
+  summary:
+    "Mengambil Katalog Produk & Jasa Merchant (dengan Filter & Paginasi)",
   tags: ["Products"],
   security: [{ TenantHeader: [] }],
+  request: {
+    query: z.object({
+      page: z
+        .string()
+        .optional()
+        .openapi({ example: "1", description: "Nomor halaman (default: 1)" }),
+      limit: z.string().optional().openapi({
+        example: "10",
+        description: "Jumlah item per halaman (default: 10)",
+      }),
+      search: z.string().optional().openapi({
+        example: "Kaos",
+        description: "Filter pencarian nama produk",
+      }),
+    }),
+  },
   responses: {
     200: {
-      description: "200 OK — Katalog produk berhasil diambil",
+      description:
+        "200 OK — Katalog produk berhasil diambil dengan objek metadata paginasi",
       content: {
         "application/json": {
-          schema: createSuccessResponseSchema(
-            z.array(ProductSchema),
+          schema: createPaginatedResponseSchema(
+            ProductSchema,
             "Berhasil mengambil katalog produk",
           ),
         },
