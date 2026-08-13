@@ -18,6 +18,13 @@ export interface CreateTransactionInput {
   items: CreateTransactionItemInput[];
 }
 
+export interface TransactionFilterQuery extends PaginationQuery {
+  startDate?: string;
+  endDate?: string;
+  paymentMethod?: string;
+  status?: string;
+}
+
 export class TransactionService {
   static async createTransaction(
     tenantId: string,
@@ -114,15 +121,34 @@ export class TransactionService {
     }
   }
 
-  static async getTransactions(tenantId: string, query: PaginationQuery = {}) {
-    const { page, limit, skip, search } = parsePaginationParams(query);
+  static async getTransactions(
+    tenantId: string,
+    query: TransactionFilterQuery = {},
+  ) {
+    const { page, limit, skip, search, sortBy, sortOrder } =
+      parsePaginationParams(query);
+    const { startDate, endDate, paymentMethod, status } = query;
 
     try {
+      const dateFilter =
+        startDate || endDate
+          ? {
+              createdAt: {
+                ...(startDate ? { gte: new Date(startDate) } : {}),
+                ...(endDate ? { lte: new Date(endDate) } : {}),
+              },
+            }
+          : {};
+
       const whereClause = {
         tenantId,
+        ...dateFilter,
+        ...(paymentMethod ? { paymentMethod } : {}),
+        ...(status ? { status } : {}),
         ...(search
           ? {
               OR: [
+                { id: { contains: search, mode: "insensitive" as const } },
                 {
                   customerName: {
                     contains: search,
@@ -146,7 +172,7 @@ export class TransactionService {
           include: { items: true },
           skip,
           take: limit,
-          orderBy: { createdAt: "desc" },
+          orderBy: { [sortBy]: sortOrder },
         }),
         db.transaction.count({ where: whereClause }),
       ]);
@@ -163,7 +189,7 @@ export class TransactionService {
           paymentMethod: "cash",
           totalAmount: 105000,
           status: "completed",
-          createdAt: new Date(),
+          createdAt: new Date("2026-08-13T10:00:00.000Z"),
           items: [
             {
               productId: "p1",
@@ -181,15 +207,45 @@ export class TransactionService {
             },
           ],
         },
+        {
+          id: "trx-1723456790",
+          tenantId,
+          customerName: "Siti",
+          customerPhone: "081987654321",
+          paymentMethod: "qris",
+          totalAmount: 145000,
+          status: "completed",
+          createdAt: new Date("2026-08-12T15:30:00.000Z"),
+          items: [
+            {
+              productId: "p2",
+              productName: "Kemeja Flanel Premium",
+              price: 145000,
+              qty: 1,
+              subtotal: 145000,
+            },
+          ],
+        },
       ];
 
-      const filtered = search
-        ? demoTransactions.filter(
-            (t) =>
-              t.customerName.toLowerCase().includes(search.toLowerCase()) ||
-              (t.customerPhone?.includes(search) ?? false),
-          )
-        : demoTransactions;
+      let filtered = demoTransactions;
+
+      if (paymentMethod) {
+        filtered = filtered.filter((t) => t.paymentMethod === paymentMethod);
+      }
+
+      if (status) {
+        filtered = filtered.filter((t) => t.status === status);
+      }
+
+      if (search) {
+        filtered = filtered.filter(
+          (t) =>
+            t.customerName.toLowerCase().includes(search.toLowerCase()) ||
+            t.id.toLowerCase().includes(search.toLowerCase()) ||
+            (t.customerPhone?.includes(search) ?? false),
+        );
+      }
 
       const paginated = filtered.slice(skip, skip + limit);
       const meta = createPaginationMeta(page, limit, filtered.length);

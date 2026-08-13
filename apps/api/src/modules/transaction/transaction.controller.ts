@@ -41,7 +41,17 @@ export class TransactionController {
   static async getTransactions(req: AuthenticatedRequest, res: Response) {
     try {
       const tenantId = req.tenantId || "demo-tenant-01";
-      const { page, limit, search, sortBy, sortOrder } = req.query;
+      const {
+        page,
+        limit,
+        search,
+        sortBy,
+        sortOrder,
+        startDate,
+        endDate,
+        paymentMethod,
+        status,
+      } = req.query;
 
       const { data, meta } = await TransactionService.getTransactions(
         tenantId,
@@ -51,6 +61,10 @@ export class TransactionController {
           search: search as string,
           sortBy: sortBy as string,
           sortOrder: sortOrder as "asc" | "desc",
+          startDate: startDate as string,
+          endDate: endDate as string,
+          paymentMethod: paymentMethod as string,
+          status: status as string,
         },
       );
 

@@ -44,4 +44,16 @@ describe("TransactionService Unit Tests", () => {
     expect(result.meta.page).toBe(1);
     expect(result.meta).toHaveProperty("totalItems");
   });
+
+  it("should filter transactions by paymentMethod and date range", async () => {
+    const result = await TransactionService.getTransactions("demo-tenant-01", {
+      paymentMethod: "cash",
+      startDate: "2026-08-01",
+      endDate: "2026-08-31",
+    });
+
+    expect(result).toBeDefined();
+    expect(result.data.length).toBeGreaterThan(0);
+    expect(result.data[0].paymentMethod).toBe("cash");
+  });
 });
