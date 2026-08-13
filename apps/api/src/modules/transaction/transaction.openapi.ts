@@ -1,5 +1,5 @@
+import { ErrorResponseSchema, registry } from "@/config/openapi-registry";
 import { z } from "zod";
-import { ErrorResponseSchema, registry } from "../../config/openapi-registry";
 
 export const CreateTransactionSchema = z
   .object({

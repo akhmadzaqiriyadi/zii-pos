@@ -36,12 +36,12 @@ app.get("/docs.json", (_req, res) => {
   res.send(getSwaggerSpec());
 });
 
-// Dynamic Scalar API Reference (Interactive OpenAPI UI)
+// Dynamic Scalar API Reference (Fetches OpenAPI Spec via /docs.json)
 app.use(
   "/docs",
   apiReference({
     spec: {
-      content: () => getSwaggerSpec(),
+      url: "/docs.json",
     },
     theme: "purple",
   }),

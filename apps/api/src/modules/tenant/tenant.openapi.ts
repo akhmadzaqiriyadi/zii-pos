@@ -1,5 +1,5 @@
+import { ErrorResponseSchema, registry } from "@/config/openapi-registry";
 import { z } from "zod";
-import { ErrorResponseSchema, registry } from "../../config/openapi-registry";
 
 export const UpdateTenantProfileSchema = z
   .object({
@@ -13,9 +13,12 @@ export const UpdateTenantProfileSchema = z
       .string()
       .optional()
       .openapi({ example: "Jl. Sudirman No. 10, Jakarta" }),
-    receiptFooter: z.string().optional().openapi({
-      example: "Garansi resmi 30 hari. Syarat & Ketentuan berlaku.",
-    }),
+    receiptFooter: z
+      .string()
+      .optional()
+      .openapi({
+        example: "Garansi resmi 30 hari. Syarat & Ketentuan berlaku.",
+      }),
   })
   .openapi("UpdateTenantInput");
 

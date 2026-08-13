@@ -1,7 +1,5 @@
-import { getOpenApiDocumentation } from "./openapi-registry";
+import { getOpenApiDocumentation } from "@/config/openapi-registry";
 
 export function getSwaggerSpec() {
   return getOpenApiDocumentation();
 }
-
-export const swaggerSpec = getSwaggerSpec();

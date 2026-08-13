@@ -1,5 +1,5 @@
+import { ErrorResponseSchema, registry } from "@/config/openapi-registry";
 import { z } from "zod";
-import { ErrorResponseSchema, registry } from "../../config/openapi-registry";
 
 export const RegisterTenantBodySchema = z
   .object({
@@ -22,7 +22,6 @@ export const LoginBodySchema = z
   })
   .openapi("LoginInput");
 
-// Auto-Register OpenAPI Paths for Auth
 registry.registerPath({
   method: "post",
   path: "/api/v1/auth/register-tenant",
@@ -48,9 +47,11 @@ registry.registerPath({
               .string()
               .openapi({ example: "Pendaftaran Merchant ZII POS berhasil!" }),
             data: z.object({
-              token: z.string().openapi({
-                example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-              }),
+              token: z
+                .string()
+                .openapi({
+                  example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+                }),
               tenant: z.object({ id: z.string(), name: z.string() }),
               user: z.object({
                 id: z.string(),
@@ -97,9 +98,11 @@ registry.registerPath({
             success: z.boolean().openapi({ example: true }),
             message: z.string().openapi({ example: "Login berhasil!" }),
             data: z.object({
-              token: z.string().openapi({
-                example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-              }),
+              token: z
+                .string()
+                .openapi({
+                  example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+                }),
             }),
           }),
         },
