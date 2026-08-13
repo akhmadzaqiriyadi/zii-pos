@@ -158,12 +158,13 @@ CREATE TABLE transaction_items (
 
 ## 5. Execution Plan & Task Breakdown (Sprint 1: 1 Minggu)
 
-### 👨‍💻 Zaqi (PM Engineer & Integration Lead)
+### 👨‍💻 Zaqi (PM Engineer & Backend Lead)
 - [x] Setup Monorepo Bun Workspaces & Directory Structure.
 - [x] Setup Database Schema Prisma ORM 5 Tabel.
 - [x] Implementasi Scalar API Reference Documentation (`/docs`) & Pino Logger.
-- [ ] Selesaikan Komponen & Helper Cetak Struk Thermal (Browser / Web Bluetooth Print).
-- [ ] Integrasi WhatsApp Gateway API (Fonnte/Wablas) untuk pengiriman Struk WA otomatis.
+- [ ] Implementasi Backend Auth (`POST /api/v1/auth/register-tenant` & `POST /api/v1/auth/login`).
+- [ ] Implementasi Middleware Multi-Tenant (`x-tenant-id`) & Tenant Settings Profile API.
+- [ ] Implementasi CRUD API Products & Transactions DB Persistence.
 
 ### 🎨 Isyadi (Frontend Lead)
 - [x] Setup Project Next.js 16 + Custom Radix UI Primitives + Tailwind CSS.
@@ -172,10 +173,11 @@ CREATE TABLE transaction_items (
 - [x] Selesaikan Structure Modular Feature-Driven (`features/pos`, `features/products`, `features/settings`).
 - [ ] Integrasi SWR / React Query untuk fetch data dari Express API.
 
-### ⚡ Ilham (Fullstack & Backend Lead)
-- [ ] Implementasi Backend Auth (`POST /api/v1/auth/register-tenant` & `POST /api/v1/auth/login`).
-- [ ] Implementasi Middleware Multi-Tenant (`x-tenant-id`) & Tenant Settings Profile API.
-- [ ] Implementasi CRUD API Products & Transactions DB Persistence.
+### ⚡ Ilham (Fullstack & Integration Lead)
+- [x] Selesaikan Komponen Struk Cetak Thermal (HTML Print Layout + CSS Thermal Size 58mm/80mm).
+- [x] Selesaikan Preview Modal Struk Thermal & WhatsApp.
+- [ ] Selesaikan Komponen & Helper Cetak Struk Thermal (Browser / Web Bluetooth Print).
+- [ ] Integrasi WhatsApp Gateway API (Fonnte/Wablas) untuk pengiriman Struk WA otomatis.
 
 ---
 

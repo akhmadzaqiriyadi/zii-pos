@@ -13,8 +13,8 @@ Dokumen ini adalah **Panduan Resmi Git & Push** untuk developer tim ZII (**Zaqi,
 
 ### Contoh Penamaan Branch:
 * `feature/pos-cart-ui` (Tugas Isyadi)
-* `feature/receipt-wa-print` (Tugas Zaqi)
-* `feature/auth-tenant-api` (Tugas Ilham)
+* `feature/auth-tenant-api` (Tugas Zaqi)
+* `feature/receipt-wa-print` (Tugas Ilham)
 * `fix/product-stock-reduction`
 
 ---

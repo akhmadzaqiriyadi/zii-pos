@@ -91,6 +91,6 @@ bun dev
 
 ## 🤝 Foundational Engineering Team
 
-* **Zaqi** — PM Engineer & Integration Lead
+* **Zaqi** — PM Engineer & Backend Lead
 * **Isyadi** — Frontend Lead
-* **Ilham** — Fullstack & Backend Lead
+* **Ilham** — Fullstack & Integration Lead
