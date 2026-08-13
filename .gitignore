@@ -1,0 +1,25 @@
+# Node & Bun
+node_modules
+.bun
+bun.lock
+
+# Next.js
+apps/web/.next
+apps/web/out
+
+# Build
+dist
+build
+
+# Environment
+.env
+.env.local
+.env.production
+
+# IDE
+.vscode
+.idea
+*.swp
+
+# OS
+.DS_Store

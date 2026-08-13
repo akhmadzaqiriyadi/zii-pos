@@ -1,0 +1,29 @@
+{
+  "name": "@zii/api",
+  "version": "1.0.0",
+  "private": true,
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "bun --watch src/index.ts",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@zii/db": "workspace:*",
+    "@zii/types": "workspace:*",
+    "@scalar/express-api-reference": "latest",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "pino": "^9.6.0",
+    "pino-http": "^10.4.0",
+    "swagger-jsdoc": "^6.2.8"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.13.4",
+    "@types/swagger-jsdoc": "^6.0.4",
+    "pino-pretty": "^13.0.0",
+    "typescript": "^5.7.3"
+  }
+}

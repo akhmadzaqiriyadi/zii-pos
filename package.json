@@ -1,0 +1,21 @@
+{
+  "name": "zii-pos-monorepo",
+  "version": "1.0.0-mvp",
+  "private": true,
+  "workspaces": ["apps/*", "packages/*"],
+  "scripts": {
+    "dev": "bun --filter '*' dev",
+    "build": "bun --filter '*' build",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "prettier --write \"**/*.{ts,tsx,json,md}\"",
+    "db:push": "bun --filter '@zii/db' db:push",
+    "db:generate": "bun --filter '@zii/db' db:generate"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "@types/bun": "^1.2.4",
+    "prettier": "^3.5.1",
+    "typescript": "^5.7.3"
+  }
+}
