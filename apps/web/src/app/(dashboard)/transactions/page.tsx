@@ -32,6 +32,8 @@ import {
   TableHeader,
   TableRow,
 } from "../../../components/ui/table";
+import { TransactionDetailModal } from "../../../features/transactions/components/TransactionDetailModal";
+import { TransactionMetricCards } from "../../../features/transactions/components/TransactionMetricCards";
 import { useTransactionsDashboard } from "../../../features/transactions/hooks/useTransactionsDashboard";
 import { formatRupiah } from "../../../lib/utils";
 
@@ -71,58 +73,7 @@ export default function TransactionsPage() {
         </header>
 
         {/* Metric Summary Cards */}
-        <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <Card className="p-5 border-emerald-200 bg-emerald-50/50">
-            <CardContent className="p-0 space-y-1">
-              <div className="flex items-center justify-between text-slate-500 text-xs font-bold">
-                <span>TOTAL OMSET PENJUALAN</span>
-                <Receipt className="h-4 w-4 text-emerald-600" />
-              </div>
-              <p className="text-2xl font-extrabold text-emerald-700">
-                {formatRupiah(summary.totalRevenue)}
-              </p>
-              <p className="text-[11px] text-slate-500 font-medium">
-                {summary.transactionCount} Transaksi Berhasil
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="p-5 border-slate-200">
-            <CardContent className="p-0 space-y-1">
-              <div className="flex items-center justify-between text-slate-500 text-xs font-bold">
-                <span>PEMBAYARAN TUNAI</span>
-                <Banknote className="h-4 w-4 text-emerald-600" />
-              </div>
-              <p className="text-xl font-bold text-slate-900">
-                {formatRupiah(summary.cashTotal)}
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="p-5 border-slate-200">
-            <CardContent className="p-0 space-y-1">
-              <div className="flex items-center justify-between text-slate-500 text-xs font-bold">
-                <span>PEMBAYARAN QRIS</span>
-                <QrCode className="h-4 w-4 text-blue-600" />
-              </div>
-              <p className="text-xl font-bold text-slate-900">
-                {formatRupiah(summary.qrisTotal)}
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="p-5 border-slate-200">
-            <CardContent className="p-0 space-y-1">
-              <div className="flex items-center justify-between text-slate-500 text-xs font-bold">
-                <span>PEMBAYARAN TRANSFER</span>
-                <CreditCard className="h-4 w-4 text-purple-600" />
-              </div>
-              <p className="text-xl font-bold text-slate-900">
-                {formatRupiah(summary.transferTotal)}
-              </p>
-            </CardContent>
-          </Card>
-        </section>
+        <TransactionMetricCards summary={summary} />
 
         {/* Transactions Table & Filters */}
         <Card className="p-4 sm:p-6 space-y-5 rounded-2xl border border-slate-200">
@@ -254,81 +205,10 @@ export default function TransactionsPage() {
         </Card>
 
         {/* Modal Detail Item Transaksi */}
-        <Dialog
-          open={!!selectedTransaction}
-          onOpenChange={(open) => !open && setSelectedTransaction(null)}
-        >
-          <DialogContent className="max-w-md p-6">
-            <DialogHeader className="mb-4">
-              <DialogTitle className="text-lg font-bold text-slate-900 flex items-center gap-2">
-                <Receipt className="h-5 w-5 text-emerald-600" />
-                <span>Detail Transaksi #{selectedTransaction?.id}</span>
-              </DialogTitle>
-            </DialogHeader>
-
-            {selectedTransaction && (
-              <div className="space-y-4 text-xs text-slate-700 font-sans">
-                <div className="rounded-xl bg-slate-50 p-3.5 border border-slate-200 space-y-1.5">
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">Pelanggan:</span>
-                    <span className="font-bold text-slate-800">
-                      {selectedTransaction.customerName || "Umum"}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">Metode Bayar:</span>
-                    <span className="font-bold uppercase text-emerald-600">
-                      {selectedTransaction.paymentMethod}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">Waktu:</span>
-                    <span>
-                      {new Date(selectedTransaction.createdAt).toLocaleString(
-                        "id-ID",
-                      )}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <span className="font-bold text-slate-800 block text-xs">
-                    Daftar Item Belanja:
-                  </span>
-                  <div className="divide-y divide-slate-100 border rounded-xl p-3 bg-white">
-                    {selectedTransaction.items?.map((item) => (
-                      <div
-                        key={item.id || item.productId}
-                        className="py-1.5 flex justify-between items-center"
-                      >
-                        <div>
-                          <p className="font-bold text-slate-800">
-                            {item.productName}
-                          </p>
-                          <p className="text-[10px] text-slate-400">
-                            {item.qty}x @ {formatRupiah(Number(item.price))}
-                          </p>
-                        </div>
-                        <span className="font-extrabold text-slate-900">
-                          {formatRupiah(Number(item.subtotal))}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="pt-2 border-t border-slate-200 flex justify-between items-center">
-                  <span className="font-bold text-slate-700">
-                    TOTAL BELANJA
-                  </span>
-                  <span className="text-lg font-extrabold text-emerald-600">
-                    {formatRupiah(Number(selectedTransaction.totalAmount))}
-                  </span>
-                </div>
-              </div>
-            )}
-          </DialogContent>
-        </Dialog>
+        <TransactionDetailModal
+          transaction={selectedTransaction}
+          onClose={() => setSelectedTransaction(null)}
+        />
       </main>
     </DashboardLayout>
   );
