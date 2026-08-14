@@ -1,4 +1,4 @@
-import { CheckCircle2, Bluetooth, Laptop, Printer, RefreshCw, Usb, XCircle } from "lucide-react";
+import { Bluetooth, Printer, RefreshCw, Usb } from "lucide-react";
 import { Button } from "../../../components/ui/button";
 import {
   Dialog,
@@ -7,6 +7,8 @@ import {
   DialogTitle,
 } from "../../../components/ui/dialog";
 import type { PrinterConnectionType, PrinterStatus } from "../hooks/useThermalPrinter";
+import { PrinterModeSelector } from "./PrinterModeSelector";
+import { PrinterStatusCard } from "./PrinterStatusCard";
 
 interface PrinterSettingsModalProps {
   isOpen: boolean;
@@ -48,123 +50,13 @@ export function PrinterSettingsModal({
 
         <div className="space-y-5 text-xs text-slate-700 font-sans">
           {/* Connection Status Card */}
-          <div
-            className={`rounded-2xl p-4 border flex items-center justify-between ${
-              isConnected
-                ? "bg-emerald-50/60 border-emerald-200 text-emerald-900"
-                : isConnecting
-                  ? "bg-amber-50/60 border-amber-200 text-amber-900"
-                  : "bg-slate-50 border-slate-200 text-slate-700"
-            }`}
-          >
-            <div className="flex items-center gap-3">
-              <div className="relative flex h-3 w-3">
-                {isConnected && (
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                )}
-                <span
-                  className={`relative inline-flex rounded-full h-3 w-3 ${
-                    isConnected
-                      ? "bg-emerald-500"
-                      : isConnecting
-                        ? "bg-amber-500 animate-pulse"
-                        : "bg-slate-400"
-                  }`}
-                />
-              </div>
-
-              <div>
-                <p className="font-extrabold text-sm leading-tight">
-                  {isConnected
-                    ? "Printer Terhubung & Siap"
-                    : isConnecting
-                      ? "Menghubungkan Printer..."
-                      : "Printer Terputus"}
-                </p>
-                <p className="text-[11px] opacity-75 mt-0.5 font-medium">
-                  {deviceName}
-                </p>
-              </div>
-            </div>
-
-            {isConnected ? (
-              <CheckCircle2 className="h-6 w-6 text-emerald-600 shrink-0" />
-            ) : (
-              <XCircle className="h-6 w-6 text-slate-400 shrink-0" />
-            )}
-          </div>
+          <PrinterStatusCard status={status} deviceName={deviceName} />
 
           {/* Printer Mode Selection */}
-          <div className="space-y-2">
-            <label className="block text-xs font-bold text-slate-800">
-              Pilih Arsitektur Koneksi Printer:
-            </label>
-
-            <div className="grid grid-cols-1 gap-2.5">
-              {/* Option 1: Direct USB WebSerial (Recommended for USB on Mac - No Driver Needed) */}
-              <button
-                type="button"
-                onClick={() => onSetMode("web_usb")}
-                className={`flex items-start gap-3 p-3.5 rounded-xl border text-left transition cursor-pointer ${
-                  connectionType === "web_usb"
-                    ? "border-emerald-500 bg-emerald-50/30 ring-2 ring-emerald-500/20"
-                    : "border-slate-200 hover:border-slate-300 bg-white"
-                }`}
-              >
-                <Usb className="h-5 w-5 text-emerald-600 shrink-0 mt-0.5" />
-                <div>
-                  <span className="font-bold text-slate-900 block text-xs">
-                    Direct USB WebSerial (Bypass Driver macOS)
-                  </span>
-                  <span className="text-[11px] text-slate-500 block leading-normal mt-0.5">
-                    Chrome langsung mengirim byte ESC/POS ke kabel USB. 100% Bebas driver Mac & Bebas kodingan XML!
-                  </span>
-                </div>
-              </button>
-
-              {/* Option 2: Browser System Driver (CUPS Driver) */}
-              <button
-                type="button"
-                onClick={() => onSetMode("browser_driver")}
-                className={`flex items-start gap-3 p-3.5 rounded-xl border text-left transition cursor-pointer ${
-                  connectionType === "browser_driver"
-                    ? "border-emerald-500 bg-emerald-50/30 ring-2 ring-emerald-500/20"
-                    : "border-slate-200 hover:border-slate-300 bg-white"
-                }`}
-              >
-                <Laptop className="h-5 w-5 text-slate-600 shrink-0 mt-0.5" />
-                <div>
-                  <span className="font-bold text-slate-900 block text-xs">
-                    Browser System Driver (CUPS 58mm)
-                  </span>
-                  <span className="text-[11px] text-slate-500 block leading-normal mt-0.5">
-                    Mencetak via dialog sistem Mac OS jika driver CUPS thermal sudah terpasang.
-                  </span>
-                </div>
-              </button>
-
-              {/* Option 3: Web Bluetooth Direct ESC/POS */}
-              <button
-                type="button"
-                onClick={() => onSetMode("web_bluetooth")}
-                className={`flex items-start gap-3 p-3.5 rounded-xl border text-left transition cursor-pointer ${
-                  connectionType === "web_bluetooth"
-                    ? "border-emerald-500 bg-emerald-50/30 ring-2 ring-emerald-500/20"
-                    : "border-slate-200 hover:border-slate-300 bg-white"
-                }`}
-              >
-                <Bluetooth className="h-5 w-5 text-blue-600 shrink-0 mt-0.5" />
-                <div>
-                  <span className="font-bold text-slate-900 block text-xs">
-                    Direct Bluetooth ESC/POS (POS-V29DD)
-                  </span>
-                  <span className="text-[11px] text-slate-500 block leading-normal mt-0.5">
-                    Koneksi Bluetooth nirkabel langsung dari Chrome untuk pengiriman byte ESC/POS tanpa kabel.
-                  </span>
-                </div>
-              </button>
-            </div>
-          </div>
+          <PrinterModeSelector
+            connectionType={connectionType}
+            onSetMode={onSetMode}
+          />
 
           {/* Action Buttons */}
           <div className="space-y-2 pt-2 border-t border-slate-100">
