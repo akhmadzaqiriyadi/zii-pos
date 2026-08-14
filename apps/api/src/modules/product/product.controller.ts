@@ -46,4 +46,60 @@ export class ProductController {
       );
     }
   }
+
+  static async createProduct(req: AuthenticatedRequest, res: Response) {
+    try {
+      const tenantId = req.tenantId || "demo-tenant-01";
+      const product = await ProductService.createProduct(tenantId, req.body);
+      return ApiResponse.success(
+        res,
+        "Berhasil menambahkan produk baru",
+        product,
+        201,
+      );
+    } catch (error: unknown) {
+      return ApiResponse.error(
+        res,
+        "Gagal menambahkan produk baru",
+        error,
+        400,
+      );
+    }
+  }
+
+  static async updateProduct(req: AuthenticatedRequest, res: Response) {
+    try {
+      const tenantId = req.tenantId || "demo-tenant-01";
+      const id = req.params.id as string;
+      const product = await ProductService.updateProduct(
+        tenantId,
+        id,
+        req.body,
+      );
+      return ApiResponse.success(
+        res,
+        "Berhasil memperbarui data produk",
+        product,
+        200,
+      );
+    } catch (error: unknown) {
+      return ApiResponse.error(
+        res,
+        "Gagal memperbarui data produk",
+        error,
+        400,
+      );
+    }
+  }
+
+  static async deleteProduct(req: AuthenticatedRequest, res: Response) {
+    try {
+      const tenantId = req.tenantId || "demo-tenant-01";
+      const id = req.params.id as string;
+      await ProductService.deleteProduct(tenantId, id);
+      return ApiResponse.success(res, "Berhasil menghapus produk", { id }, 200);
+    } catch (error: unknown) {
+      return ApiResponse.error(res, "Gagal menghapus produk", error, 400);
+    }
+  }
 }

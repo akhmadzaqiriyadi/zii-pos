@@ -16,23 +16,10 @@ export function useProductMutations() {
 
   const createMutation = useMutation<Product, Error, ProductFormInput>({
     mutationFn: async (data: ProductFormInput) => {
-      try {
-        return await fetchApi<Product>("/api/v1/products", {
-          method: "POST",
-          body: JSON.stringify(data),
-        });
-      } catch {
-        // Fallback for UI optimistic preview if backend route is not ready
-        return {
-          id: `p-${Date.now()}`,
-          tenantId: "demo-tenant-01",
-          name: data.name,
-          price: data.price,
-          stock: data.isService ? 999 : data.stock,
-          isService: data.isService,
-          createdAt: new Date(),
-        };
-      }
+      return await fetchApi<Product>("/api/v1/products", {
+        method: "POST",
+        body: JSON.stringify(data),
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["products"] });
@@ -45,23 +32,21 @@ export function useProductMutations() {
     { id: string; data: ProductFormInput }
   >({
     mutationFn: async ({ id, data }) => {
-      try {
-        return await fetchApi<Product>(`/api/v1/products/${id}`, {
-          method: "PUT",
-          body: JSON.stringify(data),
-        });
-      } catch {
-        // Fallback for UI optimistic preview if backend route is not ready
-        return {
-          id,
-          tenantId: "demo-tenant-01",
-          name: data.name,
-          price: data.price,
-          stock: data.isService ? 999 : data.stock,
-          isService: data.isService,
-          createdAt: new Date(),
-        };
-      }
+      return await fetchApi<Product>(`/api/v1/products/${id}`, {
+        method: "PUT",
+        body: JSON.stringify(data),
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+    },
+  });
+
+  const deleteMutation = useMutation<{ id: string }, Error, string>({
+    mutationFn: async (id: string) => {
+      return await fetchApi<{ id: string }>(`/api/v1/products/${id}`, {
+        method: "DELETE",
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["products"] });
@@ -71,5 +56,6 @@ export function useProductMutations() {
   return {
     createMutation,
     updateMutation,
+    deleteMutation,
   };
 }
