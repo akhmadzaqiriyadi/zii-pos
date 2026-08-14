@@ -1,3 +1,5 @@
+"use client";
+
 import type { TransactionItem } from "@zii/types";
 import { CheckCircle2, Printer, Send } from "lucide-react";
 import { Button } from "../../../components/ui/button";
@@ -25,6 +27,8 @@ interface ReceiptModalProps {
   totalAmount: number;
   customerPhone: string;
   onReset: () => void;
+  onPrintThermal?: () => void;
+  onSendWhatsApp?: () => void;
 }
 
 export function ReceiptModal({
@@ -36,7 +40,28 @@ export function ReceiptModal({
   totalAmount,
   customerPhone,
   onReset,
+  onPrintThermal,
+  onSendWhatsApp,
 }: ReceiptModalProps) {
+  const handlePrint = () => {
+    if (onPrintThermal) {
+      onPrintThermal();
+    } else {
+      window.print();
+    }
+  };
+
+  const handleSendWA = () => {
+    if (onSendWhatsApp) {
+      onSendWhatsApp();
+    } else if (customerPhone) {
+      const text = encodeURIComponent(
+        `Struk Belanja ${merchant.name}\nTotal: ${formatRupiah(totalAmount)}\nTerima Kasih!`,
+      );
+      window.open(`https://wa.me/${customerPhone}?text=${text}`, "_blank");
+    }
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-sm">
@@ -50,12 +75,12 @@ export function ReceiptModal({
           </p>
         </DialogHeader>
 
-        <div className="rounded-xl border border-dashed border-slate-300 bg-amber-50/50 p-4 font-mono text-[11px] text-slate-700 space-y-2 my-2">
-          <div className="text-center border-b border-dashed border-slate-300 pb-2">
-            <p className="font-bold text-slate-900">{merchant.name}</p>
+        <section className="rounded-xl border border-dashed border-slate-300 bg-amber-50/50 p-4 font-mono text-[11px] text-slate-700 space-y-2 my-2">
+          <header className="text-center border-b border-dashed border-slate-300 pb-2">
+            <h4 className="font-bold text-slate-900">{merchant.name}</h4>
             <p className="text-[10px] text-slate-500">{merchant.address}</p>
             <p className="text-[10px] text-slate-500">Tel: {merchant.phone}</p>
-          </div>
+          </header>
 
           <div className="space-y-1">
             {cart.map((item) => (
@@ -68,30 +93,28 @@ export function ReceiptModal({
             ))}
           </div>
 
-          <div className="border-t border-dashed border-slate-300 pt-2 flex justify-between font-bold text-slate-900">
+          <footer className="border-t border-dashed border-slate-300 pt-2 flex justify-between font-bold text-slate-900">
             <span>TOTAL ({paymentMethod.toUpperCase()})</span>
             <span>{formatRupiah(totalAmount)}</span>
-          </div>
+          </footer>
 
           <div className="text-center text-[9px] text-slate-500 pt-2 border-t border-dashed border-slate-300">
             {merchant.receiptFooter}
           </div>
-        </div>
+        </section>
 
         <div className="flex space-x-2">
           <Button
             variant="outline"
-            onClick={() => alert("Fitur Cetak Struk Thermal dipicu!")}
+            onClick={handlePrint}
             className="flex-1 text-xs"
           >
             <Printer className="h-4 w-4" />
-            <span>Cetak Thermal</span>
+            <span>Cetak Struk</span>
           </Button>
           <Button
             variant="primary"
-            onClick={() =>
-              alert(`Struk WA terkirim ke ${customerPhone || "Nomor WA"}!`)
-            }
+            onClick={handleSendWA}
             className="flex-1 text-xs"
           >
             <Send className="h-4 w-4" />

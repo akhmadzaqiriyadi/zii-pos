@@ -1,79 +1,46 @@
 "use client";
 
 import { ChevronRight, PanelRightOpen, ShoppingCart } from "lucide-react";
-import { useState } from "react";
 import { DashboardLayout } from "../../../components/layout/dashboard-layout";
-import { useAuth } from "../../../features/auth/hooks/useAuth";
 import { CartSidebar } from "../../../features/pos/components/CartSidebar";
 import { PaymentModal } from "../../../features/pos/components/PaymentModal";
 import { ProductGrid } from "../../../features/pos/components/ProductGrid";
 import { ReceiptModal } from "../../../features/pos/components/ReceiptModal";
-import { useCart } from "../../../features/pos/hooks/useCart";
-import { usePosProducts } from "../../../features/pos/hooks/usePosProducts";
+import { usePosDashboard } from "../../../features/pos/hooks/usePosDashboard";
 import { formatRupiah } from "../../../lib/utils";
 
 export default function POSDashboardPage() {
-  const { tenant } = useAuth();
-  const [search, setSearch] = useState("");
-  const [filterType, setFilterType] = useState("all");
-  const [customerName, setCustomerName] = useState("");
-  const [customerPhone, setCustomerPhone] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState<
-    "cash" | "qris" | "transfer"
-  >("cash");
-
-  const [isCartOpen, setIsCartOpen] = useState(false);
-  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
-  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
-
-  const { products, totalCount, isLoading } = usePosProducts(
-    search,
-    filterType,
-  );
-
   const {
+    search,
+    setSearch,
+    filterType,
+    setFilterType,
+    customerName,
+    setCustomerName,
+    customerPhone,
+    setCustomerPhone,
+    paymentMethod,
+    setPaymentMethod,
+    isCartOpen,
+    setIsCartOpen,
+    isPaymentModalOpen,
+    setIsPaymentModalOpen,
+    isSuccessModalOpen,
+    setIsSuccessModalOpen,
+    products,
+    totalCount,
+    isLoading,
     cart,
-    addToCart: rawAddToCart,
     updateQty,
     removeFromCart,
-    clearCart,
     totalAmount,
     totalQty,
-  } = useCart();
-
-  const handleAddToCart = (product: Parameters<typeof rawAddToCart>[0]) => {
-    rawAddToCart(product);
-    if (!isCartOpen) {
-      setIsCartOpen(true);
-    }
-  };
-
-  const merchant = {
-    name: tenant?.name || "ZII Distro & Laundry Studio",
-    phone: tenant?.phone || "0812-9988-7766",
-    address: tenant?.address || "Jl. Merdeka Raya No. 45, Jakarta",
-    receiptFooter: tenant?.phone
-      ? `Hubungi kami: ${tenant.phone}`
-      : "Terima kasih telah berbelanja di ZII Store! Simpan nota ini sebagai bukti garansi.",
-  };
-
-  const handleOpenPaymentModal = () => {
-    if (cart.length === 0) return;
-    setIsPaymentModalOpen(true);
-  };
-
-  const handleSuccessTransaction = () => {
-    setIsPaymentModalOpen(false);
-    setIsSuccessModalOpen(true);
-  };
-
-  const handleResetCart = () => {
-    clearCart();
-    setCustomerName("");
-    setCustomerPhone("");
-    setIsSuccessModalOpen(false);
-    setIsCartOpen(false);
-  };
+    handleAddToCart,
+    merchant,
+    handleOpenPaymentModal,
+    handleSuccessTransaction,
+    handleResetCart,
+  } = usePosDashboard();
 
   return (
     <DashboardLayout>
@@ -81,7 +48,7 @@ export default function POSDashboardPage() {
         {/* Catalog Area (Left Side) — Dynamically expands when cart is collapsed */}
         <div className="flex flex-1 flex-col min-w-0 h-full overflow-hidden transition-all duration-300">
           <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
               <div>
                 <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 leading-tight">
                   Katalog Produk & Jasa Kasir
@@ -107,7 +74,7 @@ export default function POSDashboardPage() {
                   </button>
                 )}
               </div>
-            </div>
+            </header>
 
             <ProductGrid
               products={products}
