@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
-export type PrinterConnectionType = "browser_driver" | "web_bluetooth";
+export type PrinterConnectionType = "browser_driver" | "web_bluetooth" | "web_usb";
 export type PrinterStatus = "connected" | "disconnected" | "connecting";
 
 export interface ThermalPrinterState {
@@ -44,6 +44,10 @@ export function useThermalPrinter() {
         localStorage.setItem("zii_printer_name", "Printer 58mm (System Driver)");
       }
       toast.success("Mode Printer diubah ke Browser System Driver 58mm");
+    } else if (type === "web_usb") {
+      setStatus("disconnected");
+      setDeviceName("STMicroelectronics USB Printer");
+      toast.info("Mode Printer diubah ke Direct USB ESC/POS (POS-V29DD)");
     } else {
       setStatus("disconnected");
       setDeviceName("POS-V29DD Bluetooth");
@@ -90,6 +94,54 @@ export function useThermalPrinter() {
     }
   };
 
+  const connectUsb = async (rawReceiptText?: string) => {
+    if (typeof window === "undefined" || (!("serial" in navigator) && !("usb" in navigator))) {
+      toast.error("Browser ini tidak mendukung Direct USB WebSerial. Gunakan Google Chrome!");
+      return;
+    }
+
+    try {
+      setStatus("connecting");
+      toast.info("Membuka port printer USB POS-V29DD...");
+
+      const port = await (navigator as any).serial.requestPort();
+      await port.open({ baudRate: 9600 });
+
+      const connectedName = "STMicroelectronics USB Printer";
+      setDeviceName(connectedName);
+      setConnectionType("web_usb");
+      setStatus("connected");
+
+      if (typeof window !== "undefined") {
+        localStorage.setItem("zii_printer_name", connectedName);
+        localStorage.setItem("zii_printer_type", "web_usb");
+      }
+
+      toast.success("Direct USB Printer POS-V29DD Terhubung!");
+
+      if (rawReceiptText && port.writable) {
+        const writer = port.writable.getWriter();
+        const encoder = new TextEncoder();
+        const escPosData = new Uint8Array([
+          0x1b, 0x40, // ESC @ (Initialize printer)
+          ...Array.from(encoder.encode(rawReceiptText)),
+          0x0a, 0x0a, 0x0a, 0x0a, // Line feeds
+          0x1d, 0x56, 0x00, // GS V 0 (Cut paper)
+        ]);
+        await writer.write(escPosData);
+        writer.releaseLock();
+        toast.success("Struk berhasil terkirim langsung ke printer USB!");
+      }
+
+      await port.close();
+    } catch (err: any) {
+      setStatus("disconnected");
+      if (err.name !== "NotFoundError") {
+        toast.error(`Direct USB: ${err.message || "Gagal membuka port USB"}`);
+      }
+    }
+  };
+
   const disconnectPrinter = () => {
     setStatus("disconnected");
     toast.info("Koneksi printer dilepas.");
@@ -108,6 +160,7 @@ export function useThermalPrinter() {
     setIsSettingsOpen,
     setPrinterMode,
     connectBluetooth,
+    connectUsb,
     disconnectPrinter,
     testPrint,
   };

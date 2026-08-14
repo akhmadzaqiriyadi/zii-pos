@@ -1,6 +1,4 @@
-"use client";
-
-import { CheckCircle2, Bluetooth, Laptop, Printer, RefreshCw, XCircle } from "lucide-react";
+import { CheckCircle2, Bluetooth, Laptop, Printer, RefreshCw, Usb, XCircle } from "lucide-react";
 import { Button } from "../../../components/ui/button";
 import {
   Dialog,
@@ -18,6 +16,7 @@ interface PrinterSettingsModalProps {
   deviceName: string;
   onSetMode: (type: PrinterConnectionType) => void;
   onConnectBluetooth: () => void;
+  onConnectUsb?: () => void;
   onDisconnect: () => void;
   onTestPrint: () => void;
 }
@@ -30,6 +29,7 @@ export function PrinterSettingsModal({
   deviceName,
   onSetMode,
   onConnectBluetooth,
+  onConnectUsb,
   onDisconnect,
   onTestPrint,
 }: PrinterSettingsModalProps) {
@@ -101,7 +101,28 @@ export function PrinterSettingsModal({
             </label>
 
             <div className="grid grid-cols-1 gap-2.5">
-              {/* Option 1: Browser System Driver (Recommended) */}
+              {/* Option 1: Direct USB WebSerial (Recommended for USB on Mac - No Driver Needed) */}
+              <button
+                type="button"
+                onClick={() => onSetMode("web_usb")}
+                className={`flex items-start gap-3 p-3.5 rounded-xl border text-left transition cursor-pointer ${
+                  connectionType === "web_usb"
+                    ? "border-emerald-500 bg-emerald-50/30 ring-2 ring-emerald-500/20"
+                    : "border-slate-200 hover:border-slate-300 bg-white"
+                }`}
+              >
+                <Usb className="h-5 w-5 text-emerald-600 shrink-0 mt-0.5" />
+                <div>
+                  <span className="font-bold text-slate-900 block text-xs">
+                    Direct USB WebSerial (Bypass Driver macOS)
+                  </span>
+                  <span className="text-[11px] text-slate-500 block leading-normal mt-0.5">
+                    Chrome langsung mengirim byte ESC/POS ke kabel USB. 100% Bebas driver Mac & Bebas kodingan XML!
+                  </span>
+                </div>
+              </button>
+
+              {/* Option 2: Browser System Driver (CUPS Driver) */}
               <button
                 type="button"
                 onClick={() => onSetMode("browser_driver")}
@@ -111,18 +132,18 @@ export function PrinterSettingsModal({
                     : "border-slate-200 hover:border-slate-300 bg-white"
                 }`}
               >
-                <Laptop className="h-5 w-5 text-emerald-600 shrink-0 mt-0.5" />
+                <Laptop className="h-5 w-5 text-slate-600 shrink-0 mt-0.5" />
                 <div>
                   <span className="font-bold text-slate-900 block text-xs">
-                    Browser System Driver 58mm (Rekomendasi)
+                    Browser System Driver (CUPS 58mm)
                   </span>
                   <span className="text-[11px] text-slate-500 block leading-normal mt-0.5">
-                    Mencetak langsung via dialog sistem OS/Browser dengan layout CSS 58mm yang otomatis terpasang.
+                    Mencetak via dialog sistem Mac OS jika driver CUPS thermal sudah terpasang.
                   </span>
                 </div>
               </button>
 
-              {/* Option 2: Web Bluetooth Direct ESC/POS */}
+              {/* Option 3: Web Bluetooth Direct ESC/POS */}
               <button
                 type="button"
                 onClick={() => onSetMode("web_bluetooth")}
@@ -138,7 +159,7 @@ export function PrinterSettingsModal({
                     Direct Bluetooth ESC/POS (POS-V29DD)
                   </span>
                   <span className="text-[11px] text-slate-500 block leading-normal mt-0.5">
-                    Koneksi Bluetooth nirkabel langsung dari Chrome untuk pengiriman byte ESC/POS tanpa dialog browser.
+                    Koneksi Bluetooth nirkabel langsung dari Chrome untuk pengiriman byte ESC/POS tanpa kabel.
                   </span>
                 </div>
               </button>
@@ -147,6 +168,18 @@ export function PrinterSettingsModal({
 
           {/* Action Buttons */}
           <div className="space-y-2 pt-2 border-t border-slate-100">
+            {connectionType === "web_usb" && onConnectUsb && (
+              <Button
+                variant="outline"
+                onClick={onConnectUsb}
+                disabled={isConnecting}
+                className="w-full gap-2 text-xs font-bold py-2.5 border-emerald-300 bg-emerald-50/50 hover:bg-emerald-100 text-emerald-900"
+              >
+                <Usb className="h-4 w-4 text-emerald-600" />
+                <span>Pilih Port USB Printer (POS-V29DD)</span>
+              </Button>
+            )}
+
             {connectionType === "web_bluetooth" && (
               <Button
                 variant="outline"
@@ -175,7 +208,7 @@ export function PrinterSettingsModal({
                 <span>Test Print Struk 58mm</span>
               </Button>
 
-              {isConnected && connectionType === "web_bluetooth" && (
+              {isConnected && (connectionType === "web_bluetooth" || connectionType === "web_usb") && (
                 <Button
                   variant="ghost"
                   onClick={onDisconnect}

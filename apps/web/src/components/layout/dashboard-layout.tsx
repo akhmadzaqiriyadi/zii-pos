@@ -161,6 +161,7 @@ export function DashboardLayout({
           deviceName={printer.deviceName}
           onSetMode={printer.setPrinterMode}
           onConnectBluetooth={printer.connectBluetooth}
+          onConnectUsb={printer.connectUsb}
           onDisconnect={printer.disconnectPrinter}
           onTestPrint={printer.testPrint}
         />
