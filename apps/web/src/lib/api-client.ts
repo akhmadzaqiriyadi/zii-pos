@@ -27,5 +27,8 @@ export async function fetchApi<T>(
   }
 
   const json = await response.json();
-  return json.data as T;
+  if (json && json.meta !== undefined) {
+    return { data: json.data, meta: json.meta } as T;
+  }
+  return (json.data !== undefined ? json.data : json) as T;
 }

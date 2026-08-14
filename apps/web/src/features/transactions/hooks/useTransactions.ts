@@ -14,11 +14,17 @@ export function useTransactions(params: TransactionFilterParams = {}) {
     queryFn: () => TransactionApiService.getTransactions(params),
   });
 
-  const transactions: Transaction[] = query.data?.data ?? [];
-  const meta = query.data?.meta ?? {
+  const rawData = query.data;
+  const transactions: Transaction[] = Array.isArray(rawData)
+    ? rawData
+    : Array.isArray((rawData as any)?.data)
+      ? (rawData as any).data
+      : [];
+
+  const meta = (rawData as any)?.meta ?? {
     page: 1,
     limit: 10,
-    totalItems: 0,
+    totalItems: transactions.length,
     totalPages: 1,
     hasNextPage: false,
     hasPrevPage: false,
