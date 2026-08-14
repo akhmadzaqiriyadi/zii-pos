@@ -8,9 +8,11 @@ import { Badge } from "../../../components/ui/badge";
 import { Button } from "../../../components/ui/button";
 import { Card } from "../../../components/ui/card";
 import { Input } from "../../../components/ui/input";
+import { useAuth } from "../../../features/auth/hooks/useAuth";
 import { formatRupiah } from "../../../lib/utils";
 
 export default function ProductsPage() {
+  const { user, tenant } = useAuth();
   const [search, setSearch] = useState("");
 
   const products = [
@@ -50,7 +52,10 @@ export default function ProductsPage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-slate-100 font-sans">
-      <Navbar merchantName="ZII Distro & Laundry Studio" cashierName="Zaqi" />
+      <Navbar
+        merchantName={tenant?.name || "ZII Distro & Laundry Studio"}
+        cashierName={user?.name || "Kasir"}
+      />
       <main className="p-8 max-w-6xl w-full mx-auto space-y-6">
         <div className="flex items-center justify-between">
           <div>

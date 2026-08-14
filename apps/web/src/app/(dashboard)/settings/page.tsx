@@ -1,20 +1,33 @@
 "use client";
 
 import { Save, Store } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Navbar } from "../../../components/layout/navbar";
 import { Button } from "../../../components/ui/button";
 import { Card, CardHeader, CardTitle } from "../../../components/ui/card";
 import { Input } from "../../../components/ui/input";
+import { useAuth } from "../../../features/auth/hooks/useAuth";
 
 export default function SettingsPage() {
+  const { user, tenant } = useAuth();
   const [storeName, setStoreName] = useState("ZII Distro & Laundry Studio");
   const [phone, setPhone] = useState("0812-9988-7766");
   const [address, setAddress] = useState("Jl. Merdeka Raya No. 45, Jakarta");
   const [footerText, setFooterText] = useState(
     "Terima kasih telah berbelanja di ZII Store! Simpan nota ini sebagai bukti garansi.",
   );
+
+  useEffect(() => {
+    if (tenant) {
+      setStoreName(tenant.name);
+      setPhone(tenant.phone || "");
+      setAddress(tenant.address || "");
+      if (tenant.receiptFooter) {
+        setFooterText(tenant.receiptFooter);
+      }
+    }
+  }, [tenant]);
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,7 +36,7 @@ export default function SettingsPage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-slate-100 font-sans">
-      <Navbar merchantName={storeName} cashierName="Zaqi" />
+      <Navbar merchantName={storeName} cashierName={user?.name || "Kasir"} />
       <main className="p-8 max-w-4xl w-full mx-auto space-y-6">
         <div>
           <h1 className="text-2xl font-extrabold text-slate-900">
