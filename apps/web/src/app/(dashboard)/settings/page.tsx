@@ -10,6 +10,7 @@ import {
   CardTitle,
 } from "../../../components/ui/card";
 import { Input } from "../../../components/ui/input";
+import { Textarea } from "../../../components/ui/textarea";
 import { useTenantSettingsForm } from "../../../features/tenant/hooks/useTenantSettingsForm";
 
 export default function SettingsPage() {
@@ -116,10 +117,9 @@ export default function SettingsPage() {
                 >
                   Pesan Footer Struk Belanja
                 </label>
-                <textarea
+                <Textarea
                   id="receiptFooter"
                   rows={3}
-                  className="w-full rounded-xl border border-slate-200 bg-white p-3 text-sm text-slate-800 focus:border-emerald-500 focus:outline-none transition"
                   placeholder="Terima kasih telah berbelanja di ZII Store! Simpan nota ini sebagai bukti garansi."
                   {...register("receiptFooter")}
                 />
