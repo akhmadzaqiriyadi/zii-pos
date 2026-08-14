@@ -94,7 +94,7 @@ export function PrinterSettingsModal({
               <Button
                 variant="primary"
                 onClick={onTestPrint}
-                className="flex-1 gap-2 text-xs font-bold bg-slate-900 hover:bg-slate-800 text-white"
+                className="flex-1 gap-2 text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white"
               >
                 <Printer className="h-4 w-4" />
                 <span>Test Print Struk 58mm</span>

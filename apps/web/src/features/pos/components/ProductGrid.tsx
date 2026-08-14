@@ -57,7 +57,7 @@ export function ProductGrid({
             onClick={() => onFilterTypeChange("all")}
             className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition cursor-pointer ${
               filterType === "all"
-                ? "bg-slate-900 text-white shadow-xs"
+                ? "bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs"
                 : "bg-slate-100 text-slate-600 hover:bg-slate-200"
             }`}
           >
@@ -68,7 +68,7 @@ export function ProductGrid({
             onClick={() => onFilterTypeChange("retail")}
             className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition cursor-pointer ${
               filterType === "retail"
-                ? "bg-slate-900 text-white shadow-xs"
+                ? "bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs"
                 : "bg-slate-100 text-slate-600 hover:bg-slate-200"
             }`}
           >
@@ -79,7 +79,7 @@ export function ProductGrid({
             onClick={() => onFilterTypeChange("service")}
             className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition cursor-pointer ${
               filterType === "service"
-                ? "bg-slate-900 text-white shadow-xs"
+                ? "bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs"
                 : "bg-slate-100 text-slate-600 hover:bg-slate-200"
             }`}
           >

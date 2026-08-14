@@ -60,7 +60,7 @@ export default function ProductsPage() {
 
   return (
     <DashboardLayout requiredRole="owner">
-      <main className="p-4 sm:p-6 lg:p-8 max-w-6xl w-full mx-auto space-y-6">
+      <main className="p-4 sm:p-6 lg:p-8 w-full space-y-6">
         <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h1 className="text-2xl font-extrabold text-slate-900">
@@ -99,7 +99,7 @@ export default function ProductsPage() {
                   onClick={() => setFilterType("all")}
                   className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer ${
                     filterType === "all"
-                      ? "bg-slate-900 text-white shadow-xs"
+                      ? "bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs"
                       : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                   }`}
                 >

@@ -88,7 +88,7 @@ export function Pagination({
                     className={cn(
                       "h-8 w-8 rounded-lg text-xs font-bold transition cursor-pointer flex items-center justify-center",
                       p === page
-                        ? "bg-slate-900 text-white shadow-xs"
+                        ? "bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs"
                         : "bg-slate-50 text-slate-600 hover:bg-slate-100 border border-slate-200",
                     )}
                   >
