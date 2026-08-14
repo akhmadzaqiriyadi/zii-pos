@@ -2,15 +2,14 @@
 
 import { Save, Store } from "lucide-react";
 import { useEffect, useState } from "react";
-
-import { Navbar } from "../../../components/layout/navbar";
+import { DashboardLayout } from "../../../components/layout/dashboard-layout";
 import { Button } from "../../../components/ui/button";
 import { Card, CardHeader, CardTitle } from "../../../components/ui/card";
 import { Input } from "../../../components/ui/input";
 import { useAuth } from "../../../features/auth/hooks/useAuth";
 
 export default function SettingsPage() {
-  const { user, tenant } = useAuth();
+  const { tenant } = useAuth();
   const [storeName, setStoreName] = useState("ZII Distro & Laundry Studio");
   const [phone, setPhone] = useState("0812-9988-7766");
   const [address, setAddress] = useState("Jl. Merdeka Raya No. 45, Jakarta");
@@ -35,8 +34,7 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-slate-100 font-sans">
-      <Navbar merchantName={storeName} cashierName={user?.name || "Kasir"} />
+    <DashboardLayout requiredRole="owner">
       <main className="p-8 max-w-4xl w-full mx-auto space-y-6">
         <div>
           <h1 className="text-2xl font-extrabold text-slate-900">
@@ -125,6 +123,6 @@ export default function SettingsPage() {
           </form>
         </Card>
       </main>
-    </div>
+    </DashboardLayout>
   );
 }
