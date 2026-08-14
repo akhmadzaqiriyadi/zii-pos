@@ -1,57 +1,101 @@
 "use client";
 
 import type { Product } from "@zii/types";
-import { useState } from "react";
+import { useReducer } from "react";
 import { usePosProducts } from "../../pos/hooks/usePosProducts";
 import { useProductMutations } from "./useProductMutations";
 
+interface ProductsDashboardState {
+  search: string;
+  filterType: string;
+  isFormModalOpen: boolean;
+  selectedProduct: Product | null;
+  productToDelete: Product | null;
+}
+
+type Action =
+  | { type: "SET_SEARCH"; payload: string }
+  | { type: "SET_FILTER_TYPE"; payload: string }
+  | { type: "OPEN_ADD_MODAL" }
+  | { type: "OPEN_EDIT_MODAL"; payload: Product }
+  | { type: "CLOSE_FORM_MODAL" }
+  | { type: "SET_DELETE_PRODUCT"; payload: Product | null };
+
+const initialState: ProductsDashboardState = {
+  search: "",
+  filterType: "all",
+  isFormModalOpen: false,
+  selectedProduct: null,
+  productToDelete: null,
+};
+
+function productsReducer(
+  state: ProductsDashboardState,
+  action: Action,
+): ProductsDashboardState {
+  switch (action.type) {
+    case "SET_SEARCH":
+      return { ...state, search: action.payload };
+    case "SET_FILTER_TYPE":
+      return { ...state, filterType: action.payload };
+    case "OPEN_ADD_MODAL":
+      return { ...state, selectedProduct: null, isFormModalOpen: true };
+    case "OPEN_EDIT_MODAL":
+      return { ...state, selectedProduct: action.payload, isFormModalOpen: true };
+    case "CLOSE_FORM_MODAL":
+      return { ...state, isFormModalOpen: false, selectedProduct: null };
+    case "SET_DELETE_PRODUCT":
+      return { ...state, productToDelete: action.payload };
+    default:
+      return state;
+  }
+}
+
 export function useProductsDashboard() {
-  const [search, setSearch] = useState("");
-  const [filterType, setFilterType] = useState("all");
-  const [isFormModalOpen, setIsFormModalOpen] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [productToDelete, setProductToDelete] = useState<Product | null>(null);
+  const [state, dispatch] = useReducer(productsReducer, initialState);
 
   const { products, totalCount, isLoading, refetch } = usePosProducts(
-    search,
-    filterType,
+    state.search,
+    state.filterType,
   );
 
   const { deleteMutation } = useProductMutations();
 
-  const handleOpenAddModal = () => {
-    setSelectedProduct(null);
-    setIsFormModalOpen(true);
+  const setSearch = (search: string) =>
+    dispatch({ type: "SET_SEARCH", payload: search });
+  const setFilterType = (filterType: string) =>
+    dispatch({ type: "SET_FILTER_TYPE", payload: filterType });
+  const setIsFormModalOpen = (isOpen: boolean) => {
+    if (!isOpen) dispatch({ type: "CLOSE_FORM_MODAL" });
   };
 
-  const handleOpenEditModal = (product: Product) => {
-    setSelectedProduct(product);
-    setIsFormModalOpen(true);
-  };
-
-  const handleDeleteProduct = (product: Product) => {
-    setProductToDelete(product);
-  };
+  const handleOpenAddModal = () => dispatch({ type: "OPEN_ADD_MODAL" });
+  const handleOpenEditModal = (product: Product) =>
+    dispatch({ type: "OPEN_EDIT_MODAL", payload: product });
+  const handleDeleteProduct = (product: Product) =>
+    dispatch({ type: "SET_DELETE_PRODUCT", payload: product });
+  const setProductToDelete = (product: Product | null) =>
+    dispatch({ type: "SET_DELETE_PRODUCT", payload: product });
 
   const confirmDelete = () => {
-    if (!productToDelete) return;
-    deleteMutation.mutate(productToDelete.id, {
+    if (!state.productToDelete) return;
+    deleteMutation.mutate(state.productToDelete.id, {
       onSuccess: () => {
-        setProductToDelete(null);
+        dispatch({ type: "SET_DELETE_PRODUCT", payload: null });
         refetch();
       },
     });
   };
 
   return {
-    search,
+    search: state.search,
     setSearch,
-    filterType,
+    filterType: state.filterType,
     setFilterType,
-    isFormModalOpen,
+    isFormModalOpen: state.isFormModalOpen,
     setIsFormModalOpen,
-    selectedProduct,
-    productToDelete,
+    selectedProduct: state.selectedProduct,
+    productToDelete: state.productToDelete,
     setProductToDelete,
     products,
     totalCount,

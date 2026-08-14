@@ -260,7 +260,7 @@ export default function TransactionsPage() {
                   variant="outline"
                   size="sm"
                   disabled={!meta.hasPrevPage}
-                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  onClick={() => setPage(Math.max(1, page - 1))}
                   className="gap-1 text-xs"
                 >
                   <ChevronLeft className="h-4 w-4" />
@@ -270,7 +270,7 @@ export default function TransactionsPage() {
                   variant="outline"
                   size="sm"
                   disabled={!meta.hasNextPage}
-                  onClick={() => setPage((p) => p + 1)}
+                  onClick={() => setPage(page + 1)}
                   className="gap-1 text-xs"
                 >
                   <span>Selanjutnya</span>
