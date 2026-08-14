@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { parseApiErrorMessage } from "../../../lib/form-helpers";
 import { type RegisterFormData, registerSchema } from "../schemas/auth.schema";
 import { useAuth } from "./useAuth";
@@ -37,12 +38,16 @@ export function useRegisterForm() {
       });
     },
     onSuccess: () => {
+      toast.success("Registrasi merchant baru berhasil!");
       window.location.href = "/pos";
     },
     onError: (err: unknown) => {
-      setFormError(
-        parseApiErrorMessage(err, "Gagal melakukan registrasi merchant."),
+      const msg = parseApiErrorMessage(
+        err,
+        "Gagal melakukan registrasi merchant.",
       );
+      setFormError(msg);
+      toast.error(msg);
     },
   });
 

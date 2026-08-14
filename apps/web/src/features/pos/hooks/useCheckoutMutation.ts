@@ -1,21 +1,24 @@
 "use client";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type { CreateTransactionInput, Transaction } from "@zii/types";
+import type { CreateTransactionInput } from "@zii/types";
+import { toast } from "sonner";
+import { parseApiErrorMessage } from "../../../lib/form-helpers";
 import { PosApiService } from "../services/posApi";
 
-export function useCheckoutMutation(onSuccessCallback?: () => void) {
+export function useCheckoutMutation() {
   const queryClient = useQueryClient();
 
-  return useMutation<Transaction, Error, CreateTransactionInput>({
-    mutationFn: (input: CreateTransactionInput) =>
-      PosApiService.createTransaction(input),
+  return useMutation({
+    mutationFn: (data: CreateTransactionInput) =>
+      PosApiService.createTransaction(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["products"] });
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
-      if (onSuccessCallback) {
-        onSuccessCallback();
-      }
+      toast.success("Transaksi POS berhasil diproses!");
+    },
+    onError: (err: unknown) => {
+      toast.error(parseApiErrorMessage(err, "Gagal memproses transaksi POS."));
     },
   });
 }

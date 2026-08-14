@@ -1,55 +1,49 @@
 "use client";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type { Product } from "@zii/types";
-import { fetchApi } from "../../../lib/api-client";
-
-export interface ProductFormInput {
-  name: string;
-  price: number;
-  stock: number;
-  isService: boolean;
-}
+import { toast } from "sonner";
+import { parseApiErrorMessage } from "../../../lib/form-helpers";
+import {
+  type CreateProductPayload,
+  ProductApiService,
+  type UpdateProductPayload,
+} from "../services/productApi";
 
 export function useProductMutations() {
   const queryClient = useQueryClient();
 
-  const createMutation = useMutation<Product, Error, ProductFormInput>({
-    mutationFn: async (data: ProductFormInput) => {
-      return await fetchApi<Product>("/api/v1/products", {
-        method: "POST",
-        body: JSON.stringify(data),
-      });
-    },
+  const createMutation = useMutation({
+    mutationFn: (data: CreateProductPayload) =>
+      ProductApiService.createProduct(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["products"] });
+      toast.success("Produk baru berhasil ditambahkan!");
+    },
+    onError: (err: unknown) => {
+      toast.error(parseApiErrorMessage(err, "Gagal menambah produk baru."));
     },
   });
 
-  const updateMutation = useMutation<
-    Product,
-    Error,
-    { id: string; data: ProductFormInput }
-  >({
-    mutationFn: async ({ id, data }) => {
-      return await fetchApi<Product>(`/api/v1/products/${id}`, {
-        method: "PUT",
-        body: JSON.stringify(data),
-      });
-    },
+  const updateMutation = useMutation({
+    mutationFn: ({ id, data }: { id: string; data: UpdateProductPayload }) =>
+      ProductApiService.updateProduct(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["products"] });
+      toast.success("Detail produk berhasil diupdate!");
+    },
+    onError: (err: unknown) => {
+      toast.error(parseApiErrorMessage(err, "Gagal memperbarui produk."));
     },
   });
 
-  const deleteMutation = useMutation<{ id: string }, Error, string>({
-    mutationFn: async (id: string) => {
-      return await fetchApi<{ id: string }>(`/api/v1/products/${id}`, {
-        method: "DELETE",
-      });
-    },
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => ProductApiService.deleteProduct(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["products"] });
+      toast.success("Produk berhasil dihapus!");
+    },
+    onError: (err: unknown) => {
+      toast.error(parseApiErrorMessage(err, "Gagal menghapus produk."));
     },
   });
 

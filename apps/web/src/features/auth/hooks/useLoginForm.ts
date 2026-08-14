@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { parseApiErrorMessage } from "../../../lib/form-helpers";
 import { type LoginFormData, loginSchema } from "../schemas/auth.schema";
 import { useAuth } from "./useAuth";
@@ -26,10 +27,13 @@ export function useLoginForm() {
       await login(data.email, data.password);
     },
     onSuccess: () => {
+      toast.success("Berhasil masuk ke ZII POS!");
       window.location.href = "/pos";
     },
     onError: (err: unknown) => {
-      setFormError(parseApiErrorMessage(err, "Email atau password salah."));
+      const msg = parseApiErrorMessage(err, "Email atau password salah.");
+      setFormError(msg);
+      toast.error(msg);
     },
   });
 

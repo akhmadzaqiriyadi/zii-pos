@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { parseApiErrorMessage } from "../../../lib/form-helpers";
 import {
   type TenantSettingsFormData,
@@ -49,13 +50,16 @@ export function useTenantSettingsForm() {
         address: data.address,
         receiptFooter: data.receiptFooter,
       });
-      setSuccessMsg(
-        "Pengaturan White-Label Merchant berhasil disimpan secara permanen!",
-      );
+      const msg = "Pengaturan White-Label Merchant berhasil disimpan!";
+      setSuccessMsg(msg);
+      toast.success(msg);
     } catch (err: unknown) {
-      setErrorMsg(
-        parseApiErrorMessage(err, "Gagal menyimpan pengaturan merchant."),
+      const msg = parseApiErrorMessage(
+        err,
+        "Gagal menyimpan pengaturan merchant.",
       );
+      setErrorMsg(msg);
+      toast.error(msg);
     }
   });
 

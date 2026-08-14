@@ -2,6 +2,7 @@
 
 import type { TransactionItem } from "@zii/types";
 import { CheckCircle2, Printer, Send } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "../../../components/ui/button";
 import {
   Dialog,
@@ -44,6 +45,7 @@ export function ReceiptModal({
   onSendWhatsApp,
 }: ReceiptModalProps) {
   const handlePrint = () => {
+    toast.info("Mencetak struk belanja...");
     if (onPrintThermal) {
       onPrintThermal();
     } else {
@@ -58,7 +60,10 @@ export function ReceiptModal({
       const text = encodeURIComponent(
         `Struk Belanja ${merchant.name}\nTotal: ${formatRupiah(totalAmount)}\nTerima Kasih!`,
       );
+      toast.success(`Membuka WhatsApp untuk nomor ${customerPhone}`);
       window.open(`https://wa.me/${customerPhone}?text=${text}`, "_blank");
+    } else {
+      toast.warning("Nomor WhatsApp pelanggan belum diisi saat transaksi.");
     }
   };
 
