@@ -22,13 +22,13 @@ nextjs-portal,
   display: none !important;
 }
 
-/* 58mm Thermal Printer Print Layout (POS-V29DD & Standard 58mm) */
+/* 58mm / 57mm Thermal Printer Print Layout (POS-V29DD & Standard Thermal) */
 @media print {
   html, body {
     background: #ffffff !important;
     margin: 0 !important;
     padding: 0 !important;
-    width: 58mm !important;
+    width: 57mm !important;
     height: auto !important;
     overflow: visible !important;
   }
@@ -41,20 +41,21 @@ nextjs-portal,
     visibility: hidden !important;
   }
 
-  /* Force thermal receipt container to be visible and formatted for 58mm */
+  /* Force thermal receipt container to be visible and formatted for 57mm/58mm roll */
   #thermal-receipt-print {
     display: block !important;
     visibility: visible !important;
     position: absolute !important;
     left: 0 !important;
     top: 0 !important;
-    width: 58mm !important;
-    max-width: 58mm !important;
-    padding: 2mm !important;
+    width: 57mm !important;
+    max-width: 57mm !important;
+    padding: 1mm 2mm !important;
     margin: 0 !important;
     font-family: "Courier New", Courier, monospace !important;
-    font-size: 11px !important;
-    line-height: 1.2 !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    line-height: 1.25 !important;
     color: #000000 !important;
     background: #ffffff !important;
     box-sizing: border-box !important;
@@ -66,7 +67,7 @@ nextjs-portal,
   }
 
   @page {
-    size: 58mm auto;
+    size: 57mm auto;
     margin: 0mm;
   }
 }
