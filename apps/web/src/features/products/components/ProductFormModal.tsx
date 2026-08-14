@@ -1,11 +1,7 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
 import type { Product } from "@zii/types";
 import { Package, Save } from "lucide-react";
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { Button } from "../../../components/ui/button";
 import {
   Dialog,
@@ -14,20 +10,7 @@ import {
   DialogTitle,
 } from "../../../components/ui/dialog";
 import { Input } from "../../../components/ui/input";
-import { useProductMutations } from "../hooks/useProductMutations";
-
-const productSchema = z.object({
-  name: z.string().min(2, { message: "Nama produk minimal 2 karakter." }),
-  price: z
-    .number({ message: "Harga harus berupa angka." })
-    .min(0, { message: "Harga produk tidak boleh negatif." }),
-  stock: z
-    .number({ message: "Stok harus berupa angka." })
-    .min(0, { message: "Stok tidak boleh negatif." }),
-  isService: z.boolean(),
-});
-
-type ProductFormData = z.infer<typeof productSchema>;
+import { useProductForm } from "../hooks/useProductForm";
 
 interface ProductFormModalProps {
   isOpen: boolean;
@@ -42,75 +25,15 @@ export function ProductFormModal({
   productToEdit,
   onSuccess,
 }: ProductFormModalProps) {
-  const isEditing = !!productToEdit;
-  const { createMutation, updateMutation } = useProductMutations();
-
   const {
-    register,
-    handleSubmit,
+    onSubmit,
+    isEditing,
+    isService,
+    isPending,
     setValue,
-    watch,
-    reset,
-    formState: { errors },
-  } = useForm<ProductFormData>({
-    resolver: zodResolver(productSchema),
-    defaultValues: {
-      name: "",
-      price: 0,
-      stock: 10,
-      isService: false,
-    },
-  });
-
-  const isService = watch("isService");
-
-  useEffect(() => {
-    if (productToEdit) {
-      reset({
-        name: productToEdit.name,
-        price: Number(productToEdit.price),
-        stock: productToEdit.stock,
-        isService: productToEdit.isService,
-      });
-    } else {
-      reset({
-        name: "",
-        price: 0,
-        stock: 10,
-        isService: false,
-      });
-    }
-  }, [productToEdit, reset]);
-
-  const onSubmit = (data: ProductFormData) => {
-    const payload = {
-      name: data.name.trim(),
-      price: data.price,
-      stock: data.isService ? 999 : data.stock,
-      isService: data.isService,
-    };
-
-    if (isEditing && productToEdit) {
-      updateMutation.mutate(
-        { id: productToEdit.id, data: payload },
-        {
-          onSuccess: () => {
-            onOpenChange(false);
-            if (onSuccess) onSuccess();
-          },
-        },
-      );
-    } else {
-      createMutation.mutate(payload, {
-        onSuccess: () => {
-          onOpenChange(false);
-          if (onSuccess) onSuccess();
-        },
-      });
-    }
-  };
-
-  const isPending = createMutation.isPending || updateMutation.isPending;
+    register,
+    errors,
+  } = useProductForm(productToEdit, onSuccess, onOpenChange);
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
@@ -127,12 +50,12 @@ export function ProductFormModal({
           </p>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={onSubmit} className="space-y-4">
           {/* Tipe Produk Selector */}
-          <div>
-            <span className="text-xs font-semibold text-slate-700 mb-1.5 block">
+          <fieldset className="border-0 p-0 m-0 space-y-1.5">
+            <legend className="text-xs font-semibold text-slate-700 mb-1.5 block">
               Tipe Katalog
-            </span>
+            </legend>
             <div className="grid grid-cols-2 gap-2">
               <button
                 type="button"
@@ -157,13 +80,13 @@ export function ProductFormModal({
                 ✂️ Jasa / Service
               </button>
             </div>
-          </div>
+          </fieldset>
 
           {/* Nama Produk */}
-          <div>
+          <div className="space-y-1">
             <label
               htmlFor="product-name"
-              className="text-xs font-semibold text-slate-700 mb-1 block"
+              className="text-xs font-semibold text-slate-700 block"
             >
               Nama Produk / Jasa
             </label>
@@ -180,10 +103,10 @@ export function ProductFormModal({
           </div>
 
           {/* Harga */}
-          <div>
+          <div className="space-y-1">
             <label
               htmlFor="product-price"
-              className="text-xs font-semibold text-slate-700 mb-1 block"
+              className="text-xs font-semibold text-slate-700 block"
             >
               Harga Jual (Rp)
             </label>
@@ -202,10 +125,10 @@ export function ProductFormModal({
 
           {/* Stok Barang (jika bukan Jasa) */}
           {!isService && (
-            <div>
+            <div className="space-y-1">
               <label
                 htmlFor="product-stock"
-                className="text-xs font-semibold text-slate-700 mb-1 block"
+                className="text-xs font-semibold text-slate-700 block"
               >
                 Jumlah Stok Barang
               </label>
