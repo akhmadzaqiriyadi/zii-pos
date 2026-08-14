@@ -32,6 +32,7 @@ Dokumen ini berisi standar koding, aturan monorepo, dan konvensi pengembangan so
   - Driver Cetak Struk Thermal 58mm/80mm HTML Print Engine (`ThermalReceiptPrintPortal.tsx`).
 - **Isyadi (Frontend Lead):**
   - Layar POS Kasir UI (`/pos`) & Modal Pembayaran (Tunai/QRIS/Transfer + Hitung Kembalian).
+  - Halaman Riwayat Transaksi & Laporan Omset UI (`/transactions`) beserta Modal Detail Struk Belanja.
   - Search Bar & Filter Pencarian Produk Real-Time.
   - Form Modal Tambah & Edit Produk Baru di `/products`.
 - **Ilham (Fullstack Lead):**
