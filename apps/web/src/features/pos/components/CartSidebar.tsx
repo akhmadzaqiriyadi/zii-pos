@@ -4,7 +4,6 @@ import type { TransactionItem } from "@zii/types";
 import { ChevronRight, ShoppingCart, X } from "lucide-react";
 import { Badge } from "../../../components/ui/badge";
 import { Button } from "../../../components/ui/button";
-import { Input } from "../../../components/ui/input";
 import { formatRupiah } from "../../../lib/utils";
 import { CartItemRow } from "./CartItemRow";
 
@@ -112,28 +111,6 @@ export function CartSidebar({
               />
             ))
           )}
-        </section>
-
-        {/* Customer Info Form */}
-        <section className="shrink-0 border-t border-slate-200 p-4 sm:p-5 bg-slate-50/50 space-y-3">
-          <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
-            Informasi Pelanggan (Opsional)
-          </h3>
-
-          <div className="grid grid-cols-2 gap-2">
-            <Input
-              placeholder="Nama Pelanggan"
-              value={customerName}
-              onChange={(e) => onCustomerNameChange(e.target.value)}
-              className="h-9 text-xs rounded-xl bg-white"
-            />
-            <Input
-              placeholder="No. WhatsApp"
-              value={customerPhone}
-              onChange={(e) => onCustomerPhoneChange(e.target.value)}
-              className="h-9 text-xs rounded-xl bg-white"
-            />
-          </div>
         </section>
 
         {/* Checkout Footer Summary */}
