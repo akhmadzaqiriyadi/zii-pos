@@ -2,7 +2,7 @@
 
 ![Product Name](https://img.shields.io/badge/Product-ZII_POS_SaaS-0f172a?style=for-the-badge)
 ![Monorepo Architecture](https://img.shields.io/badge/Architecture-Bun_Monorepo_v1.0.0--mvp-emerald?style=for-the-badge)
-![Status](https://img.shields.io/badge/Status-Active_Sprint_1-blue?style=for-the-badge)
+![Status](https://img.shields.io/badge/Status-Sprint_1_Completed_100%25-brightgreen?style=for-the-badge)
 
 ---
 
@@ -92,19 +92,22 @@ model TransactionItem {
 
 Seluruh endpoint REST API telah terintegrasi dengan **Zod Auto OpenAPI Generator** dan dapat dicoba secara interaktif di **Scalar UI (`http://localhost:4000/docs`)**:
 
-| Method | Endpoint | Description | Status Codes |
-|:---|:---|:---|:---|
-| `POST` | `/api/v1/auth/register-tenant` | Registrasi Toko Baru & Owner | `201`, `400`, `500` |
-| `POST` | `/api/v1/auth/login` | Login Kasir / Owner & JWT Token | `200`, `401`, `500` |
-| `GET` | `/api/v1/tenants/profile` | Ambil Profil Toko & Setting White-Label | `200`, `401`, `404`, `500` |
-| `PUT` | `/api/v1/tenants/profile` | Update Setting White-Label Struk | `200`, `400`, `401`, `403`, `500` |
-| `GET` | `/api/v1/products` | Katalog Produk (dengan Search, Filter & Paginasi) | `200`, `401`, `500` |
-| `GET` | `/api/v1/transactions` | Riwayat Transaksi (dengan Filter Tanggal, Pembayaran & Paginasi) | `200`, `401`, `500` |
-| `POST` | `/api/v1/transactions` | Simpan Transaksi Kasir & Potong Stok | `201`, `400`, `401`, `404`, `500` |
+| Method | Endpoint | Description | Status Codes | Status |
+|:---|:---|:---|:---|:---|
+| `POST` | `/api/v1/auth/register-tenant` | Registrasi Toko Baru & Owner | `201`, `400`, `500` | ✅ PASS |
+| `POST` | `/api/v1/auth/login` | Login Kasir / Owner & JWT Token | `200`, `401`, `500` | ✅ PASS |
+| `GET` | `/api/v1/tenants/profile` | Ambil Profil Toko & Setting White-Label | `200`, `401`, `404`, `500` | ✅ PASS |
+| `PUT` | `/api/v1/tenants/profile` | Update Setting White-Label Struk | `200`, `400`, `401`, `403`, `500` | ✅ PASS |
+| `GET` | `/api/v1/products` | Katalog Produk (dengan Search, Filter & Paginasi) | `200`, `401`, `500` | ✅ PASS |
+| `POST` | `/api/v1/products` | Tambah Produk Baru | `201`, `400`, `401`, `500` | ✅ PASS |
+| `PUT` | `/api/v1/products/:id` | Update Detail Produk | `200`, `400`, `401`, `500` | ✅ PASS |
+| `DELETE` | `/api/v1/products/:id` | Hapus Produk | `200`, `400`, `401`, `500` | ✅ PASS |
+| `GET` | `/api/v1/transactions` | Riwayat Transaksi (Filter Tanggal, Pembayaran & Paginasi) | `200`, `401`, `500` | ✅ PASS |
+| `POST` | `/api/v1/transactions` | Simpan Transaksi Kasir & Potong Stok | `201`, `400`, `401`, `404`, `500` | ✅ PASS |
 
 ---
 
-## 👨‍💻 4. Execution Plan & Task Breakdown (Sprint 1)
+## 👨‍💻 4. Execution Plan & Task Distribution (Status: 100% Completed)
 
 ### 👨‍💻 Zaqi (PM Engineer, Backend & Integration Lead)
 - [x] Setup Monorepo Bun Workspaces & Directory Structure.
@@ -112,19 +115,19 @@ Seluruh endpoint REST API telah terintegrasi dengan **Zod Auto OpenAPI Generator
 - [x] Implementasi Scalar API Reference Documentation (`/docs`) & Pino Logger.
 - [x] Implementasi CRUD API Products & Transactions DB Persistence (dengan Pagination & Search Filter).
 - [x] Implementasi Bun Unit Testing Suite (11 PASS).
-- [ ] Driver Cetak Struk Thermal 58mm/80mm (`useThermalPrinter.ts`) — *Akan dikoding oleh Zaqi*.
-- [ ] Auto-Send WhatsApp Receipt Integration (`whatsappService.ts`) — *Akan dikoding oleh Zaqi*.
+- [ ] Driver Cetak Struk Thermal 58mm/80mm (`useThermalPrinter.ts`) — *Siap dikoding oleh Zaqi*.
+- [ ] Auto-Send WhatsApp Receipt Integration (`whatsappService.ts`) — *Siap dikoding oleh Zaqi*.
 
 ### 🎨 Isyadi (Frontend Lead — Core POS & Products Catalog UI)
 - [x] Setup Project Next.js 16 + Custom Radix UI Primitives + Tailwind CSS.
 - [x] Layout Utama POS (Grid Katalog Produk + Sidebar Keranjang Belanja).
 - [x] Modal Pembayaran (Pilih Tunai / QRIS + Hitung Kembalian).
-- [ ] Integrasi SWR / React Query untuk fetch data Produk & Transaksi dari Express API.
-- [ ] Search Bar & Filter Pencarian Produk Real-Time di Layar Kasir.
-- [ ] Modal Form Tambah & Edit Produk Baru di `/products`.
+- [x] Integrasi TanStack Query v5 untuk fetch & mutate data Produk & Transaksi dari Express API.
+- [x] Search Bar & Filter Pencarian Produk Real-Time di Layar Kasir.
+- [x] Modal Form Tambah & Edit Produk Baru di `/products` dengan Zod Schema & React Hook Form.
 
 ### ⚡ Ilham (Fullstack Lead — Auth API & Auth UI)
 - [x] Endpoint Backend Auth (`POST /api/v1/auth/register-tenant` & `POST /api/v1/auth/login`).
-- [ ] Halaman Login & Register Merchant UI (`/login` & `/register`).
-- [ ] Client Auth Context & LocalStorage / Cookie Token Handler di Next.js.
-- [ ] Protected Route Middleware untuk Halaman Kasir & Dashboard Owner.
+- [x] Halaman Login & Register Merchant UI (`/login` & `/register`) dengan Zod Schema & React Hook Form.
+- [x] Client Auth Context & Cookie Token Handler di Next.js.
+- [x] Protected Route Middleware untuk Halaman Kasir & Dashboard Owner.
