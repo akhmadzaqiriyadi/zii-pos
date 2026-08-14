@@ -14,7 +14,10 @@ export class PosApiService {
       if (filterType === "lowStock") query.append("lowStock", "true");
     }
     const queryString = query.toString() ? `?${query.toString()}` : "";
-    return await fetchApi<Product[]>(`/api/v1/products${queryString}`);
+    const res = await fetchApi<any>(`/api/v1/products${queryString}`);
+    if (Array.isArray(res)) return res;
+    if (Array.isArray(res?.data)) return res.data;
+    return [];
   }
 
   static async createTransaction(
