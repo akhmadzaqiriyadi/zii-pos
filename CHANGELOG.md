@@ -4,6 +4,33 @@ Semua perubahan penting pada proyek ZII POS dicatat dalam dokumen ini. Format be
 
 ---
 
+## [1.1.0] - 2026-08-14
+
+### 🖨️ Added & Enhanced (Thermal Printing & Hardware Architecture)
+- **WebUSB Direct ESC/POS Byte Streaming:** Direct USB thermal printer communication via WebUSB (`navigator.usb.requestDevice()` & `device.transferOut()`) for POS-V29DD to bypass OS/browser print dialogs.
+- **32-Column ESC/POS Binary Encoder (`escPosFormatter.ts`):** Standard binary ESC/POS formatting with centered header, bold store name, column-32 aligned item pricing, bold total line, and auto paper cut (`GS V 0`).
+- **Interactive Header Printer Badge:** Top navbar status badge (`🟢 Printer: POS-V29DD`) opening a modular printer settings modal (`PrinterSettingsModal.tsx`).
+- **Thermal Receipt Portal (`ThermalReceiptPrintPortal.tsx`):** Fixed browser print blank page issue by portaling receipt layout directly to `document.body`.
+
+### 📲 Added (WhatsApp Digital Receipt)
+- **Indonesian Phone Normalizer (`waReceiptFormatter.ts`):** Converts local numbers (`08xx`, `+628xx`) to international format `628xx`.
+- **WhatsApp Markdown Digital Receipt Generator:** Generates formatted receipt strings with WhatsApp Markdown (`*bold*`, `_italic_`, `=` line dividers) for direct customer sharing via `wa.me`.
+- **Unicode Character Encoding Fix:** Resolved multi-byte surrogate character URL encoding corruption.
+
+### 🧩 Refactored (Hyper-Modular Feature Architecture)
+- **Presenter & Hook Separation:** Decomposed all dashboard pages (`/pos`, `/products`, `/transactions`, `/settings`) into presenter components (< 100 lines) delegating state and side-effects to custom hooks (`usePosDashboard`, `useProductsDashboard`, `useTransactionsDashboard`, `useTenantSettingsForm`).
+- **Atomic Subcomponents:** Created `ProductCard.tsx`, `CartItemRow.tsx`, `PaymentMethodSelector.tsx`, `PaymentCashCalculator.tsx`, `ProductTypeSelector.tsx`, `ProductDeleteModal.tsx`, `TransactionMetricCards.tsx`, `TransactionDetailModal.tsx`, `PrinterStatusCard.tsx`, `PrinterModeSelector.tsx`, and `TenantSettingsForm.tsx`.
+- **Cart Cleanup:** Removed redundant customer info form section from `CartSidebar.tsx` (handled cleanly in `PaymentModal.tsx`).
+
+### 🎨 Design System & Layout
+- **Full-Width Responsive Layout:** Converted all dashboard pages to 100% full-width edge-to-edge rendering (`w-full`).
+- **Emerald Green Theme Harmonization:** Standardized all active filter pills, pagination buttons, and primary action buttons to Emerald Green (`bg-emerald-600 hover:bg-emerald-700 text-white`).
+
+### 🧪 Testing
+- **15 Unit Tests Passed:** Expanded test suite across Auth, Tenant, Product, Transaction, and WhatsApp Formatter modules (`bun test`).
+
+---
+
 ## [1.0.0-mvp] - 2026-08-12
 
 ### 🚀 Added
