@@ -39,10 +39,15 @@ export class ApiResponse {
     error: unknown = null,
     statusCode = 400,
   ) {
+    const formattedError =
+      error instanceof Error
+        ? { name: error.name, details: error.message }
+        : error;
+
     return res.status(statusCode).json({
       success: false,
       message,
-      error,
+      error: formattedError,
     });
   }
 }
