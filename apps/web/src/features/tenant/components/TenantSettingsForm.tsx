@@ -17,7 +17,7 @@ export function TenantSettingsForm() {
     useTenantSettingsForm();
 
   return (
-    <Card className="rounded-2xl border border-slate-200 p-6">
+    <Card className="w-full rounded-2xl border border-slate-200 p-6">
       <CardHeader className="px-0 pt-0 mb-4 border-b border-slate-100 pb-4">
         <CardTitle className="flex items-center gap-2 text-slate-900 text-lg">
           <Store className="h-5 w-5 text-emerald-600" />
