@@ -6,7 +6,7 @@ import { TenantSettingsForm } from "../../../features/tenant/components/TenantSe
 export default function SettingsPage() {
   return (
     <DashboardLayout requiredRole="owner">
-      <main className="p-4 sm:p-6 lg:p-8 w-full space-y-6">
+      <main className="p-4 sm:p-6 lg:p-8 max-w-4xl w-full mx-auto space-y-6">
         <header>
           <h1 className="text-2xl font-extrabold text-slate-900">
             Pengaturan White-Label Merchant
