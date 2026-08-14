@@ -19,6 +19,7 @@ import {
   DialogTitle,
 } from "../../../components/ui/dialog";
 import { Input } from "../../../components/ui/input";
+import { Pagination } from "../../../components/ui/pagination";
 import {
   Table,
   TableBody,
@@ -37,6 +38,9 @@ export default function ProductsPage() {
     setSearch,
     filterType,
     setFilterType,
+    page,
+    setPage,
+    totalPages,
     isFormModalOpen,
     setIsFormModalOpen,
     selectedProduct,
@@ -232,6 +236,14 @@ export default function ProductsPage() {
                 )}
               </TableBody>
             </Table>
+
+            <Pagination
+              page={page}
+              totalPages={totalPages}
+              totalItems={totalCount}
+              onPageChange={setPage}
+              itemLabel="produk"
+            />
           </CardContent>
         </Card>
 
