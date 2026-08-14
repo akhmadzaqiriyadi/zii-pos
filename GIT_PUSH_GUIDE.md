@@ -40,7 +40,7 @@ Sebelum melakukan commit dan push, jalankan 3 perintah wajib ini di terminal kam
 # 1. Jalankan Linter & Auto-Format kode
 bun run lint:fix
 
-# 2. Jalankan 11 Backend Unit Tests
+# 2. Jalankan 15 Monorepo Unit Tests
 bun test
 
 # 3. Tes Kompilasi Frontend Next.js 16

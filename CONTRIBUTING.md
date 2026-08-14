@@ -11,25 +11,30 @@ Dokumen ini berisi standar koding, aturan monorepo, dan konvensi pengembangan so
 - **Backend Framework:** Express.js TypeScript (Running natively on Bun)
 - **Frontend Framework:** Next.js 16 (App Router + Turbopack + Radix UI + Tailwind CSS)
 - **Database:** Prisma ORM v6 + PostgreSQL (`bun db:seed`)
-- **Testing:** Bun Native Test Runner (`bun test`) — 11 Unit Tests PASSED
+- **Testing:** Bun Native Test Runner (`bun test`) — **15 Unit Tests PASSED (100%)**
 
 ---
 
-## 📌 Alokasi Tugas Resmi Tim ZII (Sprint 1)
+## 📌 Rekap Alokasi & Penyelesaian Tugas Tim ZII
 
-- **`feature/receipt-wa-print` (Zaqi — Integration & Backend Lead):**
-  - Express REST API, Multi-Tenant Header Middleware, Prisma DB Persistence & Seeder, Scalar OpenAPI Docs & Zod Models, Bun Unit Testing Suite (11 PASS).
-  - Driver Cetak Struk Thermal 58mm/80mm (`useThermalPrinter.ts`).
-  - Auto-Send WhatsApp Receipt Integration (`whatsappService.ts`).
+### 🚀 Sprint 2 (v1.1.0 — Completed 100%):
+- **Zaqi (Integration & Hardware Architecture Lead):**
+  - WebUSB Direct ESC/POS Byte Streaming ke Printer POS-V29DD (`useThermalPrinter.ts`, `escPosFormatter.ts`).
+  - WhatsApp Markdown Receipt Normalizer (`waReceiptFormatter.ts`, `08xx` -> `628xx`).
+  - Modularisasi Presenter & Custom Hooks (`usePosDashboard`, `useProductsDashboard`, `useTransactionsDashboard`, `useTenantSettingsForm`).
+  - Refaktoring Komponen Atomik (`ProductCard`, `CartItemRow`, `PaymentMethodSelector`, `PaymentCashCalculator`, `TenantSettingsForm`, dll).
+  - Penataan Layout Full-Width 100% Responsive (`w-full`) & Harmonisasi Tema Warna Hijau Emerald.
+  - Ekspansi Suite Unit Testing Monorepo menjadi **15 PASS / 0 FAIL**.
 
-- **`feature/pos-cart-ui` (Isyadi — Frontend Lead):**
-  - POS Layar Kasir UI (`/pos`) & Modal Pembayaran (Tunai/QRIS + Hitung Kembalian).
+### 🚀 Sprint 1 (v1.0.0 MVP — Completed 100%):
+- **Zaqi (Backend Lead):**
+  - Express REST API, Multi-Tenant Header Middleware, Prisma DB Persistence & Seeder, Scalar OpenAPI Docs & Zod Models.
+  - Driver Cetak Struk Thermal 58mm/80mm HTML Print Engine (`ThermalReceiptPrintPortal.tsx`).
+- **Isyadi (Frontend Lead):**
+  - Layar POS Kasir UI (`/pos`) & Modal Pembayaran (Tunai/QRIS/Transfer + Hitung Kembalian).
   - Search Bar & Filter Pencarian Produk Real-Time.
-  - SWR Data Fetching Integration dengan Express REST API.
-  - Modal Form Tambah & Edit Produk Baru di `/products`.
-
-- **`feature/auth-fullstack` (Ilham — Fullstack Lead):**
+  - Form Modal Tambah & Edit Produk Baru di `/products`.
+- **Ilham (Fullstack Lead):**
   - Endpoint Backend Auth (`POST /api/v1/auth/register-tenant` & `/login`).
   - Halaman Login & Register Merchant UI (`/login` & `/register`).
-  - Client Auth Context & LocalStorage / Cookie Token Handler di Next.js.
   - Protected Route Middleware untuk Halaman Kasir & Dashboard Owner.
