@@ -8,9 +8,12 @@
     "skipLibCheck": true,
     "types": ["bun"],
     "baseUrl": ".",
+    "outDir": "./dist",
+    "rootDir": "./src",
     "paths": {
       "@/*": ["src/*"]
     }
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*"],
+  "exclude": ["src/**/__tests__/**/*", "dist"]
 }
