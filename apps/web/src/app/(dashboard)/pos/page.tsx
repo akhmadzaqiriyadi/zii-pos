@@ -37,6 +37,7 @@ export default function POSDashboardPage() {
     totalQty,
     handleAddToCart,
     merchant,
+    lastCompletedReceipt,
     handleOpenPaymentModal,
     handleSuccessTransaction,
     handleResetCart,
@@ -128,12 +129,15 @@ export default function POSDashboardPage() {
 
         <ReceiptModal
           isOpen={isSuccessModalOpen}
-          onOpenChange={setIsSuccessModalOpen}
+          onOpenChange={(open) => {
+            setIsSuccessModalOpen(open);
+            if (!open) handleResetCart();
+          }}
           merchant={merchant}
-          cart={cart}
-          paymentMethod={paymentMethod}
-          totalAmount={totalAmount}
-          customerPhone={customerPhone}
+          cart={lastCompletedReceipt?.cart || cart}
+          paymentMethod={lastCompletedReceipt?.paymentMethod || paymentMethod}
+          totalAmount={lastCompletedReceipt?.totalAmount || totalAmount}
+          customerPhone={lastCompletedReceipt?.customerPhone || customerPhone}
           onReset={handleResetCart}
         />
       </div>

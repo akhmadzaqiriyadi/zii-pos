@@ -15,6 +15,12 @@ interface PosDashboardState {
   isCartOpen: boolean;
   isPaymentModalOpen: boolean;
   isSuccessModalOpen: boolean;
+  lastCompletedReceipt: {
+    cart: any[];
+    totalAmount: number;
+    paymentMethod: string;
+    customerPhone: string;
+  } | null;
 }
 
 type Action =
@@ -26,6 +32,7 @@ type Action =
   | { type: "SET_CART_OPEN"; payload: boolean }
   | { type: "SET_PAYMENT_MODAL_OPEN"; payload: boolean }
   | { type: "SET_SUCCESS_MODAL_OPEN"; payload: boolean }
+  | { type: "SET_LAST_COMPLETED_RECEIPT"; payload: any }
   | { type: "RESET_TRANSACTION_STATE" };
 
 const initialState: PosDashboardState = {
@@ -37,6 +44,7 @@ const initialState: PosDashboardState = {
   isCartOpen: false,
   isPaymentModalOpen: false,
   isSuccessModalOpen: false,
+  lastCompletedReceipt: null,
 };
 
 function posReducer(
@@ -60,6 +68,8 @@ function posReducer(
       return { ...state, isPaymentModalOpen: action.payload };
     case "SET_SUCCESS_MODAL_OPEN":
       return { ...state, isSuccessModalOpen: action.payload };
+    case "SET_LAST_COMPLETED_RECEIPT":
+      return { ...state, lastCompletedReceipt: action.payload };
     case "RESET_TRANSACTION_STATE":
       return {
         ...state,
@@ -115,6 +125,16 @@ export function usePosDashboard() {
   };
 
   const handleSuccessTransaction = () => {
+    dispatch({
+      type: "SET_LAST_COMPLETED_RECEIPT",
+      payload: {
+        cart: [...cart],
+        totalAmount,
+        paymentMethod: state.paymentMethod,
+        customerPhone: state.customerPhone,
+      },
+    });
+    clearCart();
     dispatch({ type: "SET_PAYMENT_MODAL_OPEN", payload: false });
     dispatch({ type: "SET_SUCCESS_MODAL_OPEN", payload: true });
   };
@@ -158,6 +178,7 @@ export function usePosDashboard() {
     totalQty,
     handleAddToCart,
     merchant,
+    lastCompletedReceipt: state.lastCompletedReceipt,
     handleOpenPaymentModal,
     handleSuccessTransaction,
     handleResetCart,
