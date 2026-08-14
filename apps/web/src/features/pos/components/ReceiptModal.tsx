@@ -11,6 +11,7 @@ import {
   DialogTitle,
 } from "../../../components/ui/dialog";
 import { formatRupiah } from "../../../lib/utils";
+import { useThermalPrinter } from "../hooks/useThermalPrinter";
 
 interface MerchantInfo {
   name: string;
@@ -45,14 +46,23 @@ export function ReceiptModal({
   onSendWhatsApp,
 }: ReceiptModalProps) {
   const [isMounted, setIsMounted] = useState(false);
+  const printer = useThermalPrinter();
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
-  const handlePrint = () => {
+
+  const handlePrint = async () => {
     toast.info("Mencetak struk belanja 58mm...");
     if (onPrintThermal) {
       onPrintThermal();
+    } else if (printer.connectionType === "web_usb") {
+      let text = `${merchant.name}\n${merchant.address}\nTelp: ${merchant.phone}\n--------------------------------\n`;
+      cart.forEach((item) => {
+        text += `${item.qty}x ${item.productName} - ${formatRupiah(item.subtotal)}\n`;
+      });
+      text += `--------------------------------\nTOTAL (${paymentMethod.toUpperCase()}): ${formatRupiah(totalAmount)}\n--------------------------------\n${merchant.receiptFooter}\nPowered by ZII POS\n`;
+      await printer.connectUsb(text);
     } else {
       window.print();
     }

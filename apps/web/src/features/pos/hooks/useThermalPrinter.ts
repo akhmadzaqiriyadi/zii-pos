@@ -141,9 +141,22 @@ export function useThermalPrinter() {
     toast.info("Koneksi printer dilepas.");
   };
 
-  const testPrint = () => {
+  const printReceiptDirect = async (receiptText: string) => {
+    if (connectionType === "web_usb") {
+      await connectUsb(receiptText);
+    } else {
+      window.print();
+    }
+  };
+
+  const testPrint = async () => {
     toast.info("Menjalankan test print 58mm...");
-    window.print();
+    const sampleText = "ZII POS STORE\nJl. Merdeka Raya No. 45\nTelp: 0812-9988-7766\n--------------------------------\n1x Kaos Polos Combed 30s - Rp 65.000\n--------------------------------\nTOTAL (CASH): Rp 65.000\n--------------------------------\nTerima kasih telah berbelanja!\nPowered by ZII POS\n";
+    if (connectionType === "web_usb") {
+      await connectUsb(sampleText);
+    } else {
+      window.print();
+    }
   };
 
   return {
@@ -157,5 +170,6 @@ export function useThermalPrinter() {
     connectUsb,
     disconnectPrinter,
     testPrint,
+    printReceiptDirect,
   };
 }
