@@ -12,3 +12,7 @@ export function formatDate(date: Date | string): string {
     timeStyle: "short",
   }).format(new Date(date));
 }
+
+export function cn(...inputs: (string | undefined | null | false)[]): string {
+  return inputs.filter(Boolean).join(" ");
+}

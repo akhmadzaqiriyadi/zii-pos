@@ -19,6 +19,14 @@ import {
   DialogTitle,
 } from "../../../components/ui/dialog";
 import { Input } from "../../../components/ui/input";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "../../../components/ui/table";
 import { ProductFormModal } from "../../../features/products/components/ProductFormModal";
 import { useProductsDashboard } from "../../../features/products/hooks/useProductsDashboard";
 import { formatRupiah } from "../../../lib/utils";
@@ -128,114 +136,102 @@ export default function ProductsPage() {
               </fieldset>
             </header>
 
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-sm text-slate-700">
-                <thead className="bg-slate-50 text-xs uppercase text-slate-500 border-b border-slate-200">
-                  <tr>
-                    <th className="px-4 py-3">Nama Produk</th>
-                    <th className="px-4 py-3">Tipe</th>
-                    <th className="px-4 py-3">Harga</th>
-                    <th className="px-4 py-3">Stok</th>
-                    <th className="px-4 py-3 text-right">Aksi</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {isLoading ? (
-                    <tr>
-                      <td
-                        colSpan={5}
-                        className="py-8 text-center text-slate-400"
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Nama Produk</TableHead>
+                  <TableHead>Tipe</TableHead>
+                  <TableHead>Harga</TableHead>
+                  <TableHead>Stok</TableHead>
+                  <TableHead className="text-right">Aksi</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {isLoading ? (
+                  <TableRow>
+                    <TableCell colSpan={5} className="py-8 text-center text-slate-400">
+                      Memuat data produk...
+                    </TableCell>
+                  </TableRow>
+                ) : products.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={5} className="py-8 text-center text-slate-400">
+                      Tidak ada produk yang sesuai.
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  products.map((item) => {
+                    const isLowStock = !item.isService && item.stock <= 5;
+                    return (
+                      <TableRow
+                        key={item.id}
+                        className={isLowStock ? "bg-rose-50/40 hover:bg-rose-50/70" : ""}
                       >
-                        Memuat data produk...
-                      </td>
-                    </tr>
-                  ) : products.length === 0 ? (
-                    <tr>
-                      <td
-                        colSpan={5}
-                        className="py-8 text-center text-slate-400"
-                      >
-                        Tidak ada produk yang sesuai.
-                      </td>
-                    </tr>
-                  ) : (
-                    products.map((item) => {
-                      const isLowStock = !item.isService && item.stock <= 5;
-                      return (
-                        <tr
-                          key={item.id}
-                          className={`transition ${
-                            isLowStock
-                              ? "bg-rose-50/40 hover:bg-rose-50/70"
-                              : "hover:bg-slate-50/50"
-                          }`}
-                        >
-                          <td className="px-4 py-3 font-semibold text-slate-800">
-                            <div className="flex items-center gap-2">
-                              <span>{item.name}</span>
-                              {isLowStock && (
-                                <span className="flex items-center gap-1 text-[10px] bg-rose-100 text-rose-700 font-extrabold px-2 py-0.5 rounded-full border border-rose-200">
-                                  <AlertCircle className="h-3 w-3 text-rose-600" />
-                                  Stok Menipis
-                                </span>
-                              )}
-                            </div>
-                          </td>
-                          <td className="px-4 py-3">
-                            <Badge variant={item.isService ? "amber" : "blue"}>
-                              {item.isService ? "JASA" : "RETAIL"}
-                            </Badge>
-                          </td>
-                          <td
-                            className={`px-4 py-3 font-bold ${
-                              isLowStock ? "text-rose-700" : "text-slate-900"
-                            }`}
-                          >
-                            {formatRupiah(item.price)}
-                          </td>
-                          <td className="px-4 py-3 text-xs">
-                            {item.isService ? (
-                              <span className="text-slate-400">-</span>
-                            ) : (
-                              <span
-                                className={
-                                  isLowStock
-                                    ? "font-extrabold text-rose-600 bg-rose-100 px-2 py-0.5 rounded-full border border-rose-200 inline-block"
-                                    : "text-slate-600 font-semibold"
-                                }
-                              >
-                                {item.stock}
+                        <TableCell className="font-semibold text-slate-800">
+                          <div className="flex items-center gap-2">
+                            <span>{item.name}</span>
+                            {isLowStock && (
+                              <span className="flex items-center gap-1 text-[10px] bg-rose-100 text-rose-700 font-extrabold px-2 py-0.5 rounded-full border border-rose-200">
+                                <AlertCircle className="h-3 w-3 text-rose-600" />
+                                Stok Menipis
                               </span>
                             )}
-                          </td>
-                          <td className="px-4 py-3 text-right space-x-1">
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => handleOpenEditModal(item)}
-                              className="text-xs text-slate-600 hover:text-emerald-600 gap-1 rounded-lg"
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant={item.isService ? "amber" : "blue"}>
+                            {item.isService ? "JASA" : "RETAIL"}
+                          </Badge>
+                        </TableCell>
+                        <TableCell
+                          className={`font-bold ${
+                            isLowStock ? "text-rose-700" : "text-slate-900"
+                          }`}
+                        >
+                          {formatRupiah(item.price)}
+                        </TableCell>
+                        <TableCell className="text-xs">
+                          {item.isService ? (
+                            <span className="text-slate-400">-</span>
+                          ) : (
+                            <span
+                              className={
+                                isLowStock
+                                  ? "font-extrabold text-rose-600 bg-rose-100 px-2 py-0.5 rounded-full border border-rose-200 inline-block"
+                                  : "text-slate-600 font-semibold"
+                              }
                             >
-                              <Edit2 className="h-3.5 w-3.5" />
-                              <span>Edit</span>
-                            </Button>
+                              {item.stock}
+                            </span>
+                          )}
+                        </TableCell>
+                        <TableCell className="text-right space-x-1">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleOpenEditModal(item)}
+                            className="text-xs text-slate-600 hover:text-emerald-600 gap-1 rounded-lg"
+                          >
+                            <Edit2 className="h-3.5 w-3.5" />
+                            <span>Edit</span>
+                          </Button>
 
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => handleDeleteProduct(item)}
-                              className="text-xs text-slate-400 hover:text-rose-600 hover:bg-rose-50 gap-1 rounded-lg"
-                            >
-                              <Trash2 className="h-3.5 w-3.5" />
-                              <span>Hapus</span>
-                            </Button>
-                          </td>
-                        </tr>
-                      );
-                    })
-                  )}
-                </tbody>
-              </table>
-            </div>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleDeleteProduct(item)}
+                            className="text-xs text-slate-400 hover:text-rose-600 hover:bg-rose-50 gap-1 rounded-lg"
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                            <span>Hapus</span>
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })
+                )}
+              </TableBody>
+            </Table>
           </CardContent>
         </Card>
 

@@ -15,6 +15,7 @@ import { DashboardLayout } from "../../../components/layout/dashboard-layout";
 import { Badge } from "../../../components/ui/badge";
 import { Button } from "../../../components/ui/button";
 import { Card, CardContent } from "../../../components/ui/card";
+import { DateRangePicker } from "../../../components/ui/date-picker";
 import {
   Dialog,
   DialogContent,
@@ -22,6 +23,14 @@ import {
   DialogTitle,
 } from "../../../components/ui/dialog";
 import { Input } from "../../../components/ui/input";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "../../../components/ui/table";
 import { useTransactionsDashboard } from "../../../features/transactions/hooks/useTransactionsDashboard";
 import { formatRupiah } from "../../../lib/utils";
 
@@ -130,24 +139,12 @@ export default function TransactionsPage() {
 
             {/* Date Range Inputs & Payment Method Pills */}
             <div className="flex flex-wrap items-center gap-3">
-              <div className="flex items-center gap-2 bg-slate-50 p-1 rounded-xl border border-slate-200">
-                <Calendar className="h-4 w-4 text-slate-400 ml-2" />
-                <input
-                  type="date"
-                  value={startDate}
-                  onChange={(e) => setStartDate(e.target.value)}
-                  className="bg-transparent text-xs text-slate-700 focus:outline-none"
-                  title="Tanggal Mulai"
-                />
-                <span className="text-slate-400 text-xs">-</span>
-                <input
-                  type="date"
-                  value={endDate}
-                  onChange={(e) => setEndDate(e.target.value)}
-                  className="bg-transparent text-xs text-slate-700 focus:outline-none"
-                  title="Tanggal Akhir"
-                />
-              </div>
+              <DateRangePicker
+                startDate={startDate}
+                endDate={endDate}
+                onStartDateChange={setStartDate}
+                onEndDateChange={setEndDate}
+              />
 
               <fieldset className="flex items-center gap-1.5 border-0 p-0 m-0">
                 {(["all", "cash", "qris", "transfer"] as const).map(
@@ -170,83 +167,78 @@ export default function TransactionsPage() {
             </div>
           </header>
 
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm text-slate-700">
-              <thead className="bg-slate-50 text-xs uppercase text-slate-500 border-b border-slate-200">
-                <tr>
-                  <th className="px-4 py-3">ID Transaksi</th>
-                  <th className="px-4 py-3">Pelanggan</th>
-                  <th className="px-4 py-3">Metode Bayar</th>
-                  <th className="px-4 py-3">Total Belanja</th>
-                  <th className="px-4 py-3">Tanggal</th>
-                  <th className="px-4 py-3 text-right">Detail</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {isLoading ? (
-                  <tr>
-                    <td colSpan={6} className="py-8 text-center text-slate-400">
-                      Memuat riwayat transaksi...
-                    </td>
-                  </tr>
-                ) : transactions.length === 0 ? (
-                  <tr>
-                    <td colSpan={6} className="py-8 text-center text-slate-400">
-                      Tidak ada riwayat transaksi yang sesuai filter.
-                    </td>
-                  </tr>
-                ) : (
-                  transactions.map((trx) => (
-                    <tr
-                      key={trx.id}
-                      className="hover:bg-slate-50/60 transition"
-                    >
-                      <td className="px-4 py-3 font-mono text-xs font-bold text-slate-900">
-                        {trx.id}
-                      </td>
-                      <td className="px-4 py-3 font-medium text-slate-800">
-                        {trx.customerName || "Umum"}
-                      </td>
-                      <td className="px-4 py-3">
-                        <Badge
-                          variant={
-                            trx.paymentMethod === "cash"
-                              ? "emerald"
-                              : trx.paymentMethod === "qris"
-                                ? "blue"
-                                : "amber"
-                          }
-                          className="uppercase text-[10px] font-bold"
-                        >
-                          {trx.paymentMethod}
-                        </Badge>
-                      </td>
-                      <td className="px-4 py-3 font-extrabold text-emerald-600">
-                        {formatRupiah(Number(trx.totalAmount))}
-                      </td>
-                      <td className="px-4 py-3 text-xs text-slate-500">
-                        {new Date(trx.createdAt).toLocaleString("id-ID", {
-                          dateStyle: "short",
-                          timeStyle: "short",
-                        })}
-                      </td>
-                      <td className="px-4 py-3 text-right">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => setSelectedTransaction(trx)}
-                          className="text-xs text-slate-600 hover:text-emerald-600 gap-1 rounded-lg"
-                        >
-                          <Eye className="h-3.5 w-3.5" />
-                          <span>Lihat Item</span>
-                        </Button>
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>ID Transaksi</TableHead>
+                <TableHead>Pelanggan</TableHead>
+                <TableHead>Metode Bayar</TableHead>
+                <TableHead>Total Belanja</TableHead>
+                <TableHead>Tanggal</TableHead>
+                <TableHead className="text-right">Detail</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {isLoading ? (
+                <TableRow>
+                  <TableCell colSpan={6} className="py-8 text-center text-slate-400">
+                    Memuat riwayat transaksi...
+                  </TableCell>
+                </TableRow>
+              ) : transactions.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={6} className="py-8 text-center text-slate-400">
+                    Tidak ada riwayat transaksi yang sesuai filter.
+                  </TableCell>
+                </TableRow>
+              ) : (
+                transactions.map((trx) => (
+                  <TableRow key={trx.id}>
+                    <TableCell className="font-mono text-xs font-bold text-slate-900">
+                      {trx.id}
+                    </TableCell>
+                    <TableCell className="font-medium text-slate-800">
+                      {trx.customerName || "Umum"}
+                    </TableCell>
+                    <TableCell>
+                      <Badge
+                        variant={
+                          trx.paymentMethod === "cash"
+                            ? "emerald"
+                            : trx.paymentMethod === "qris"
+                              ? "blue"
+                              : "amber"
+                        }
+                        className="uppercase text-[10px] font-bold"
+                      >
+                        {trx.paymentMethod}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="font-extrabold text-emerald-600">
+                      {formatRupiah(Number(trx.totalAmount))}
+                    </TableCell>
+                    <TableCell className="text-xs text-slate-500">
+                      {new Date(trx.createdAt).toLocaleString("id-ID", {
+                        dateStyle: "short",
+                        timeStyle: "short",
+                      })}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setSelectedTransaction(trx)}
+                        className="text-xs text-slate-600 hover:text-emerald-600 gap-1 rounded-lg"
+                      >
+                        <Eye className="h-3.5 w-3.5" />
+                        <span>Lihat Item</span>
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
 
           {/* Pagination Footer */}
           {meta.totalPages > 1 && (
