@@ -5,6 +5,7 @@ import {
   ChevronRight,
   LogOut,
   Package,
+  Receipt,
   Settings,
   ShoppingCart,
   UserCheck,
@@ -45,6 +46,13 @@ export function AppSidebar({
       badge: null,
     },
     {
+      title: "Riwayat Transaksi",
+      href: "/transactions",
+      icon: Receipt,
+      roles: ["owner"],
+      badge: null,
+    },
+    {
       title: "Pengaturan Toko",
       href: "/settings",
       icon: Settings,
@@ -73,7 +81,7 @@ export function AppSidebar({
         }`}
       >
         {/* Sidebar Header / Brand */}
-        <div className="flex items-center justify-between border-b border-slate-200 p-4 h-16 bg-white">
+        <header className="flex items-center justify-between border-b border-slate-200 p-4 h-16 bg-white">
           {!isCollapsed ? (
             <div className="flex items-center space-x-3 overflow-hidden">
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-600 font-extrabold text-white shadow-md">
@@ -105,10 +113,10 @@ export function AppSidebar({
               <X className="h-5 w-5 sm:hidden" />
             </button>
           )}
-        </div>
+        </header>
 
         {/* User Role Card */}
-        <div className="p-3 border-b border-slate-100 bg-slate-50/70">
+        <section className="p-3 border-b border-slate-100 bg-slate-50/70">
           {!isCollapsed ? (
             <div className="flex items-center justify-between p-2.5 rounded-xl bg-white border border-slate-200/80 shadow-xs">
               <div className="flex items-center space-x-2 min-w-0">
@@ -141,7 +149,7 @@ export function AppSidebar({
               </Badge>
             </div>
           )}
-        </div>
+        </section>
 
         {/* Navigation Menu */}
         <nav className="flex-1 overflow-y-auto p-3 space-y-1.5">
@@ -199,7 +207,7 @@ export function AppSidebar({
         </nav>
 
         {/* Sidebar Footer / Toggle & Logout */}
-        <div className="border-t border-slate-200 p-3 space-y-2 bg-white">
+        <footer className="border-t border-slate-200 p-3 space-y-2 bg-white">
           {isCollapsed && onToggleCollapse && (
             <button
               type="button"
@@ -221,7 +229,7 @@ export function AppSidebar({
             <LogOut className="h-4 w-4 shrink-0 text-slate-400 group-hover:text-rose-600" />
             {!isCollapsed && <span>Keluar Akun</span>}
           </button>
-        </div>
+        </footer>
       </aside>
     </>
   );
