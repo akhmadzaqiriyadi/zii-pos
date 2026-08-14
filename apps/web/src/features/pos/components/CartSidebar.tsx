@@ -1,11 +1,23 @@
+"use client";
+
 import type { TransactionItem } from "@zii/types";
-import { Minus, Plus, ShoppingCart, Trash2 } from "lucide-react";
+import {
+  ChevronRight,
+  Minus,
+  PanelRightClose,
+  Plus,
+  ShoppingCart,
+  Trash2,
+  X,
+} from "lucide-react";
 import { Badge } from "../../../components/ui/badge";
 import { Button } from "../../../components/ui/button";
 import { Input } from "../../../components/ui/input";
 import { formatRupiah } from "../../../lib/utils";
 
 interface CartSidebarProps {
+  isOpen?: boolean;
+  onToggleOpen?: () => void;
   cart: TransactionItem[];
   customerName: string;
   customerPhone: string;
@@ -21,6 +33,8 @@ interface CartSidebarProps {
 }
 
 export function CartSidebar({
+  isOpen = true,
+  onToggleOpen,
   cart,
   customerName,
   customerPhone,
@@ -34,124 +48,211 @@ export function CartSidebar({
   onRemoveItem,
   onCheckout,
 }: CartSidebarProps) {
-  return (
-    <div className="flex w-96 flex-col bg-white shadow-xl">
-      <div className="flex items-center justify-between border-b border-slate-100 p-4">
-        <div className="flex items-center space-x-2">
-          <ShoppingCart className="h-5 w-5 text-emerald-600" />
-          <h2 className="font-bold text-slate-800">Keranjang Belanja</h2>
-        </div>
-        <Badge variant="slate">{totalQty} item</Badge>
-      </div>
-
-      <div className="flex-1 overflow-y-auto p-4 space-y-3">
-        {cart.length === 0 ? (
-          <div className="flex h-full flex-col items-center justify-center text-center text-slate-400">
-            <ShoppingCart className="mb-2 h-12 w-12 stroke-1 text-slate-300" />
-            <p className="text-sm font-medium">Keranjang masih kosong</p>
-            <p className="text-xs">
-              Klik produk di sebelah kiri untuk menambahkan
-            </p>
+  if (!isOpen) {
+    return (
+      <div className="w-16 h-full shrink-0 flex flex-col items-center py-5 bg-white border-l border-slate-200 shadow-xs justify-between z-30 overflow-hidden">
+        <button
+          type="button"
+          onClick={onToggleOpen}
+          className="flex flex-col items-center gap-2 p-2 rounded-xl text-slate-600 hover:bg-emerald-50 hover:text-emerald-600 transition cursor-pointer"
+          title="Buka Keranjang"
+        >
+          <PanelRightClose className="h-5 w-5 rotate-180" />
+          <div className="relative">
+            <ShoppingCart className="h-6 w-6 text-emerald-600" />
+            {totalQty > 0 && (
+              <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-emerald-600 text-[10px] font-extrabold text-white">
+                {totalQty}
+              </span>
+            )}
           </div>
-        ) : (
-          cart.map((item) => (
-            <div
-              key={item.productId}
-              className="flex items-center justify-between rounded-xl border border-slate-100 bg-slate-50 p-3"
-            >
-              <div className="flex-1 pr-2">
-                <h4 className="text-xs font-semibold text-slate-800">
-                  {item.productName}
-                </h4>
-                <p className="text-[11px] text-slate-500">
-                  {formatRupiah(item.price)}
-                </p>
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      {/* Mobile/Tablet Backdrop Blur */}
+      {isOpen && onToggleOpen && (
+        <button
+          type="button"
+          onClick={onToggleOpen}
+          className="fixed inset-0 z-40 bg-slate-900/40 backdrop-blur-xs lg:hidden transition-opacity border-0 cursor-default"
+          aria-label="Close cart overlay"
+        />
+      )}
+
+      <div className="fixed lg:relative inset-y-0 right-0 z-50 lg:z-30 w-full sm:w-[380px] xl:w-[420px] h-full shrink-0 flex flex-col bg-white border-l border-slate-200 shadow-2xl lg:shadow-lg transition-all duration-300">
+        {/* Sidebar Header */}
+        <div className="shrink-0 flex items-center justify-between border-b border-slate-200 p-4 sm:p-5 bg-white">
+          <div className="flex items-center space-x-2.5">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-200">
+              <ShoppingCart className="h-5 w-5" />
+            </div>
+            <div>
+              <h2 className="font-bold text-slate-900 text-base">
+                Keranjang POS
+              </h2>
+              <p className="text-[11px] text-slate-500">Daftar pesanan kasir</p>
+            </div>
+          </div>
+          <div className="flex items-center space-x-2">
+            <Badge variant="emerald" className="font-bold">
+              {totalQty} item
+            </Badge>
+            {onToggleOpen && (
+              <button
+                type="button"
+                onClick={onToggleOpen}
+                className="p-1 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition cursor-pointer"
+                title="Sembunyikan Keranjang"
+              >
+                <ChevronRight className="h-5 w-5 hidden lg:block" />
+                <X className="h-5 w-5 lg:hidden" />
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Cart Items List */}
+        <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-3">
+          {cart.length === 0 ? (
+            <div className="flex h-full flex-col items-center justify-center text-center text-slate-400 p-6 space-y-2">
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-50 border border-slate-200 text-slate-300">
+                <ShoppingCart className="h-7 w-7 stroke-1" />
               </div>
-              <div className="flex items-center space-x-2">
-                <div className="flex items-center space-x-1 rounded-lg bg-white border border-slate-200">
+              <p className="text-sm font-semibold text-slate-700">
+                Keranjang Masih Kosong
+              </p>
+              <p className="text-xs text-slate-400">
+                Klik item pada katalog produk untuk menambah ke kasir.
+              </p>
+            </div>
+          ) : (
+            cart.map((item) => (
+              <div
+                key={item.productId}
+                className="flex items-center justify-between rounded-xl border border-slate-200/80 bg-slate-50/70 p-3 shadow-xs transition hover:border-slate-300 gap-2"
+              >
+                <div className="flex-1 min-w-0 pr-1">
+                  <h4 className="text-xs font-bold text-slate-800 leading-tight truncate">
+                    {item.productName}
+                  </h4>
+                  <p className="text-[11px] font-semibold text-slate-500 mt-0.5">
+                    {formatRupiah(item.price)}
+                  </p>
+                </div>
+                <div className="flex items-center space-x-2 shrink-0">
+                  <div className="flex items-center space-x-1 rounded-xl bg-white border border-slate-200 p-0.5 shadow-xs">
+                    <button
+                      type="button"
+                      onClick={() => onUpdateQty(item.productId, -1)}
+                      className="p-1 text-slate-500 hover:bg-slate-100 hover:text-red-600 rounded-lg transition cursor-pointer"
+                    >
+                      <Minus className="h-3 w-3" />
+                    </button>
+                    <span className="w-5 text-center text-xs font-extrabold text-slate-800">
+                      {item.qty}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => onUpdateQty(item.productId, 1)}
+                      className="p-1 text-slate-500 hover:bg-slate-100 hover:text-emerald-600 rounded-lg transition cursor-pointer"
+                    >
+                      <Plus className="h-3 w-3" />
+                    </button>
+                  </div>
                   <button
                     type="button"
-                    onClick={() => onUpdateQty(item.productId, -1)}
-                    className="p-1 text-slate-500 hover:text-red-600 cursor-pointer"
+                    onClick={() => onRemoveItem(item.productId)}
+                    className="p-1 text-slate-400 hover:text-red-500 transition cursor-pointer"
                   >
-                    <Minus className="h-3 w-3" />
-                  </button>
-                  <span className="w-5 text-center text-xs font-bold text-slate-700">
-                    {item.qty}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => onUpdateQty(item.productId, 1)}
-                    className="p-1 text-slate-500 hover:text-emerald-600 cursor-pointer"
-                  >
-                    <Plus className="h-3 w-3" />
+                    <Trash2 className="h-4 w-4" />
                   </button>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => onRemoveItem(item.productId)}
-                  className="text-slate-300 hover:text-red-500 cursor-pointer"
+              </div>
+            ))
+          )}
+        </div>
+
+        {/* Cart Summary & Action Area */}
+        {cart.length > 0 && (
+          <div className="shrink-0 border-t border-slate-200 p-4 sm:p-5 bg-slate-50/80 space-y-4">
+            <div className="space-y-2.5">
+              <div>
+                <label
+                  htmlFor="cart-customer-name"
+                  className="block text-[11px] font-bold text-slate-600 mb-1"
                 >
-                  <Trash2 className="h-4 w-4" />
-                </button>
+                  Nama Pelanggan
+                </label>
+                <Input
+                  id="cart-customer-name"
+                  type="text"
+                  placeholder="Contoh: Budi / Umum"
+                  value={customerName}
+                  onChange={(e) => onCustomerNameChange(e.target.value)}
+                  className="bg-white"
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="cart-customer-phone"
+                  className="block text-[11px] font-bold text-slate-600 mb-1"
+                >
+                  No. WhatsApp
+                </label>
+                <Input
+                  id="cart-customer-phone"
+                  type="tel"
+                  placeholder="081234567890 (Struk WA)"
+                  value={customerPhone}
+                  onChange={(e) => onCustomerPhoneChange(e.target.value)}
+                  className="bg-white"
+                />
               </div>
             </div>
-          ))
+
+            <div className="flex flex-wrap items-center justify-between gap-2 text-xs font-semibold text-slate-600">
+              <span>Metode Bayar:</span>
+              <div className="flex space-x-1">
+                {(["cash", "qris", "transfer"] as const).map((method) => (
+                  <button
+                    type="button"
+                    key={method}
+                    onClick={() => onPaymentMethodChange(method)}
+                    className={`rounded-lg px-2.5 py-1 text-[10px] font-extrabold uppercase transition cursor-pointer ${
+                      paymentMethod === method
+                        ? "bg-emerald-600 text-white shadow-xs"
+                        : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-100"
+                    }`}
+                  >
+                    {method}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between border-t border-slate-200 pt-3">
+              <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">
+                Total Tagihan
+              </span>
+              <span className="text-xl font-extrabold text-emerald-600">
+                {formatRupiah(totalAmount)}
+              </span>
+            </div>
+
+            <Button
+              onClick={onCheckout}
+              size="lg"
+              className="w-full text-base font-extrabold py-6 shadow-lg shadow-emerald-600/20"
+            >
+              BAYAR SEKARANG
+            </Button>
+          </div>
         )}
       </div>
-
-      {cart.length > 0 && (
-        <div className="border-t border-slate-100 p-4 bg-slate-50 space-y-3">
-          <div className="space-y-2">
-            <Input
-              type="text"
-              placeholder="Nama Pelanggan (Opsional)"
-              value={customerName}
-              onChange={(e) => onCustomerNameChange(e.target.value)}
-            />
-            <Input
-              type="tel"
-              placeholder="No WhatsApp (untuk Struk WA)"
-              value={customerPhone}
-              onChange={(e) => onCustomerPhoneChange(e.target.value)}
-            />
-          </div>
-
-          <div className="flex items-center justify-between text-xs text-slate-500">
-            <span>Metode Pembayaran:</span>
-            <div className="flex space-x-1">
-              {(["cash", "qris", "transfer"] as const).map((method) => (
-                <button
-                  type="button"
-                  key={method}
-                  onClick={() => onPaymentMethodChange(method)}
-                  className={`rounded-lg px-2.5 py-1 text-[10px] font-bold uppercase transition cursor-pointer ${
-                    paymentMethod === method
-                      ? "bg-emerald-600 text-white"
-                      : "bg-white text-slate-600 border border-slate-200"
-                  }`}
-                >
-                  {method}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between border-t border-slate-200 pt-2">
-            <span className="text-sm font-bold text-slate-700">TOTAL:</span>
-            <span className="text-lg font-extrabold text-emerald-600">
-              {formatRupiah(totalAmount)}
-            </span>
-          </div>
-
-          <Button
-            onClick={onCheckout}
-            className="w-full text-sm font-bold py-6"
-          >
-            BAYAR SEKARANG
-          </Button>
-        </div>
-      )}
-    </div>
+    </>
   );
 }

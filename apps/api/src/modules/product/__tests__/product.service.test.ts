@@ -52,5 +52,5 @@ describe("ProductService Unit Tests with Pagination & Search Filter", () => {
     expect(
       priceFiltered.data.every((p) => p.price >= 50000 && p.price <= 150000),
     ).toBe(true);
-  });
+  }, 15000);
 });

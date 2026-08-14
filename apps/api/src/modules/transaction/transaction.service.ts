@@ -104,18 +104,32 @@ export class TransactionService {
           include: { items: true },
         });
 
-        return transaction;
+        return {
+          ...transaction,
+          totalAmount: Number(transaction.totalAmount),
+          items: transaction.items.map((i) => ({
+            ...i,
+            price: Number(i.price),
+            subtotal: Number(i.subtotal),
+          })),
+        };
       });
     } catch {
+      const trxId = `trx-${Date.now()}`;
       return {
-        id: `trx-${Date.now()}`,
+        id: trxId,
         tenantId,
+        userId: input.userId || "demo-user-id",
         customerName: input.customerName || "Umum",
         customerPhone: input.customerPhone,
         paymentMethod: input.paymentMethod,
         totalAmount,
         status: "completed",
-        items: itemsToCreate,
+        items: itemsToCreate.map((item, idx) => ({
+          ...item,
+          id: `ti-fallback-${idx}`,
+          transactionId: trxId,
+        })),
         createdAt: new Date(),
       };
     }
@@ -178,12 +192,22 @@ export class TransactionService {
       ]);
 
       const meta = createPaginationMeta(page, limit, totalItems);
-      return { data: transactions, meta };
+      const formattedTransactions = transactions.map((t) => ({
+        ...t,
+        totalAmount: Number(t.totalAmount),
+        items: t.items.map((i) => ({
+          ...i,
+          price: Number(i.price),
+          subtotal: Number(i.subtotal),
+        })),
+      }));
+      return { data: formattedTransactions, meta };
     } catch {
       const demoTransactions = [
         {
           id: "trx-1723456789",
           tenantId,
+          userId: "demo-user-id",
           customerName: "Budi",
           customerPhone: "081234567890",
           paymentMethod: "cash",
@@ -192,6 +216,8 @@ export class TransactionService {
           createdAt: new Date("2026-08-13T10:00:00.000Z"),
           items: [
             {
+              id: "ti-1",
+              transactionId: "trx-1723456789",
               productId: "p1",
               productName: "Kaos Polos Cotton 30s",
               price: 65000,
@@ -199,6 +225,8 @@ export class TransactionService {
               subtotal: 65000,
             },
             {
+              id: "ti-2",
+              transactionId: "trx-1723456789",
               productId: "p3",
               productName: "Jasa Potong & Styling",
               price: 40000,
@@ -210,6 +238,7 @@ export class TransactionService {
         {
           id: "trx-1723456790",
           tenantId,
+          userId: "demo-user-id",
           customerName: "Siti",
           customerPhone: "081987654321",
           paymentMethod: "qris",
@@ -218,6 +247,8 @@ export class TransactionService {
           createdAt: new Date("2026-08-12T15:30:00.000Z"),
           items: [
             {
+              id: "ti-3",
+              transactionId: "trx-1723456790",
               productId: "p2",
               productName: "Kemeja Flanel Premium",
               price: 145000,

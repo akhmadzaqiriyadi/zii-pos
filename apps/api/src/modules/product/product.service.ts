@@ -107,7 +107,11 @@ export class ProductService {
 
       if (totalItems > 0) {
         const meta = createPaginationMeta(page, limit, totalItems);
-        return { data: products, meta };
+        const formattedProducts = products.map((p) => ({
+          ...p,
+          price: Number(p.price),
+        }));
+        return { data: formattedProducts, meta };
       }
     } catch {
       // Fallback handling when DB is in demo state
