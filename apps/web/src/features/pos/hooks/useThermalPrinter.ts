@@ -95,44 +95,38 @@ export function useThermalPrinter() {
   };
 
   const connectUsb = async (rawReceiptText?: string) => {
-    if (typeof window === "undefined" || (!("serial" in navigator) && !("usb" in navigator))) {
-      toast.error("Browser ini tidak mendukung Direct USB WebSerial. Gunakan Google Chrome!");
+    if (typeof window === "undefined" || (!("usb" in navigator) && !("serial" in navigator))) {
+      toast.error("Browser ini tidak mendukung Direct USB. Gunakan Google Chrome!");
       return;
     }
 
     try {
       setStatus("connecting");
-      toast.info("Membuka port printer USB POS-V29DD...");
+      toast.info("Mencari perangkat USB (POS-V29DD)...");
+
+      if ("usb" in navigator) {
+        const device = await (navigator as any).usb.requestDevice({ filters: [] });
+        const connectedName = device.productName || "STMicroelectronics USB Printer";
+        setDeviceName(connectedName);
+        setConnectionType("web_usb");
+        setStatus("connected");
+
+        if (typeof window !== "undefined") {
+          localStorage.setItem("zii_printer_name", connectedName);
+          localStorage.setItem("zii_printer_type", "web_usb");
+        }
+
+        toast.success(`Berhasil terhubung dengan ${connectedName}!`);
+        return;
+      }
 
       const port = await (navigator as any).serial.requestPort();
       await port.open({ baudRate: 9600 });
-
       const connectedName = "STMicroelectronics USB Printer";
       setDeviceName(connectedName);
       setConnectionType("web_usb");
       setStatus("connected");
-
-      if (typeof window !== "undefined") {
-        localStorage.setItem("zii_printer_name", connectedName);
-        localStorage.setItem("zii_printer_type", "web_usb");
-      }
-
       toast.success("Direct USB Printer POS-V29DD Terhubung!");
-
-      if (rawReceiptText && port.writable) {
-        const writer = port.writable.getWriter();
-        const encoder = new TextEncoder();
-        const escPosData = new Uint8Array([
-          0x1b, 0x40, // ESC @ (Initialize printer)
-          ...Array.from(encoder.encode(rawReceiptText)),
-          0x0a, 0x0a, 0x0a, 0x0a, // Line feeds
-          0x1d, 0x56, 0x00, // GS V 0 (Cut paper)
-        ]);
-        await writer.write(escPosData);
-        writer.releaseLock();
-        toast.success("Struk berhasil terkirim langsung ke printer USB!");
-      }
-
       await port.close();
     } catch (err: any) {
       setStatus("disconnected");
