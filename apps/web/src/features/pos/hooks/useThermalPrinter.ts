@@ -95,18 +95,24 @@ export function useThermalPrinter() {
   };
 
   const connectUsb = async (rawReceiptText?: string) => {
-    if (typeof window === "undefined" || (!("usb" in navigator) && !("serial" in navigator))) {
-      toast.error("Browser ini tidak mendukung Direct USB. Gunakan Google Chrome!");
+    if (typeof window === "undefined" || !("usb" in navigator)) {
+      toast.info("Menggunakan Mode System Driver 58mm...");
+      window.print();
       return;
     }
 
     try {
       setStatus("connecting");
-      toast.info("Mencari perangkat USB (POS-V29DD)...");
+      let device = (window as any)._zii_usb_device;
 
-      if ("usb" in navigator) {
-        const device = await (navigator as any).usb.requestDevice({ filters: [] });
-        const connectedName = device.productName || "STMicroelectronics USB Printer";
+      if (!device) {
+        toast.info("Mencari perangkat USB (POS-V29DD)...");
+        device = await (navigator as any).usb.requestDevice({ filters: [] });
+        (window as any)._zii_usb_device = device;
+      }
+
+      if (device) {
+        const connectedName = device.productName || "USB Portable Printer";
         setDeviceName(connectedName);
         setConnectionType("web_usb");
         setStatus("connected");
@@ -116,22 +122,42 @@ export function useThermalPrinter() {
           localStorage.setItem("zii_printer_type", "web_usb");
         }
 
-        toast.success(`Berhasil terhubung dengan ${connectedName}!`);
-        return;
-      }
+        if (rawReceiptText) {
+          try {
+            if (!device.opened) await device.open();
+            if (device.configuration === null) await device.selectConfiguration(1);
 
-      const port = await (navigator as any).serial.requestPort();
-      await port.open({ baudRate: 9600 });
-      const connectedName = "STMicroelectronics USB Printer";
-      setDeviceName(connectedName);
-      setConnectionType("web_usb");
-      setStatus("connected");
-      toast.success("Direct USB Printer POS-V29DD Terhubung!");
-      await port.close();
+            const iface = device.configuration.interfaces[0];
+            const altIface = iface?.alternates?.[0] || iface?.alternate;
+            await device.claimInterface(iface?.interfaceNumber || 0);
+
+            const outEndpoint =
+              altIface?.endpoints?.find((e: any) => e.direction === "out")?.endpointNumber || 1;
+
+            const encoder = new TextEncoder();
+            const escPosData = new Uint8Array([
+              0x1b, 0x40, // ESC @ (Initialize)
+              ...Array.from(encoder.encode(rawReceiptText)),
+              0x0a, 0x0a, 0x0a, 0x0a, // Feeds
+              0x1d, 0x56, 0x00, // Cut
+            ]);
+
+            await device.transferOut(outEndpoint, escPosData);
+            toast.success("Struk berhasil terkirim langsung ke printer USB!");
+          } catch (transferErr: any) {
+            console.warn("Direct USB Transfer Fallback:", transferErr);
+            toast.info("Mencetak via Mode 58mm...");
+            window.print();
+          }
+        } else {
+          toast.success(`Berhasil terhubung dengan ${connectedName}!`);
+        }
+      }
     } catch (err: any) {
       setStatus("disconnected");
       if (err.name !== "NotFoundError") {
-        toast.error(`Direct USB: ${err.message || "Gagal membuka port USB"}`);
+        toast.info("Mencetak via Mode 58mm...");
+        window.print();
       }
     }
   };
