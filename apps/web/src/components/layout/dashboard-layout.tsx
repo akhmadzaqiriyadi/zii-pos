@@ -11,6 +11,8 @@ import {
 import Link from "next/link";
 import { useState } from "react";
 import { useAuth } from "../../features/auth/hooks/useAuth";
+import { PrinterSettingsModal } from "../../features/pos/components/PrinterSettingsModal";
+import { useThermalPrinter } from "../../features/pos/hooks/useThermalPrinter";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
@@ -30,6 +32,7 @@ export function DashboardLayout({
   const [isSidebarCollapsed, setIsSidebarCollapsed] =
     useState(defaultCollapsed);
   const { user, tenant, logout } = useAuth();
+  const printer = useThermalPrinter();
 
   const isOwner = user?.role === "owner" || !user?.role;
   const isAuthorized =
@@ -67,14 +70,30 @@ export function DashboardLayout({
           </div>
 
           <div className="flex items-center space-x-2 sm:space-x-3 shrink-0">
-            <span
-              className="hidden md:flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-slate-50 text-slate-600 border border-slate-200"
-              title="Status Printer Thermal 58mm (POS-V29DD)"
+            <button
+              type="button"
+              onClick={() => printer.setIsSettingsOpen(true)}
+              className="hidden md:flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 shadow-xs transition cursor-pointer"
+              title="Klik untuk membuka Pengaturan Printer Thermal 58mm"
             >
-              <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span
+                className={`h-2 w-2 rounded-full ${
+                  printer.status === "connected"
+                    ? "bg-emerald-500 animate-pulse"
+                    : printer.status === "connecting"
+                      ? "bg-amber-500 animate-pulse"
+                      : "bg-slate-400"
+                }`}
+              />
               <Printer className="h-3.5 w-3.5 text-slate-500" />
-              <span>Printer 58mm: Siap</span>
-            </span>
+              <span>
+                {printer.status === "connected"
+                  ? `Printer: ${printer.connectionType === "browser_driver" ? "58mm Ready" : "POS-V29DD"}`
+                  : printer.status === "connecting"
+                    ? "Connecting..."
+                    : "Printer: Terputus"}
+              </span>
+            </button>
 
             <Badge
               variant="emerald"
@@ -132,6 +151,19 @@ export function DashboardLayout({
             children
           )}
         </div>
+
+        {/* Real Thermal Printer Architecture Settings Modal */}
+        <PrinterSettingsModal
+          isOpen={printer.isSettingsOpen}
+          onOpenChange={printer.setIsSettingsOpen}
+          status={printer.status}
+          connectionType={printer.connectionType}
+          deviceName={printer.deviceName}
+          onSetMode={printer.setPrinterMode}
+          onConnectBluetooth={printer.connectBluetooth}
+          onDisconnect={printer.disconnectPrinter}
+          onTestPrint={printer.testPrint}
+        />
       </div>
     </div>
   );

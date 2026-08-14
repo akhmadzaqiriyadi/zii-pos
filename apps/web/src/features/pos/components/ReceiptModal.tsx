@@ -139,7 +139,10 @@ export function ReceiptModal({
       </Dialog>
 
       {/* Hidden 58mm Thermal Print Layout — ONLY visible during window.print() */}
-      <div id="thermal-receipt-print" style={{ display: "none" }}>
+      <div
+        id="thermal-receipt-print"
+        className="fixed -left-[9999px] -top-[9999px] opacity-0 pointer-events-none"
+      >
         <div style={{ textAlign: "center", marginBottom: "4px" }}>
           <strong style={{ fontSize: "13px", display: "block" }}>
             {merchant.name}
