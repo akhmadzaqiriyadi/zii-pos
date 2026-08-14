@@ -1,7 +1,7 @@
-"use client";
-
 import type { TransactionItem } from "@zii/types";
 import { CheckCircle2, Printer, Send } from "lucide-react";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { toast } from "sonner";
 import { Button } from "../../../components/ui/button";
 import {
@@ -44,6 +44,11 @@ export function ReceiptModal({
   onPrintThermal,
   onSendWhatsApp,
 }: ReceiptModalProps) {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
   const handlePrint = () => {
     toast.info("Mencetak struk belanja 58mm...");
     if (onPrintThermal) {
@@ -138,72 +143,73 @@ export function ReceiptModal({
         </DialogContent>
       </Dialog>
 
-      {/* Hidden 58mm Thermal Print Layout — ONLY visible during window.print() */}
-      <div
-        id="thermal-receipt-print"
-        className="fixed -left-[9999px] -top-[9999px] opacity-0 pointer-events-none"
-      >
-        <div style={{ textAlign: "center", marginBottom: "4px" }}>
-          <strong style={{ fontSize: "13px", display: "block" }}>
-            {merchant.name}
-          </strong>
-          <div>{merchant.address}</div>
-          <div>Telp: {merchant.phone}</div>
-          <div>--------------------------------</div>
-        </div>
+      {/* Render 58mm Thermal Print Layout directly at document.body level via React Portal */}
+      {isMounted &&
+        createPortal(
+          <div id="thermal-receipt-print">
+            <div style={{ textAlign: "center", marginBottom: "4px" }}>
+              <strong style={{ fontSize: "13px", display: "block" }}>
+                {merchant.name}
+              </strong>
+              <div>{merchant.address}</div>
+              <div>Telp: {merchant.phone}</div>
+              <div>--------------------------------</div>
+            </div>
 
-        <div style={{ marginBottom: "4px" }}>
-          {cart.map((item) => (
+            <div style={{ marginBottom: "4px" }}>
+              {cart.map((item) => (
+                <div
+                  key={item.productId}
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    marginBottom: "2px",
+                  }}
+                >
+                  <span>
+                    {item.qty}x {item.productName}
+                  </span>
+                  <span>{formatRupiah(item.subtotal)}</span>
+                </div>
+              ))}
+            </div>
+
             <div
-              key={item.productId}
               style={{
-                display: "flex",
-                justifyContent: "space-between",
-                marginBottom: "2px",
+                borderTop: "1px dashed #000",
+                paddingTop: "4px",
+                marginTop: "4px",
               }}
             >
-              <span>
-                {item.qty}x {item.productName}
-              </span>
-              <span>{formatRupiah(item.subtotal)}</span>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  fontWeight: "bold",
+                  fontSize: "12px",
+                }}
+              >
+                <span>TOTAL ({paymentMethod.toUpperCase()})</span>
+                <span>{formatRupiah(totalAmount)}</span>
+              </div>
             </div>
-          ))}
-        </div>
 
-        <div
-          style={{
-            borderTop: "1px dashed #000",
-            paddingTop: "4px",
-            marginTop: "4px",
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              fontWeight: "bold",
-              fontSize: "12px",
-            }}
-          >
-            <span>TOTAL ({paymentMethod.toUpperCase()})</span>
-            <span>{formatRupiah(totalAmount)}</span>
-          </div>
-        </div>
-
-        <div
-          style={{
-            textAlign: "center",
-            marginTop: "8px",
-            paddingTop: "4px",
-            borderTop: "1px dashed #000",
-          }}
-        >
-          <div>{merchant.receiptFooter}</div>
-          <div style={{ fontSize: "8px", marginTop: "4px", opacity: 0.8 }}>
-            Powered by ZII POS SaaS
-          </div>
-        </div>
-      </div>
+            <div
+              style={{
+                textAlign: "center",
+                marginTop: "8px",
+                paddingTop: "4px",
+                borderTop: "1px dashed #000",
+              }}
+            >
+              <div>{merchant.receiptFooter}</div>
+              <div style={{ fontSize: "8px", marginTop: "4px", opacity: 0.8 }}>
+                Powered by ZII POS SaaS
+              </div>
+            </div>
+          </div>,
+          document.body,
+        )}
     </>
   );
 }
