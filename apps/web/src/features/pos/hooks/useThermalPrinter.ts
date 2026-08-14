@@ -94,12 +94,14 @@ export function useThermalPrinter() {
     }
   };
 
-  const connectUsb = async (rawReceiptText?: string) => {
+  const connectUsb = async (rawReceiptText?: any) => {
     if (typeof window === "undefined" || !("usb" in navigator)) {
       toast.info("Menggunakan Mode System Driver 58mm...");
       window.print();
       return;
     }
+
+    const textToSend = typeof rawReceiptText === "string" ? rawReceiptText : undefined;
 
     try {
       setStatus("connecting");
@@ -122,7 +124,7 @@ export function useThermalPrinter() {
           localStorage.setItem("zii_printer_type", "web_usb");
         }
 
-        if (rawReceiptText) {
+        if (textToSend) {
           try {
             if (!device.opened) await device.open();
             if (device.configuration === null) await device.selectConfiguration(1);
@@ -137,7 +139,7 @@ export function useThermalPrinter() {
             const encoder = new TextEncoder();
             const escPosData = new Uint8Array([
               0x1b, 0x40, // ESC @ (Initialize)
-              ...Array.from(encoder.encode(rawReceiptText)),
+              ...Array.from(encoder.encode(textToSend)),
               0x0a, 0x0a, 0x0a, 0x0a, // Feeds
               0x1d, 0x56, 0x00, // Cut
             ]);
