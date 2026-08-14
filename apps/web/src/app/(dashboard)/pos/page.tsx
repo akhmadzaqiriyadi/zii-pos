@@ -15,6 +15,9 @@ export default function POSDashboardPage() {
     setSearch,
     filterType,
     setFilterType,
+    page,
+    setPage,
+    totalPages,
     customerName,
     setCustomerName,
     customerPhone,
@@ -71,9 +74,12 @@ export default function POSDashboardPage() {
               totalCount={totalCount}
               search={search}
               filterType={filterType}
+              page={page}
+              totalPages={totalPages}
               isLoading={isLoading}
               onSearchChange={setSearch}
               onFilterTypeChange={setFilterType}
+              onPageChange={setPage}
               onAddToCart={handleAddToCart}
             />
           </main>

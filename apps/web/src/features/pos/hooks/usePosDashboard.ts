@@ -9,6 +9,7 @@ import { usePosProducts } from "./usePosProducts";
 interface PosDashboardState {
   search: string;
   filterType: string;
+  page: number;
   customerName: string;
   customerPhone: string;
   paymentMethod: "cash" | "qris" | "transfer";
@@ -26,6 +27,7 @@ interface PosDashboardState {
 type Action =
   | { type: "SET_SEARCH"; payload: string }
   | { type: "SET_FILTER_TYPE"; payload: string }
+  | { type: "SET_PAGE"; payload: number }
   | { type: "SET_CUSTOMER_NAME"; payload: string }
   | { type: "SET_CUSTOMER_PHONE"; payload: string }
   | { type: "SET_PAYMENT_METHOD"; payload: "cash" | "qris" | "transfer" }
@@ -38,6 +40,7 @@ type Action =
 const initialState: PosDashboardState = {
   search: "",
   filterType: "all",
+  page: 1,
   customerName: "",
   customerPhone: "",
   paymentMethod: "cash",
@@ -53,9 +56,11 @@ function posReducer(
 ): PosDashboardState {
   switch (action.type) {
     case "SET_SEARCH":
-      return { ...state, search: action.payload };
+      return { ...state, search: action.payload, page: 1 };
     case "SET_FILTER_TYPE":
-      return { ...state, filterType: action.payload };
+      return { ...state, filterType: action.payload, page: 1 };
+    case "SET_PAGE":
+      return { ...state, page: action.payload };
     case "SET_CUSTOMER_NAME":
       return { ...state, customerName: action.payload };
     case "SET_CUSTOMER_PHONE":
@@ -91,6 +96,13 @@ export function usePosDashboard() {
   const { products, totalCount, isLoading } = usePosProducts(
     state.search,
     state.filterType,
+  );
+
+  const ITEMS_PER_PAGE = 8;
+  const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE) || 1;
+  const paginatedProducts = products.slice(
+    (state.page - 1) * ITEMS_PER_PAGE,
+    state.page * ITEMS_PER_PAGE,
   );
 
   const {
@@ -150,6 +162,9 @@ export function usePosDashboard() {
     filterType: state.filterType,
     setFilterType: (filterType: string) =>
       dispatch({ type: "SET_FILTER_TYPE", payload: filterType }),
+    page: state.page,
+    setPage: (page: number) => dispatch({ type: "SET_PAGE", payload: page }),
+    totalPages,
     customerName: state.customerName,
     setCustomerName: (customerName: string) =>
       dispatch({ type: "SET_CUSTOMER_NAME", payload: customerName }),
@@ -168,7 +183,7 @@ export function usePosDashboard() {
     isSuccessModalOpen: state.isSuccessModalOpen,
     setIsSuccessModalOpen: (isOpen: boolean) =>
       dispatch({ type: "SET_SUCCESS_MODAL_OPEN", payload: isOpen }),
-    products,
+    products: paginatedProducts,
     totalCount,
     isLoading,
     cart,

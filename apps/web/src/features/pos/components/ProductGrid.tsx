@@ -5,6 +5,7 @@ import { AlertCircle, Package, Plus, Search } from "lucide-react";
 import { Badge } from "../../../components/ui/badge";
 import { Card } from "../../../components/ui/card";
 import { Input } from "../../../components/ui/input";
+import { Pagination } from "../../../components/ui/pagination";
 import { formatRupiah } from "../../../lib/utils";
 
 interface ProductGridProps {
@@ -12,9 +13,12 @@ interface ProductGridProps {
   totalCount: number;
   search: string;
   filterType: string;
+  page: number;
+  totalPages: number;
   isLoading?: boolean;
   onSearchChange: (val: string) => void;
   onFilterTypeChange: (type: string) => void;
+  onPageChange: (page: number) => void;
   onAddToCart: (product: Product) => void;
 }
 
@@ -23,9 +27,12 @@ export function ProductGrid({
   totalCount,
   search,
   filterType,
+  page,
+  totalPages,
   isLoading,
   onSearchChange,
   onFilterTypeChange,
+  onPageChange,
   onAddToCart,
 }: ProductGridProps) {
   return (
@@ -178,6 +185,14 @@ export function ProductGrid({
           })}
         </section>
       )}
+
+      <Pagination
+        page={page}
+        totalPages={totalPages}
+        totalItems={totalCount}
+        onPageChange={onPageChange}
+        itemLabel="produk"
+      />
     </Card>
   );
 }
