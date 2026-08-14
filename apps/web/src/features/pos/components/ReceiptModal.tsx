@@ -12,6 +12,7 @@ import {
 } from "../../../components/ui/dialog";
 import { formatRupiah } from "../../../lib/utils";
 import { useThermalPrinter } from "../hooks/useThermalPrinter";
+import { formatEscPosReceipt } from "../utils/escPosFormatter";
 
 interface MerchantInfo {
   name: string;
@@ -57,12 +58,17 @@ export function ReceiptModal({
     if (onPrintThermal) {
       onPrintThermal();
     } else if (printer.connectionType === "web_usb") {
-      let text = `${merchant.name}\n${merchant.address}\nTelp: ${merchant.phone}\n--------------------------------\n`;
-      cart.forEach((item) => {
-        text += `${item.qty}x ${item.productName} - ${formatRupiah(item.subtotal)}\n`;
+      const formattedBytes = formatEscPosReceipt({
+        merchant,
+        cart: cart.map((c) => ({
+          productName: c.productName,
+          qty: c.qty,
+          subtotal: c.subtotal,
+        })),
+        totalAmount,
+        paymentMethod,
       });
-      text += `--------------------------------\nTOTAL (${paymentMethod.toUpperCase()}): ${formatRupiah(totalAmount)}\n--------------------------------\n${merchant.receiptFooter}\nPowered by ZII POS\n`;
-      await printer.connectUsb(text);
+      await printer.connectUsb(formattedBytes);
     } else {
       window.print();
     }

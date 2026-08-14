@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
+import { formatEscPosReceipt } from "../utils/escPosFormatter";
+
 export type PrinterConnectionType = "browser_driver" | "web_bluetooth" | "web_usb";
 export type PrinterStatus = "connected" | "disconnected" | "connecting";
 
@@ -94,14 +96,25 @@ export function useThermalPrinter() {
     }
   };
 
-  const connectUsb = async (rawReceiptText?: any) => {
+  const connectUsb = async (rawReceiptData?: any) => {
     if (typeof window === "undefined" || !("usb" in navigator)) {
       toast.info("Menggunakan Mode System Driver 58mm...");
       window.print();
       return;
     }
 
-    const textToSend = typeof rawReceiptText === "string" ? rawReceiptText : undefined;
+    let payloadBytes: Uint8Array | undefined = undefined;
+    if (rawReceiptData instanceof Uint8Array) {
+      payloadBytes = rawReceiptData;
+    } else if (typeof rawReceiptData === "string") {
+      const encoder = new TextEncoder();
+      payloadBytes = new Uint8Array([
+        0x1b, 0x40,
+        ...Array.from(encoder.encode(rawReceiptData)),
+        0x0a, 0x0a, 0x0a, 0x0a,
+        0x1d, 0x56, 0x00,
+      ]);
+    }
 
     try {
       setStatus("connecting");
@@ -124,7 +137,7 @@ export function useThermalPrinter() {
           localStorage.setItem("zii_printer_type", "web_usb");
         }
 
-        if (textToSend) {
+        if (payloadBytes) {
           try {
             if (!device.opened) await device.open();
             if (device.configuration === null) await device.selectConfiguration(1);
@@ -136,16 +149,8 @@ export function useThermalPrinter() {
             const outEndpoint =
               altIface?.endpoints?.find((e: any) => e.direction === "out")?.endpointNumber || 1;
 
-            const encoder = new TextEncoder();
-            const escPosData = new Uint8Array([
-              0x1b, 0x40, // ESC @ (Initialize)
-              ...Array.from(encoder.encode(textToSend)),
-              0x0a, 0x0a, 0x0a, 0x0a, // Feeds
-              0x1d, 0x56, 0x00, // Cut
-            ]);
-
-            await device.transferOut(outEndpoint, escPosData);
-            toast.success("Struk berhasil terkirim langsung ke printer USB!");
+            await device.transferOut(outEndpoint, payloadBytes);
+            toast.success("Struk terkirim langsung ke printer thermal 58mm!");
           } catch (transferErr: any) {
             console.warn("Direct USB Transfer Fallback:", transferErr);
             toast.info("Mencetak via Mode 58mm...");
@@ -169,9 +174,9 @@ export function useThermalPrinter() {
     toast.info("Koneksi printer dilepas.");
   };
 
-  const printReceiptDirect = async (receiptText: string) => {
+  const printReceiptDirect = async (receiptData: Uint8Array | string) => {
     if (connectionType === "web_usb") {
-      await connectUsb(receiptText);
+      await connectUsb(receiptData);
     } else {
       window.print();
     }
@@ -179,9 +184,23 @@ export function useThermalPrinter() {
 
   const testPrint = async () => {
     toast.info("Menjalankan test print 58mm...");
-    const sampleText = "ZII POS STORE\nJl. Merdeka Raya No. 45\nTelp: 0812-9988-7766\n--------------------------------\n1x Kaos Polos Combed 30s - Rp 65.000\n--------------------------------\nTOTAL (CASH): Rp 65.000\n--------------------------------\nTerima kasih telah berbelanja!\nPowered by ZII POS\n";
+    const sampleData = {
+      merchant: {
+        name: "ZII POS STORE",
+        address: "Jl. Merdeka Raya No. 45",
+        phone: "0812-9988-7766",
+        receiptFooter: "Terima kasih telah berbelanja!",
+      },
+      cart: [
+        { productName: "Kaos Polos Combed 30s", qty: 1, subtotal: 65000 },
+      ],
+      totalAmount: 65000,
+      paymentMethod: "CASH",
+    };
+
     if (connectionType === "web_usb") {
-      await connectUsb(sampleText);
+      const bytes = formatEscPosReceipt(sampleData);
+      await connectUsb(bytes);
     } else {
       window.print();
     }
