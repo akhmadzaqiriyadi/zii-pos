@@ -45,36 +45,11 @@ export function ReceiptModal({
   onSendWhatsApp,
 }: ReceiptModalProps) {
   const handlePrint = () => {
-    toast.info("Mencetak struk 58mm (POS-V29DD)...");
+    toast.info("Mencetak struk belanja 58mm...");
     if (onPrintThermal) {
       onPrintThermal();
     } else {
       window.print();
-    }
-  };
-
-  const handleBluetoothPrint = async () => {
-    try {
-      if (typeof window === "undefined" || !("bluetooth" in navigator)) {
-        toast.error(
-          "Browser tidak mendukung Web Bluetooth API. Gunakan Chrome di Laptop / Android!",
-        );
-        return;
-      }
-      toast.info("Mencari Printer Bluetooth (POS-V29DD)...");
-      const device = await (navigator as any).bluetooth.requestDevice({
-        acceptAllDevices: true,
-        optionalServices: [
-          "000018f0-0000-1000-8000-00805f9b34fb",
-          "0000e025-0000-1000-8000-00805f9b34fb",
-          "0000ff00-0000-1000-8000-00805f9b34fb",
-        ],
-      });
-      toast.success(`Terhubung dengan ${device.name || "MiNi Thermal Printer POS-V29DD"}`);
-    } catch (err: any) {
-      if (err.name !== "NotFoundError") {
-        toast.error(`Koneksi Printer Bluetooth: ${err.message || "Gagal terhubung"}`);
-      }
     }
   };
 
@@ -102,7 +77,7 @@ export function ReceiptModal({
               Transaksi Berhasil!
             </DialogTitle>
             <p className="text-center text-xs text-slate-500">
-              ZII POS White-Label Receipt (POS-V29DD 58mm)
+              Struk Lunas ZII POS Merchant
             </p>
           </DialogHeader>
 
@@ -134,48 +109,37 @@ export function ReceiptModal({
             </div>
           </section>
 
-          <div className="flex flex-col gap-2">
-            <div className="flex space-x-2">
-              <Button
-                variant="outline"
-                onClick={handlePrint}
-                className="flex-1 text-xs gap-1.5 font-bold"
-              >
-                <Printer className="h-4 w-4 text-slate-600" />
-                <span>Cetak 58mm</span>
-              </Button>
-              <Button
-                variant="primary"
-                onClick={handleSendWA}
-                className="flex-1 text-xs gap-1.5 font-bold"
-              >
-                <Send className="h-4 w-4" />
-                <span>Kirim WA</span>
-              </Button>
-            </div>
-
+          <div className="flex space-x-2">
             <Button
               variant="outline"
-              onClick={handleBluetoothPrint}
-              className="w-full text-xs gap-1.5 text-slate-600 border-slate-300 hover:bg-slate-50"
+              onClick={handlePrint}
+              className="flex-1 text-xs gap-1.5 font-bold"
             >
-              <Printer className="h-3.5 w-3.5 text-emerald-600" />
-              <span>Connect Bluetooth POS-V29DD</span>
+              <Printer className="h-4 w-4 text-slate-600" />
+              <span>Cetak Struk</span>
             </Button>
-
             <Button
-              variant="ghost"
-              onClick={onReset}
-              className="w-full text-xs text-slate-400 hover:text-slate-600"
+              variant="primary"
+              onClick={handleSendWA}
+              className="flex-1 text-xs gap-1.5 font-bold"
             >
-              Tutup & Transaksi Baru
+              <Send className="h-4 w-4" />
+              <span>Kirim WA</span>
             </Button>
           </div>
+
+          <Button
+            variant="ghost"
+            onClick={onReset}
+            className="w-full text-xs text-slate-400 hover:text-slate-600"
+          >
+            Tutup & Transaksi Baru
+          </Button>
         </DialogContent>
       </Dialog>
 
-      {/* Hidden 58mm Thermal Print Layout for POS-V29DD Printer */}
-      <div id="thermal-receipt-print">
+      {/* Hidden 58mm Thermal Print Layout — ONLY visible during window.print() */}
+      <div id="thermal-receipt-print" style={{ display: "none" }}>
         <div style={{ textAlign: "center", marginBottom: "4px" }}>
           <strong style={{ fontSize: "13px", display: "block" }}>
             {merchant.name}

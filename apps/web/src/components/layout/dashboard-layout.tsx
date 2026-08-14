@@ -3,6 +3,7 @@
 import {
   LogOut,
   PanelLeft,
+  Printer,
   ShieldAlert,
   ShoppingCart,
   Store,
@@ -66,6 +67,15 @@ export function DashboardLayout({
           </div>
 
           <div className="flex items-center space-x-2 sm:space-x-3 shrink-0">
+            <span
+              className="hidden md:flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-slate-50 text-slate-600 border border-slate-200"
+              title="Status Printer Thermal 58mm (POS-V29DD)"
+            >
+              <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+              <Printer className="h-3.5 w-3.5 text-slate-500" />
+              <span>Printer 58mm: Siap</span>
+            </span>
+
             <Badge
               variant="emerald"
               className="gap-1.5 py-1 text-xs font-semibold"
