@@ -57,7 +57,7 @@ export function DashboardLayout({
             </button>
             <div className="min-w-0">
               <h1 className="text-sm sm:text-base font-extrabold text-slate-900 leading-none truncate">
-                {tenant?.name || "ZII Distro & Apparel Studio"}
+                {tenant?.name || "ZII POS Store"}
               </h1>
               <p className="text-[10px] sm:text-[11px] text-slate-400 mt-1 truncate">
                 Point of Sale White-Label CMS
@@ -72,7 +72,7 @@ export function DashboardLayout({
             >
               <Store className="h-3.5 w-3.5" />
               <span className="truncate max-w-[130px] sm:max-w-none">
-                {user?.name || "Isyadi"} ({user?.role || "kasir"})
+                {user?.name || "Kasir Utama"} ({user?.role || "kasir"})
               </span>
             </Badge>
             <button

@@ -42,8 +42,8 @@ async function main() {
   const userOwner = await db.user.create({
     data: {
       tenantId: tenantDistro.id,
-      name: "Zaqi (PM Owner)",
-      email: "zaqi@zii.id",
+      name: "Pemilik Toko",
+      email: "owner@zii.id",
       passwordHash,
       role: "owner",
     },
@@ -52,7 +52,7 @@ async function main() {
   const userKasir = await db.user.create({
     data: {
       tenantId: tenantDistro.id,
-      name: "Budi (Kasir Shift 1)",
+      name: "Kasir Utama",
       email: "kasir@zii.id",
       passwordHash,
       role: "cashier",

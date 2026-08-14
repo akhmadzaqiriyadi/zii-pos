@@ -7,8 +7,8 @@ import { z } from "zod";
 
 export const AuthUserSchema = z.object({
   id: z.string().openapi({ example: "u123-uuid" }),
-  name: z.string().openapi({ example: "Zaqi" }),
-  email: z.string().email().openapi({ example: "zaqi@zii.id" }),
+  name: z.string().openapi({ example: "Pemilik Toko" }),
+  email: z.string().email().openapi({ example: "owner@zii.id" }),
   role: z.string().openapi({ example: "owner" }),
 });
 
@@ -33,8 +33,8 @@ export const AuthResponseSchema = z.object({
 export const RegisterTenantBodySchema = z
   .object({
     tenantName: z.string().openapi({ example: "ZII Distro & Laundry Studio" }),
-    ownerName: z.string().openapi({ example: "Zaqi" }),
-    email: z.string().email().openapi({ example: "zaqi@zii.id" }),
+    ownerName: z.string().openapi({ example: "Pemilik Toko" }),
+    email: z.string().email().openapi({ example: "owner@zii.id" }),
     password: z.string().min(6).openapi({ example: "password123" }),
     phone: z.string().optional().openapi({ example: "081299887766" }),
     address: z
@@ -46,7 +46,7 @@ export const RegisterTenantBodySchema = z
 
 export const LoginBodySchema = z
   .object({
-    email: z.string().email().openapi({ example: "zaqi@zii.id" }),
+    email: z.string().email().openapi({ example: "owner@zii.id" }),
     password: z.string().openapi({ example: "password123" }),
   })
   .openapi("LoginInput");

@@ -91,7 +91,7 @@ export function getOpenApiDocumentation() {
       description:
         "Dokumentasi Resmi ZII POS REST API (Multi-Tenant, Filter, Pagination, & White-Label). Setiap status code (200, 201, 400, 401, 403, 404, 500) memiliki skema JSON response lengkap.",
       contact: {
-        name: "ZII Engineering Team (Zaqi, Isyadi, Ilham)",
+        name: "ZII Engineering Team",
       },
     },
     servers: [
