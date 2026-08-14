@@ -2,8 +2,8 @@
 
 import type { TransactionItem } from "@zii/types";
 import { Banknote, CheckCircle, CreditCard, QrCode } from "lucide-react";
-import { useState } from "react";
 import { Button } from "../../../components/ui/button";
+import { Card, CardContent } from "../../../components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -12,7 +12,7 @@ import {
 } from "../../../components/ui/dialog";
 import { Input } from "../../../components/ui/input";
 import { formatRupiah } from "../../../lib/utils";
-import { useCheckoutMutation } from "../hooks/useCheckoutMutation";
+import { usePaymentForm } from "../hooks/usePaymentForm";
 
 interface PaymentModalProps {
   isOpen: boolean;
@@ -41,38 +41,22 @@ export function PaymentModal({
   onPaymentMethodChange,
   onSuccessTransaction,
 }: PaymentModalProps) {
-  const [cashReceivedInput, setCashReceivedInput] = useState<string>("");
-
-  const checkoutMutation = useCheckoutMutation();
-
-  const cashReceived = Number(cashReceivedInput) || 0;
-  const changeAmount = cashReceived - totalAmount;
-  const isCashValid = paymentMethod !== "cash" || cashReceived >= totalAmount;
-
-  const handlePresetCash = (amount: number) => {
-    setCashReceivedInput(amount.toString());
-  };
-
-  const handleProcessPayment = () => {
-    if (!isCashValid || cart.length === 0) return;
-
-    checkoutMutation.mutate(
-      {
-        customerName: customerName.trim() || "Umum",
-        customerPhone: customerPhone.trim() || undefined,
-        paymentMethod,
-        items: cart.map((item) => ({
-          productId: item.productId,
-          qty: item.qty,
-        })),
-      },
-      {
-        onSuccess: (data) => {
-          onSuccessTransaction(data);
-        },
-      },
-    );
-  };
+  const {
+    cashReceivedInput,
+    setCashReceivedInput,
+    changeAmount,
+    isCashValid,
+    handlePresetCash,
+    handleProcessPayment,
+    isPending,
+  } = usePaymentForm(
+    cart,
+    totalAmount,
+    customerName,
+    customerPhone,
+    paymentMethod,
+    onSuccessTransaction,
+  );
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
@@ -87,18 +71,20 @@ export function PaymentModal({
         </DialogHeader>
 
         {/* Ringkasan Total */}
-        <div className="mb-5 rounded-xl bg-slate-50 p-4 border border-slate-200">
-          <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
-            <span>Total Tagihan</span>
-            <span>{cart.length} Jenis Item</span>
-          </div>
-          <div className="text-2xl font-extrabold text-emerald-600">
-            {formatRupiah(totalAmount)}
-          </div>
-        </div>
+        <Card className="mb-5 bg-slate-50 border-slate-200 p-4">
+          <CardContent className="p-0">
+            <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
+              <span>Total Tagihan</span>
+              <span>{cart.length} Jenis Item</span>
+            </div>
+            <div className="text-2xl font-extrabold text-emerald-600">
+              {formatRupiah(totalAmount)}
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Form Pelanggan */}
-        <div className="space-y-3 mb-5">
+        <fieldset className="space-y-3 mb-5 border-0 p-0 m-0">
           <div>
             <label
               htmlFor="customer-name"
@@ -127,13 +113,13 @@ export function PaymentModal({
               onChange={(e) => onCustomerPhoneChange(e.target.value)}
             />
           </div>
-        </div>
+        </fieldset>
 
         {/* Metode Pembayaran Tabs */}
-        <div className="mb-5">
-          <span className="text-xs font-semibold text-slate-600 mb-2 block">
+        <fieldset className="mb-5 border-0 p-0 m-0">
+          <legend className="text-xs font-semibold text-slate-600 mb-2 block">
             Metode Pembayaran
-          </span>
+          </legend>
           <div className="grid grid-cols-3 gap-2">
             <button
               type="button"
@@ -172,11 +158,11 @@ export function PaymentModal({
               <span>Transfer</span>
             </button>
           </div>
-        </div>
+        </fieldset>
 
         {/* Area Pembayaran Tunai & Real-Time Kalkulator Kembalian */}
         {paymentMethod === "cash" && (
-          <div className="mb-5 space-y-3 rounded-xl bg-slate-50 p-4 border border-slate-200">
+          <fieldset className="mb-5 space-y-3 rounded-xl bg-slate-50 p-4 border border-slate-200 m-0">
             <div>
               <label
                 htmlFor="cash-received"
@@ -241,16 +227,16 @@ export function PaymentModal({
                   : `Kurang ${formatRupiah(Math.abs(changeAmount))}`}
               </span>
             </div>
-          </div>
+          </fieldset>
         )}
 
         {/* Tombol Eksekusi Transaksi */}
         <Button
           onClick={handleProcessPayment}
-          disabled={!isCashValid || checkoutMutation.isPending}
+          disabled={!isCashValid || isPending}
           className="w-full gap-2 py-6 text-base font-bold bg-emerald-600 hover:bg-emerald-700 text-white"
         >
-          {checkoutMutation.isPending ? (
+          {isPending ? (
             <span>Memproses Transaksi...</span>
           ) : (
             <>

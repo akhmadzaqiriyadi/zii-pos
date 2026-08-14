@@ -50,7 +50,7 @@ export function CartSidebar({
 }: CartSidebarProps) {
   if (!isOpen) {
     return (
-      <div className="w-16 h-full shrink-0 flex flex-col items-center py-5 bg-white border-l border-slate-200 shadow-xs justify-between z-30 overflow-hidden">
+      <aside className="w-16 h-full shrink-0 flex flex-col items-center py-5 bg-white border-l border-slate-200 shadow-xs justify-between z-30 overflow-hidden">
         <button
           type="button"
           onClick={onToggleOpen}
@@ -67,7 +67,7 @@ export function CartSidebar({
             )}
           </div>
         </button>
-      </div>
+      </aside>
     );
   }
 
@@ -83,9 +83,9 @@ export function CartSidebar({
         />
       )}
 
-      <div className="fixed lg:relative inset-y-0 right-0 z-50 lg:z-30 w-full sm:w-[380px] xl:w-[420px] h-full shrink-0 flex flex-col bg-white border-l border-slate-200 shadow-2xl lg:shadow-lg transition-all duration-300">
+      <aside className="fixed lg:relative inset-y-0 right-0 z-50 lg:z-30 w-full sm:w-[380px] xl:w-[420px] h-full shrink-0 flex flex-col bg-white border-l border-slate-200 shadow-2xl lg:shadow-lg transition-all duration-300">
         {/* Sidebar Header */}
-        <div className="shrink-0 flex items-center justify-between border-b border-slate-200 p-4 sm:p-5 bg-white">
+        <header className="shrink-0 flex items-center justify-between border-b border-slate-200 p-4 sm:p-5 bg-white">
           <div className="flex items-center space-x-2.5">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-200">
               <ShoppingCart className="h-5 w-5" />
@@ -113,10 +113,10 @@ export function CartSidebar({
               </button>
             )}
           </div>
-        </div>
+        </header>
 
         {/* Cart Items List */}
-        <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-3">
+        <section className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-3">
           {cart.length === 0 ? (
             <div className="flex h-full flex-col items-center justify-center text-center text-slate-400 p-6 space-y-2">
               <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-50 border border-slate-200 text-slate-300">
@@ -131,7 +131,7 @@ export function CartSidebar({
             </div>
           ) : (
             cart.map((item) => (
-              <div
+              <article
                 key={item.productId}
                 className="flex items-center justify-between rounded-xl border border-slate-200/80 bg-slate-50/70 p-3 shadow-xs transition hover:border-slate-300 gap-2"
               >
@@ -171,15 +171,15 @@ export function CartSidebar({
                     <Trash2 className="h-4 w-4" />
                   </button>
                 </div>
-              </div>
+              </article>
             ))
           )}
-        </div>
+        </section>
 
         {/* Cart Summary & Action Area */}
         {cart.length > 0 && (
-          <div className="shrink-0 border-t border-slate-200 p-4 sm:p-5 bg-slate-50/80 space-y-4">
-            <div className="space-y-2.5">
+          <footer className="shrink-0 border-t border-slate-200 p-4 sm:p-5 bg-slate-50/80 space-y-4">
+            <fieldset className="space-y-2.5 border-0 p-0 m-0">
               <div>
                 <label
                   htmlFor="cart-customer-name"
@@ -212,7 +212,7 @@ export function CartSidebar({
                   className="bg-white"
                 />
               </div>
-            </div>
+            </fieldset>
 
             <div className="flex flex-wrap items-center justify-between gap-2 text-xs font-semibold text-slate-600">
               <span>Metode Bayar:</span>
@@ -250,9 +250,9 @@ export function CartSidebar({
             >
               BAYAR SEKARANG
             </Button>
-          </div>
+          </footer>
         )}
-      </div>
+      </aside>
     </>
   );
 }

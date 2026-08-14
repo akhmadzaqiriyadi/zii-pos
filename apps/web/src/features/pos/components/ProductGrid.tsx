@@ -31,7 +31,7 @@ export function ProductGrid({
   return (
     <Card className="p-4 sm:p-6 lg:p-8 space-y-6 rounded-2xl border border-slate-200/80 bg-white shadow-xs min-w-0">
       {/* Search Bar & Filter Header */}
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between border-b border-slate-100 pb-5">
+      <header className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between border-b border-slate-100 pb-5">
         <div className="relative w-full md:w-80">
           <Search className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
           <Input
@@ -43,7 +43,7 @@ export function ProductGrid({
         </div>
 
         {/* Filter Pills */}
-        <div className="flex flex-wrap items-center gap-2">
+        <fieldset className="flex flex-wrap items-center gap-2 border-0 p-0 m-0">
           <button
             type="button"
             onClick={() => onFilterTypeChange("all")}
@@ -88,8 +88,8 @@ export function ProductGrid({
           >
             Stok Menipis
           </button>
-        </div>
-      </div>
+        </fieldset>
+      </header>
 
       {/* Grid Content / Loading */}
       {isLoading ? (
@@ -105,8 +105,8 @@ export function ProductGrid({
           </p>
         </div>
       ) : (
-        /* Dynamic Container-based Grid: Min 210px per card, price never crops or truncates */
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(210px,1fr))] gap-4 sm:gap-5">
+        /* Dynamic Container-based Grid: Min 210px per card */
+        <section className="grid grid-cols-[repeat(auto-fill,minmax(210px,1fr))] gap-4 sm:gap-5">
           {products.map((prod) => {
             const isLowStock = !prod.isService && prod.stock <= 5;
             return (
@@ -120,61 +120,63 @@ export function ProductGrid({
                     : "border-slate-200/90 bg-white hover:border-emerald-500"
                 }`}
               >
-                <div>
-                  <div className="mb-3.5 flex items-center justify-between gap-1.5 flex-wrap">
-                    <Badge
-                      variant={prod.isService ? "amber" : "blue"}
-                      className="px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wider"
-                    >
-                      {prod.isService ? "JASA" : "RETAIL"}
-                    </Badge>
-                    {!prod.isService && (
-                      <span
-                        className={`text-xs font-bold flex items-center gap-1 shrink-0 ${
-                          isLowStock
-                            ? "bg-rose-100 text-rose-700 px-2.5 py-1 rounded-full border border-rose-200"
-                            : "bg-slate-100/80 text-slate-500 px-2.5 py-1 rounded-full"
-                        }`}
+                <article className="w-full h-full flex flex-col justify-between">
+                  <div>
+                    <div className="mb-3.5 flex items-center justify-between gap-1.5 flex-wrap">
+                      <Badge
+                        variant={prod.isService ? "amber" : "blue"}
+                        className="px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wider"
                       >
-                        {isLowStock && (
-                          <AlertCircle className="h-3.5 w-3.5 inline text-rose-600 animate-pulse" />
-                        )}
-                        Stok: {prod.stock}
-                      </span>
-                    )}
+                        {prod.isService ? "JASA" : "RETAIL"}
+                      </Badge>
+                      {!prod.isService && (
+                        <span
+                          className={`text-xs font-bold flex items-center gap-1 shrink-0 ${
+                            isLowStock
+                              ? "bg-rose-100 text-rose-700 px-2.5 py-1 rounded-full border border-rose-200"
+                              : "bg-slate-100/80 text-slate-500 px-2.5 py-1 rounded-full"
+                          }`}
+                        >
+                          {isLowStock && (
+                            <AlertCircle className="h-3.5 w-3.5 inline text-rose-600 animate-pulse" />
+                          )}
+                          Stok: {prod.stock}
+                        </span>
+                      )}
+                    </div>
+                    <h3
+                      className={`font-bold text-sm sm:text-base leading-snug tracking-tight mb-3.5 min-h-[40px] flex items-center transition ${
+                        isLowStock
+                          ? "text-slate-900 group-hover:text-rose-600"
+                          : "text-slate-800 group-hover:text-emerald-600"
+                      }`}
+                    >
+                      {prod.name}
+                    </h3>
                   </div>
-                  <h3
-                    className={`font-bold text-sm sm:text-base leading-snug tracking-tight mb-3.5 min-h-[40px] flex items-center transition ${
-                      isLowStock
-                        ? "text-slate-900 group-hover:text-rose-600"
-                        : "text-slate-800 group-hover:text-emerald-600"
-                    }`}
-                  >
-                    {prod.name}
-                  </h3>
-                </div>
-                <div className="mt-auto pt-3.5 border-t border-slate-100 flex items-center justify-between gap-2">
-                  <span
-                    className={`whitespace-nowrap shrink-0 text-sm sm:text-base font-extrabold ${
-                      isLowStock ? "text-rose-700" : "text-slate-900"
-                    }`}
-                  >
-                    {formatRupiah(prod.price)}
-                  </span>
-                  <span
-                    className={`flex h-8.5 w-8.5 shrink-0 items-center justify-center rounded-xl transition shadow-xs ${
-                      isLowStock
-                        ? "bg-rose-100 text-rose-700 group-hover:bg-rose-600 group-hover:text-white"
-                        : "bg-emerald-50 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white"
-                    }`}
-                  >
-                    <Plus className="h-4 w-4" />
-                  </span>
-                </div>
+                  <footer className="mt-auto pt-3.5 border-t border-slate-100 flex items-center justify-between gap-2">
+                    <span
+                      className={`whitespace-nowrap shrink-0 text-sm sm:text-base font-extrabold ${
+                        isLowStock ? "text-rose-700" : "text-slate-900"
+                      }`}
+                    >
+                      {formatRupiah(prod.price)}
+                    </span>
+                    <span
+                      className={`flex h-8.5 w-8.5 shrink-0 items-center justify-center rounded-xl transition shadow-xs ${
+                        isLowStock
+                          ? "bg-rose-100 text-rose-700 group-hover:bg-rose-600 group-hover:text-white"
+                          : "bg-emerald-50 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white"
+                      }`}
+                    >
+                      <Plus className="h-4 w-4" />
+                    </span>
+                  </footer>
+                </article>
               </button>
             );
           })}
-        </div>
+        </section>
       )}
     </Card>
   );
