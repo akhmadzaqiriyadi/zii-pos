@@ -23,6 +23,7 @@ import {
   DialogTitle,
 } from "../../../components/ui/dialog";
 import { Input } from "../../../components/ui/input";
+import { Pagination } from "../../../components/ui/pagination";
 import {
   Table,
   TableBody,
@@ -241,36 +242,15 @@ export default function TransactionsPage() {
           </Table>
 
           {/* Pagination Footer */}
-          {meta.totalPages > 1 && (
-            <footer className="flex items-center justify-between pt-4 border-t border-slate-100">
-              <span className="text-xs text-slate-500">
-                Halaman {meta.page} dari {meta.totalPages} ({meta.totalItems}{" "}
-                total)
-              </span>
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  disabled={!meta.hasPrevPage}
-                  onClick={() => setPage(Math.max(1, page - 1))}
-                  className="gap-1 text-xs"
-                >
-                  <ChevronLeft className="h-4 w-4" />
-                  <span>Sebelumnya</span>
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  disabled={!meta.hasNextPage}
-                  onClick={() => setPage(page + 1)}
-                  className="gap-1 text-xs"
-                >
-                  <span>Selanjutnya</span>
-                  <ChevronRight className="h-4 w-4" />
-                </Button>
-              </div>
-            </footer>
-          )}
+          <Pagination
+            page={meta.page}
+            totalPages={meta.totalPages}
+            totalItems={meta.totalItems}
+            onPageChange={setPage}
+            hasNextPage={meta.hasNextPage}
+            hasPrevPage={meta.hasPrevPage}
+            itemLabel="transaksi"
+          />
         </Card>
 
         {/* Modal Detail Item Transaksi */}
