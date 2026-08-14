@@ -12,6 +12,8 @@ import {
 import { Input } from "../../../components/ui/input";
 import { useProductForm } from "../hooks/useProductForm";
 
+import { ProductTypeSelector } from "./ProductTypeSelector";
+
 interface ProductFormModalProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
@@ -52,35 +54,10 @@ export function ProductFormModal({
 
         <form onSubmit={onSubmit} className="space-y-4">
           {/* Tipe Produk Selector */}
-          <fieldset className="border-0 p-0 m-0 space-y-1.5">
-            <legend className="text-xs font-semibold text-slate-700 mb-1.5 block">
-              Tipe Katalog
-            </legend>
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                type="button"
-                onClick={() => setValue("isService", false)}
-                className={`py-2 px-3 rounded-xl border text-xs font-bold transition cursor-pointer ${
-                  !isService
-                    ? "border-blue-500 bg-blue-50 text-blue-700"
-                    : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
-                }`}
-              >
-                📦 Barang Retail
-              </button>
-              <button
-                type="button"
-                onClick={() => setValue("isService", true)}
-                className={`py-2 px-3 rounded-xl border text-xs font-bold transition cursor-pointer ${
-                  isService
-                    ? "border-amber-500 bg-amber-50 text-amber-700"
-                    : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
-                }`}
-              >
-                ✂️ Jasa / Service
-              </button>
-            </div>
-          </fieldset>
+          <ProductTypeSelector
+            isService={isService}
+            onSelectType={(val) => setValue("isService", val)}
+          />
 
           {/* Nama Produk */}
           <div className="space-y-1">
