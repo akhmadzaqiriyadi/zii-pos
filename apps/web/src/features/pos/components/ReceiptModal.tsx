@@ -54,10 +54,12 @@ export function ReceiptModal({
   }, []);
 
   const handlePrint = async () => {
-    toast.info("Mencetak struk belanja 58mm...");
+    const savedType = (typeof window !== "undefined" && localStorage.getItem("zii_printer_type")) || printer.connectionType;
+
     if (onPrintThermal) {
       onPrintThermal();
-    } else if (printer.connectionType === "web_usb") {
+    } else if (savedType === "web_usb") {
+      toast.info("Mencetak 58mm langsung ke printer USB...");
       const formattedBytes = formatEscPosReceipt({
         merchant,
         cart: cart.map((c) => ({
