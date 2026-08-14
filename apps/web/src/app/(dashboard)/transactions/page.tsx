@@ -1,29 +1,20 @@
 "use client";
 
-import type { Transaction } from "@zii/types";
 import {
   Banknote,
   Calendar,
-  CheckCircle2,
   ChevronLeft,
   ChevronRight,
   CreditCard,
   Eye,
-  FileSpreadsheet,
   QrCode,
   Receipt,
   Search,
 } from "lucide-react";
-import { useState } from "react";
 import { DashboardLayout } from "../../../components/layout/dashboard-layout";
 import { Badge } from "../../../components/ui/badge";
 import { Button } from "../../../components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "../../../components/ui/card";
+import { Card, CardContent } from "../../../components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -31,27 +22,28 @@ import {
   DialogTitle,
 } from "../../../components/ui/dialog";
 import { Input } from "../../../components/ui/input";
-import { useTransactions } from "../../../features/transactions/hooks/useTransactions";
+import { useTransactionsDashboard } from "../../../features/transactions/hooks/useTransactionsDashboard";
 import { formatRupiah } from "../../../lib/utils";
 
 export default function TransactionsPage() {
-  const [search, setSearch] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState("all");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [page, setPage] = useState(1);
-
-  const [selectedTransaction, setSelectedTransaction] =
-    useState<Transaction | null>(null);
-
-  const { transactions, meta, summary, isLoading } = useTransactions({
-    page,
-    limit: 10,
+  const {
     search,
+    setSearch,
     paymentMethod,
-    startDate: startDate || undefined,
-    endDate: endDate || undefined,
-  });
+    setPaymentMethod,
+    startDate,
+    setStartDate,
+    endDate,
+    setEndDate,
+    page,
+    setPage,
+    selectedTransaction,
+    setSelectedTransaction,
+    transactions,
+    meta,
+    summary,
+    isLoading,
+  } = useTransactionsDashboard();
 
   return (
     <DashboardLayout requiredRole="owner">
