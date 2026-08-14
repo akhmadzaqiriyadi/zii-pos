@@ -6,17 +6,16 @@ import { PosApiService } from "../services/posApi";
 
 export function usePosProducts(search = "", filterType = "all") {
   const query = useQuery<Product[]>({
-    queryKey: ["products"],
-    queryFn: () => PosApiService.getProducts(),
+    queryKey: ["products", search, filterType],
+    queryFn: () => PosApiService.getProducts(search, filterType),
   });
 
-  const rawProducts = query.data ?? [];
+  const rawProducts = Array.isArray(query.data) ? query.data : [];
 
   const filteredProducts = rawProducts.filter((product) => {
     // Search filter
-    const matchesSearch = product.name
-      .toLowerCase()
-      .includes(search.toLowerCase());
+    const matchesSearch =
+      !search || product.name.toLowerCase().includes(search.toLowerCase());
 
     if (!matchesSearch) return false;
 
@@ -32,6 +31,6 @@ export function usePosProducts(search = "", filterType = "all") {
   return {
     ...query,
     products: filteredProducts,
-    totalCount: rawProducts.length,
+    totalCount: filteredProducts.length,
   };
 }
