@@ -59,7 +59,7 @@ export default function TransactionsPage() {
 
   return (
     <DashboardLayout requiredRole="owner">
-      <main className="p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto space-y-6">
+      <main className="p-4 sm:p-6 lg:p-8 w-full space-y-6">
         <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h1 className="text-2xl font-extrabold text-slate-900">
