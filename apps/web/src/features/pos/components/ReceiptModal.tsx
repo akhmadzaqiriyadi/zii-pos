@@ -11,6 +11,7 @@ import {
 import { formatRupiah } from "../../../lib/utils";
 import { useThermalPrinter } from "../hooks/useThermalPrinter";
 import { formatEscPosReceipt } from "../utils/escPosFormatter";
+import { generateWhatsAppReceiptUrl } from "../utils/waReceiptFormatter";
 import { ThermalReceiptPrintPortal } from "./ThermalReceiptPrintPortal";
 
 interface MerchantInfo {
@@ -74,11 +75,14 @@ export function ReceiptModal({
     if (onSendWhatsApp) {
       onSendWhatsApp();
     } else if (customerPhone) {
-      const text = encodeURIComponent(
-        `Struk Belanja ${merchant.name}\nTotal: ${formatRupiah(totalAmount)}\nTerima Kasih!`,
-      );
+      const waUrl = generateWhatsAppReceiptUrl(customerPhone, {
+        merchant,
+        cart,
+        paymentMethod,
+        totalAmount,
+      });
       toast.success(`Membuka WhatsApp untuk nomor ${customerPhone}`);
-      window.open(`https://wa.me/${customerPhone}?text=${text}`, "_blank");
+      window.open(waUrl, "_blank");
     } else {
       toast.warning("Nomor WhatsApp pelanggan belum diisi saat transaksi.");
     }
