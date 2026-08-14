@@ -4,34 +4,35 @@ Dokumentasi resmi strategi testing untuk Backend (`apps/api`) dan Frontend (`app
 
 ---
 
-## ⚡ 1. Backend Testing Strategy (`apps/api`)
+## ⚡ 1. Unit Testing Strategy (`bun test`)
 
-Backend ZII POS menggunakan **Bun Native Test Runner (`bun test`)** yang sangat cepat (11 pengujian unit selesai dalam < 100ms).
+ZII POS menggunakan **Bun Native Test Runner (`bun test`)** yang sangat cepat (15 pengujian unit selesai dalam < 500ms).
 
-### Menjalankan Testing Backend:
+### Menjalankan Testing Monorepo:
 ```bash
 # Dari root monorepo
 bun test
-
-# Atau masuk ke folder apps/api
-cd apps/api && bun test
 ```
 
-### Cakupan Pengujian Backend (11 PASS / 0 FAIL):
-- **`AuthService` Unit Tests:**
+### Cakupan Pengujian (15 PASS / 0 FAIL):
+- **`AuthService` Unit Tests (`apps/api`):**
   - Validasi email/password kosong saat login.
   - Validasi kelengkapan data pendaftaran merchant baru.
-- **`TenantService` Unit Tests:**
+- **`TenantService` Unit Tests (`apps/api`):**
   - Ambil profil toko & fallback setting White-Label.
   - Update data profil & pesan footer struk merchant.
-- **`TransactionService` Unit Tests:**
+- **`TransactionService` Unit Tests (`apps/api`):**
   - Validasi keranjang belanja kosong.
   - Perhitungan akurasi total nominal transaksi & pemotongan stok.
   - Filter riwayat transaksi berdasarkan rentang tanggal (`startDate`, `endDate`) dan metode pembayaran (`paymentMethod`).
-- **`ProductService` Unit Tests:**
+- **`ProductService` Unit Tests (`apps/api`):**
   - Filter pencarian teks nama produk (`search`).
   - Filter jenis produk (`isService`), alert stok menipis (`lowStock`), dan rentang harga (`minPrice`, `maxPrice`).
   - Pengujian metadata paginasi (`meta`).
+- **`WhatsApp Receipt Formatter` Unit Tests (`apps/web`):**
+  - Normalisasi nomor HP Indonesia (`08xx` -> `628xx`, `+628xx` -> `628xx`).
+  - Format pesan nota belanja WhatsApp dengan WhatsApp Markdown (`*bold*`, `_italic_`).
+  - Generasi URL `https://wa.me/628xx?text=...` yang valid & terhindar dari karakter corrupt.
 
 ---
 

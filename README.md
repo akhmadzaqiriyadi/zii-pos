@@ -3,7 +3,7 @@
 ![ZII POS Banner](https://img.shields.io/badge/Stack-Bun_Monorepo_%7C_Next.js_16_%7C_Express_TS_%7C_Prisma_v6_%7C_Radix_UI-0f172a?style=for-the-badge&logo=bun)
 ![License](https://img.shields.io/badge/License-MIT-emerald?style=for-the-badge)
 ![Version](https://img.shields.io/badge/Release-v1.0.0--mvp-blue?style=for-the-badge)
-![Testing](https://img.shields.io/badge/Unit_Tests-11_PASS_(76ms)-emerald?style=for-the-badge)
+![Testing](https://img.shields.io/badge/Unit_Tests-15_PASS_(100%25)-emerald?style=for-the-badge)
 
 Dokumentasi monorepo resmi untuk **ZII POS** — Aplikasi Point of Sale (POS) Multi-Tenant & White-Label untuk Toko Ritel General dan Penyedia Jasa (Laundry, Barbershop, Repair, Distro, dll).
 
@@ -16,13 +16,13 @@ Dikembangkan dengan arsitektur **Bun Workspaces Monorepo** performa tinggi:
 ```text
 zii-pos/
 ├── apps/
-│   ├── api/          # Express.js REST API (TypeScript + Bun Runtime)
-│   └── web/          # Next.js 16 (App Router + Turbopack + Radix UI + Tailwind CSS)
+│   ├── api/          # Express.js REST API (TypeScript + Bun Runtime + Zod OpenAPI)
+│   └── web/          # Next.js 16 (App Router + Turbopack + Radix UI + WebUSB ESC/POS)
 ├── packages/
 │   ├── db/           # Prisma ORM v6 (PostgreSQL Client & Database Seeder)
 │   └── types/        # Shared TypeScript Interfaces & Data Contracts
 ├── PRD.md            # Product & Technical Requirement Document
-├── TESTING_GUIDE.md  # Guide & Strategy Testing (Bun Test)
+├── TESTING_GUIDE.md  # Guide & Strategy Testing (15 Bun Unit Tests)
 ├── GIT_PUSH_GUIDE.md # Panduan Developer Git & Push
 └── CONTRIBUTING.md   # Code Rules & Conventions Tim ZII
 ```
@@ -34,11 +34,13 @@ zii-pos/
 | Layer | Teknologi | Keterangan |
 |:---|:---|:---|
 | **Runtime & Package Manager** | **Bun 1.3+** | Super fast package manager & workspace bundler |
-| **Frontend App** | **Next.js 16 (App Router)** | Tailwind CSS + Custom Radix UI Primitives (NO shadcn/ui) |
+| **Frontend App** | **Next.js 16 (App Router)** | Tailwind CSS + Radix UI + Feature-Based Hooks & Components |
 | **Backend API** | **Express.js (TypeScript)** | Running natively on Bun + Pino Logger + JWT Auth |
 | **Database & ORM** | **Prisma v6 + PostgreSQL** | 5 Tabel Utama + Database Seeder Script |
+| **Thermal Printing Engine** | **WebUSB Direct ESC/POS** | Stream ESC/POS binary bytes langsung ke POS-V29DD (0 dialog popup) |
+| **WhatsApp Receipt Engine** | **WA Markdown Normalizer** | Formatter nota otomatis + normalisasi nomor telepon (`08xx` -> `628xx`) |
 | **OpenAPI Docs UI** | **Scalar API Reference** | Auto OpenAPI Docs via Zod (`/docs`) |
-| **Testing Runner** | **Bun Native Test Runner** | 11 Unit Tests (`bun test`) completed in < 100ms |
+| **Testing Runner** | **Bun Native Test Runner** | **15 Unit Tests** (`bun test`) passed 100% |
 | **Linter & Formatter** | **Biome JS 1.9+** | Universal linter & formatter (`bun run lint:fix`) |
 
 ---
