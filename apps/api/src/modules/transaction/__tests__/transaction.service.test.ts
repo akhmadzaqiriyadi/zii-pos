@@ -28,6 +28,15 @@ const mockTransactions = [
 
 mock.module("@zii/db", () => ({
   db: {
+    tenant: {
+      findUnique: async () => ({ id: "tenant-test-01", name: "Test Store" }),
+      findFirst: async () => ({ id: "tenant-test-01", name: "Test Store" }),
+      create: async () => ({ id: "tenant-test-01", name: "Test Store" }),
+    },
+    user: {
+      findFirst: async () => ({ id: "user-test-01", tenantId: "tenant-test-01" }),
+      create: async () => ({ id: "user-test-01", tenantId: "tenant-test-01" }),
+    },
     product: {
       findMany: async () => [
         {
