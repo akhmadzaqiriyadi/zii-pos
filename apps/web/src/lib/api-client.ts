@@ -21,9 +21,28 @@ export async function fetchApi<T>(
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
-    throw new Error(
-      errorData?.error?.message || `API Error: ${response.statusText}`,
-    );
+    let extractedMessage = "";
+
+    if (typeof errorData?.message === "string" && errorData.message.trim()) {
+      extractedMessage = errorData.message;
+    } else if (
+      typeof errorData?.error?.message === "string" &&
+      errorData.error.message.trim()
+    ) {
+      extractedMessage = errorData.error.message;
+    } else if (typeof errorData?.error === "string" && errorData.error.trim()) {
+      extractedMessage = errorData.error;
+    } else if (Array.isArray(errorData?.error) && errorData.error.length > 0) {
+      extractedMessage = errorData.error
+        .map((e: any) => e.message || String(e))
+        .join(", ");
+    }
+
+    const finalMessage =
+      extractedMessage ||
+      `Gagal (${response.status}): ${response.statusText || "Respon API error"}`;
+
+    throw new Error(finalMessage);
   }
 
   const json = await response.json();
