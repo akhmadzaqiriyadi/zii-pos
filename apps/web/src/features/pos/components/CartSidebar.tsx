@@ -1,19 +1,12 @@
 "use client";
 
 import type { TransactionItem } from "@zii/types";
-import {
-  ChevronRight,
-  Minus,
-  PanelRightClose,
-  Plus,
-  ShoppingCart,
-  Trash2,
-  X,
-} from "lucide-react";
+import { ChevronRight, ShoppingCart, X } from "lucide-react";
 import { Badge } from "../../../components/ui/badge";
 import { Button } from "../../../components/ui/button";
 import { Input } from "../../../components/ui/input";
 import { formatRupiah } from "../../../lib/utils";
+import { CartItemRow } from "./CartItemRow";
 
 interface CartSidebarProps {
   isOpen?: boolean;
@@ -111,72 +104,58 @@ export function CartSidebar({
             </div>
           ) : (
             cart.map((item) => (
-              <article
+              <CartItemRow
                 key={item.productId}
-                className="flex items-center justify-between rounded-xl border border-slate-200/80 bg-slate-50/70 p-3 shadow-xs transition hover:border-slate-300 gap-2"
-              >
-                <div className="flex-1 min-w-0 pr-1">
-                  <h4 className="text-xs font-bold text-slate-800 leading-tight truncate">
-                    {item.productName}
-                  </h4>
-                  <p className="text-[11px] font-semibold text-slate-500 mt-0.5">
-                    {formatRupiah(item.price)}
-                  </p>
-                </div>
-                <div className="flex items-center space-x-2 shrink-0">
-                  <div className="flex items-center space-x-1 rounded-xl bg-white border border-slate-200 p-0.5 shadow-xs">
-                    <button
-                      type="button"
-                      onClick={() => onUpdateQty(item.productId, -1)}
-                      className="p-1 text-slate-500 hover:bg-slate-100 hover:text-red-600 rounded-lg transition cursor-pointer"
-                    >
-                      <Minus className="h-3 w-3" />
-                    </button>
-                    <span className="w-5 text-center text-xs font-extrabold text-slate-800">
-                      {item.qty}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => onUpdateQty(item.productId, 1)}
-                      className="p-1 text-slate-500 hover:bg-slate-100 hover:text-emerald-600 rounded-lg transition cursor-pointer"
-                    >
-                      <Plus className="h-3 w-3" />
-                    </button>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => onRemoveItem(item.productId)}
-                    className="p-1 text-slate-400 hover:text-red-500 transition cursor-pointer"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </button>
-                </div>
-              </article>
+                item={item}
+                onUpdateQty={onUpdateQty}
+                onRemoveItem={onRemoveItem}
+              />
             ))
           )}
         </section>
 
-        {/* Cart Summary & Action Area */}
-        {cart.length > 0 && (
-          <footer className="shrink-0 border-t border-slate-200 p-4 sm:p-5 bg-slate-50/80 space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-200 pb-3">
-              <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">
-                Total Tagihan
-              </span>
-              <span className="text-xl font-extrabold text-emerald-600">
-                {formatRupiah(totalAmount)}
-              </span>
-            </div>
+        {/* Customer Info Form */}
+        <section className="shrink-0 border-t border-slate-200 p-4 sm:p-5 bg-slate-50/50 space-y-3">
+          <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
+            Informasi Pelanggan (Opsional)
+          </h3>
 
-            <Button
-              onClick={onCheckout}
-              size="lg"
-              className="w-full text-base font-extrabold py-6 shadow-lg shadow-emerald-600/20"
-            >
-              PROSES BAYAR ({formatRupiah(totalAmount)})
-            </Button>
-          </footer>
-        )}
+          <div className="grid grid-cols-2 gap-2">
+            <Input
+              placeholder="Nama Pelanggan"
+              value={customerName}
+              onChange={(e) => onCustomerNameChange(e.target.value)}
+              className="h-9 text-xs rounded-xl bg-white"
+            />
+            <Input
+              placeholder="No. WhatsApp"
+              value={customerPhone}
+              onChange={(e) => onCustomerPhoneChange(e.target.value)}
+              className="h-9 text-xs rounded-xl bg-white"
+            />
+          </div>
+        </section>
+
+        {/* Checkout Footer Summary */}
+        <footer className="shrink-0 border-t border-slate-200 p-4 sm:p-5 bg-white space-y-4">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+              Total Pembayaran
+            </span>
+            <span className="text-xl font-extrabold text-emerald-600 font-sans">
+              {formatRupiah(totalAmount)}
+            </span>
+          </div>
+
+          <Button
+            onClick={onCheckout}
+            disabled={cart.length === 0}
+            className="w-full h-12 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-sm rounded-xl shadow-lg shadow-emerald-600/25 transition flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+          >
+            <span>Lanjutkan ke Pembayaran</span>
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+        </footer>
       </aside>
     </>
   );
