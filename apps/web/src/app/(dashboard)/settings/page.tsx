@@ -1,43 +1,68 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckCircle2, Loader2, Save, Store } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import { DashboardLayout } from "../../../components/layout/dashboard-layout";
 import { Button } from "../../../components/ui/button";
 import { Card, CardHeader, CardTitle } from "../../../components/ui/card";
 import { Input } from "../../../components/ui/input";
 import { useTenant } from "../../../features/tenant/hooks/useTenant";
 
+const settingsSchema = z.object({
+  storeName: z.string().min(2, { message: "Nama toko minimal 2 karakter." }),
+  phone: z.string().min(5, { message: "Nomor telepon minimal 5 karakter." }),
+  address: z.string().min(5, { message: "Alamat minimal 5 karakter." }),
+  receiptFooter: z
+    .string()
+    .min(2, { message: "Pesan footer minimal 2 karakter." }),
+});
+
+type SettingsFormData = z.infer<typeof settingsSchema>;
+
 export default function SettingsPage() {
   const { tenant, updateTenant, isUpdating } = useTenant();
-
-  const [storeName, setStoreName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [address, setAddress] = useState("");
-  const [footerText, setFooterText] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
 
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<SettingsFormData>({
+    resolver: zodResolver(settingsSchema),
+    defaultValues: {
+      storeName: "",
+      phone: "",
+      address: "",
+      receiptFooter: "",
+    },
+  });
+
   useEffect(() => {
     if (tenant) {
-      setStoreName(tenant.name || "");
-      setPhone(tenant.phone || "");
-      setAddress(tenant.address || "");
-      setFooterText(tenant.receiptFooter || "Terima kasih telah berbelanja!");
+      reset({
+        storeName: tenant.name || "",
+        phone: tenant.phone || "",
+        address: tenant.address || "",
+        receiptFooter: tenant.receiptFooter || "Terima kasih telah berbelanja!",
+      });
     }
-  }, [tenant]);
+  }, [tenant, reset]);
 
-  const handleSave = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit = async (data: SettingsFormData) => {
     setSuccessMsg("");
     setErrorMsg("");
 
     try {
       await updateTenant({
-        name: storeName,
-        phone,
-        address,
-        receiptFooter: footerText,
+        name: data.storeName,
+        phone: data.phone,
+        address: data.address,
+        receiptFooter: data.receiptFooter,
       });
       setSuccessMsg(
         "Pengaturan White-Label Merchant berhasil disimpan secara permanen!",
@@ -72,7 +97,7 @@ export default function SettingsPage() {
             </CardTitle>
           </CardHeader>
 
-          <form onSubmit={handleSave} className="space-y-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             {successMsg && (
               <div className="flex items-center gap-2 rounded-xl bg-emerald-50 border border-emerald-200 p-3.5 text-xs text-emerald-700 font-semibold">
                 <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
@@ -95,11 +120,14 @@ export default function SettingsPage() {
               </label>
               <Input
                 id="storeName"
-                value={storeName}
-                onChange={(e) => setStoreName(e.target.value)}
-                required
                 placeholder="Contoh: ZII Distro & Laundry Studio"
+                {...register("storeName")}
               />
+              {errors.storeName && (
+                <p className="text-[11px] text-red-500 font-medium mt-1">
+                  {errors.storeName.message}
+                </p>
+              )}
             </div>
 
             <div>
@@ -111,11 +139,14 @@ export default function SettingsPage() {
               </label>
               <Input
                 id="phone"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                required
                 placeholder="Contoh: 0812-9988-7766"
+                {...register("phone")}
               />
+              {errors.phone && (
+                <p className="text-[11px] text-red-500 font-medium mt-1">
+                  {errors.phone.message}
+                </p>
+              )}
             </div>
 
             <div>
@@ -127,28 +158,35 @@ export default function SettingsPage() {
               </label>
               <Input
                 id="address"
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-                required
                 placeholder="Contoh: Jl. Merdeka Raya No. 45, Jakarta"
+                {...register("address")}
               />
+              {errors.address && (
+                <p className="text-[11px] text-red-500 font-medium mt-1">
+                  {errors.address.message}
+                </p>
+              )}
             </div>
 
             <div>
               <label
-                htmlFor="footerText"
+                htmlFor="receiptFooter"
                 className="block text-xs font-bold text-slate-700 mb-1"
               >
                 Pesan Footer Struk Belanja
               </label>
               <textarea
-                id="footerText"
-                value={footerText}
-                onChange={(e) => setFooterText(e.target.value)}
+                id="receiptFooter"
                 rows={3}
                 className="w-full rounded-xl border border-slate-200 bg-white p-3 text-sm text-slate-800 focus:border-emerald-500 focus:outline-none transition"
                 placeholder="Terima kasih telah berbelanja di ZII Store! Simpan nota ini sebagai bukti garansi."
+                {...register("receiptFooter")}
               />
+              {errors.receiptFooter && (
+                <p className="text-[11px] text-red-500 font-medium mt-1">
+                  {errors.receiptFooter.message}
+                </p>
+              )}
             </div>
 
             <Button

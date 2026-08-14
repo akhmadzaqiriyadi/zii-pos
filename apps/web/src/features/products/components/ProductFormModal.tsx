@@ -1,8 +1,11 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import type { Product } from "@zii/types";
 import { Package, Save } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import { Button } from "../../../components/ui/button";
 import {
   Dialog,
@@ -12,6 +15,19 @@ import {
 } from "../../../components/ui/dialog";
 import { Input } from "../../../components/ui/input";
 import { useProductMutations } from "../hooks/useProductMutations";
+
+const productSchema = z.object({
+  name: z.string().min(2, { message: "Nama produk minimal 2 karakter." }),
+  price: z
+    .number({ message: "Harga harus berupa angka." })
+    .min(0, { message: "Harga produk tidak boleh negatif." }),
+  stock: z
+    .number({ message: "Stok harus berupa angka." })
+    .min(0, { message: "Stok tidak boleh negatif." }),
+  isService: z.boolean(),
+});
+
+type ProductFormData = z.infer<typeof productSchema>;
 
 interface ProductFormModalProps {
   isOpen: boolean;
@@ -27,51 +43,51 @@ export function ProductFormModal({
   onSuccess,
 }: ProductFormModalProps) {
   const isEditing = !!productToEdit;
-
-  const [name, setName] = useState("");
-  const [priceInput, setPriceInput] = useState("");
-  const [stockInput, setStockInput] = useState("");
-  const [isService, setIsService] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
-
   const { createMutation, updateMutation } = useProductMutations();
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    reset,
+    formState: { errors },
+  } = useForm<ProductFormData>({
+    resolver: zodResolver(productSchema),
+    defaultValues: {
+      name: "",
+      price: 0,
+      stock: 10,
+      isService: false,
+    },
+  });
+
+  const isService = watch("isService");
 
   useEffect(() => {
     if (productToEdit) {
-      setName(productToEdit.name);
-      setPriceInput(productToEdit.price.toString());
-      setStockInput(productToEdit.stock.toString());
-      setIsService(productToEdit.isService);
+      reset({
+        name: productToEdit.name,
+        price: Number(productToEdit.price),
+        stock: productToEdit.stock,
+        isService: productToEdit.isService,
+      });
     } else {
-      setName("");
-      setPriceInput("");
-      setStockInput("10");
-      setIsService(false);
+      reset({
+        name: "",
+        price: 0,
+        stock: 10,
+        isService: false,
+      });
     }
-    setErrorMsg("");
-  }, [productToEdit]);
+  }, [productToEdit, reset]);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!name.trim()) {
-      setErrorMsg("Nama produk wajib diisi.");
-      return;
-    }
-
-    const price = Number(priceInput);
-    if (Number.isNaN(price) || price < 0) {
-      setErrorMsg("Harga produk tidak valid.");
-      return;
-    }
-
-    const stock = isService ? 999 : Number(stockInput) || 0;
-
+  const onSubmit = (data: ProductFormData) => {
     const payload = {
-      name: name.trim(),
-      price,
-      stock,
-      isService,
+      name: data.name.trim(),
+      price: data.price,
+      stock: data.isService ? 999 : data.stock,
+      isService: data.isService,
     };
 
     if (isEditing && productToEdit) {
@@ -111,13 +127,7 @@ export function ProductFormModal({
           </p>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {errorMsg && (
-            <div className="rounded-xl bg-rose-50 border border-rose-200 p-3 text-xs text-rose-600 font-semibold">
-              {errorMsg}
-            </div>
-          )}
-
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           {/* Tipe Produk Selector */}
           <div>
             <span className="text-xs font-semibold text-slate-700 mb-1.5 block">
@@ -126,7 +136,7 @@ export function ProductFormModal({
             <div className="grid grid-cols-2 gap-2">
               <button
                 type="button"
-                onClick={() => setIsService(false)}
+                onClick={() => setValue("isService", false)}
                 className={`py-2 px-3 rounded-xl border text-xs font-bold transition cursor-pointer ${
                   !isService
                     ? "border-blue-500 bg-blue-50 text-blue-700"
@@ -137,7 +147,7 @@ export function ProductFormModal({
               </button>
               <button
                 type="button"
-                onClick={() => setIsService(true)}
+                onClick={() => setValue("isService", true)}
                 className={`py-2 px-3 rounded-xl border text-xs font-bold transition cursor-pointer ${
                   isService
                     ? "border-amber-500 bg-amber-50 text-amber-700"
@@ -160,10 +170,13 @@ export function ProductFormModal({
             <Input
               id="product-name"
               placeholder="Contoh: Kaos Polos / Jasa Cuci Sepatu"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
+              {...register("name")}
             />
+            {errors.name && (
+              <p className="text-[11px] text-red-500 font-medium mt-1">
+                {errors.name.message}
+              </p>
+            )}
           </div>
 
           {/* Harga */}
@@ -178,10 +191,13 @@ export function ProductFormModal({
               id="product-price"
               type="number"
               placeholder="50000"
-              value={priceInput}
-              onChange={(e) => setPriceInput(e.target.value)}
-              required
+              {...register("price", { valueAsNumber: true })}
             />
+            {errors.price && (
+              <p className="text-[11px] text-red-500 font-medium mt-1">
+                {errors.price.message}
+              </p>
+            )}
           </div>
 
           {/* Stok Barang (jika bukan Jasa) */}
@@ -197,10 +213,13 @@ export function ProductFormModal({
                 id="product-stock"
                 type="number"
                 placeholder="10"
-                value={stockInput}
-                onChange={(e) => setStockInput(e.target.value)}
-                required
+                {...register("stock", { valueAsNumber: true })}
               />
+              {errors.stock && (
+                <p className="text-[11px] text-red-500 font-medium mt-1">
+                  {errors.stock.message}
+                </p>
+              )}
             </div>
           )}
 
