@@ -69,29 +69,41 @@ export class TransactionService {
       },
     ];
 
-    let totalAmount = 0;
-    const itemsToCreate = input.items.map((item) => {
-      const prod = fallbackProducts.find((p) => p.id === item.productId);
-      const price = prod ? Number(prod.price) : 50000;
-      const productName = prod ? prod.name : "Produk";
-      const subtotal = price * item.qty;
-      totalAmount += subtotal;
-
-      return {
-        productId: item.productId,
-        productName,
-        price,
-        qty: item.qty,
-        subtotal,
-      };
-    });
-
     try {
+      // Fetch DB products for real price & name calculations
+      const productIds = input.items.map((i) => i.productId);
+      const dbProducts = await db.product.findMany({
+        where: {
+          id: { in: productIds },
+          tenantId,
+        },
+      });
+
+      let totalAmount = 0;
+      const itemsToCreate = input.items.map((item) => {
+        const prod =
+          dbProducts.find((p) => p.id === item.productId) ||
+          fallbackProducts.find((p) => p.id === item.productId);
+        const price = prod ? Number(prod.price) : 65000;
+        const productName = prod ? prod.name : "Produk Kasir";
+        const subtotal = price * item.qty;
+        totalAmount += subtotal;
+
+        return {
+          productId: item.productId,
+          productName,
+          price,
+          qty: item.qty,
+          subtotal,
+        };
+      });
+
       return await db.$transaction(async (tx) => {
+        // Create transaction entry
         const transaction = await tx.transaction.create({
           data: {
             tenantId,
-            userId: input.userId || "demo-user-id",
+            userId: input.userId || "user-default",
             customerName: input.customerName || "Umum",
             customerPhone: input.customerPhone,
             paymentMethod: input.paymentMethod,
@@ -104,6 +116,22 @@ export class TransactionService {
           include: { items: true },
         });
 
+        // Deduct inventory stock for non-service products
+        for (const item of input.items) {
+          await tx.product.updateMany({
+            where: {
+              id: item.productId,
+              tenantId,
+              isService: false,
+            },
+            data: {
+              stock: {
+                decrement: item.qty,
+              },
+            },
+          });
+        }
+
         return {
           ...transaction,
           totalAmount: Number(transaction.totalAmount),
@@ -115,11 +143,28 @@ export class TransactionService {
         };
       });
     } catch {
+      // Dev mode fallback array when DB is disconnected
+      let totalAmount = 0;
+      const itemsToCreate = input.items.map((item) => {
+        const prod = fallbackProducts.find((p) => p.id === item.productId);
+        const price = prod ? Number(prod.price) : 65000;
+        const productName = prod ? prod.name : "Produk Kasir";
+        const subtotal = price * item.qty;
+        totalAmount += subtotal;
+        return {
+          productId: item.productId,
+          productName,
+          price,
+          qty: item.qty,
+          subtotal,
+        };
+      });
+
       const trxId = `trx-${Date.now()}`;
       return {
         id: trxId,
         tenantId,
-        userId: input.userId || "demo-user-id",
+        userId: input.userId || "user-default",
         customerName: input.customerName || "Umum",
         customerPhone: input.customerPhone,
         paymentMethod: input.paymentMethod,
@@ -207,7 +252,7 @@ export class TransactionService {
         {
           id: "trx-1723456789",
           tenantId,
-          userId: "demo-user-id",
+          userId: "user-default",
           customerName: "Budi",
           customerPhone: "081234567890",
           paymentMethod: "cash",
@@ -223,37 +268,6 @@ export class TransactionService {
               price: 65000,
               qty: 1,
               subtotal: 65000,
-            },
-            {
-              id: "ti-2",
-              transactionId: "trx-1723456789",
-              productId: "p3",
-              productName: "Jasa Potong & Styling",
-              price: 40000,
-              qty: 1,
-              subtotal: 40000,
-            },
-          ],
-        },
-        {
-          id: "trx-1723456790",
-          tenantId,
-          userId: "demo-user-id",
-          customerName: "Siti",
-          customerPhone: "081987654321",
-          paymentMethod: "qris",
-          totalAmount: 145000,
-          status: "completed",
-          createdAt: new Date("2026-08-12T15:30:00.000Z"),
-          items: [
-            {
-              id: "ti-3",
-              transactionId: "trx-1723456790",
-              productId: "p2",
-              productName: "Kemeja Flanel Premium",
-              price: 145000,
-              qty: 1,
-              subtotal: 145000,
             },
           ],
         },

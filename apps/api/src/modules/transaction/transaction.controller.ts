@@ -19,6 +19,7 @@ export class TransactionController {
       }
 
       const result = await TransactionService.createTransaction(tenantId, {
+        userId: req.userId,
         customerName,
         customerPhone,
         paymentMethod,
