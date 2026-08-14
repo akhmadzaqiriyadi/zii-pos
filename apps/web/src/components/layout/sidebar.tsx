@@ -117,7 +117,7 @@ export function AppSidebar({
                 </div>
                 <div className="min-w-0">
                   <p className="text-xs font-bold text-slate-800 truncate">
-                    {user?.name || "Isyadi"}
+                    {user?.name || "Kasir"}
                   </p>
                   <p className="text-[10px] text-slate-500 capitalize truncate">
                     {user?.role || "kasir"}
