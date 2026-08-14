@@ -86,11 +86,10 @@ export function CartSidebar({
               <button
                 type="button"
                 onClick={onToggleOpen}
-                className="p-1 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition cursor-pointer"
-                title="Sembunyikan Keranjang"
+                className="p-1 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition cursor-pointer lg:hidden"
+                title="Tutup Keranjang"
               >
-                <ChevronRight className="h-5 w-5 hidden lg:block" />
-                <X className="h-5 w-5 lg:hidden" />
+                <X className="h-5 w-5" />
               </button>
             )}
           </div>
