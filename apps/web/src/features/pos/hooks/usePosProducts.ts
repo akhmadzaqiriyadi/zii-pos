@@ -10,7 +10,12 @@ export function usePosProducts(search = "", filterType = "all") {
     queryFn: () => PosApiService.getProducts(search, filterType),
   });
 
-  const rawProducts = Array.isArray(query.data) ? query.data : [];
+  const rawData = query.data;
+  const rawProducts: Product[] = Array.isArray(rawData)
+    ? rawData
+    : Array.isArray((rawData as any)?.data)
+      ? (rawData as any).data
+      : [];
 
   const filteredProducts = rawProducts.filter((product) => {
     // Search filter
