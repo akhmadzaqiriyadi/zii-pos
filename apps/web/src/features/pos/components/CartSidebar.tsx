@@ -49,26 +49,7 @@ export function CartSidebar({
   onCheckout,
 }: CartSidebarProps) {
   if (!isOpen) {
-    return (
-      <aside className="w-16 h-full shrink-0 flex flex-col items-center py-5 bg-white border-l border-slate-200 shadow-xs justify-between z-30 overflow-hidden">
-        <button
-          type="button"
-          onClick={onToggleOpen}
-          className="flex flex-col items-center gap-2 p-2 rounded-xl text-slate-600 hover:bg-emerald-50 hover:text-emerald-600 transition cursor-pointer"
-          title="Buka Keranjang"
-        >
-          <PanelRightClose className="h-5 w-5 rotate-180" />
-          <div className="relative">
-            <ShoppingCart className="h-6 w-6 text-emerald-600" />
-            {totalQty > 0 && (
-              <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-emerald-600 text-[10px] font-extrabold text-white">
-                {totalQty}
-              </span>
-            )}
-          </div>
-        </button>
-      </aside>
-    );
+    return null;
   }
 
   return (

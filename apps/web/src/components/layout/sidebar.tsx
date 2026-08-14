@@ -106,11 +106,10 @@ export function AppSidebar({
             <button
               type="button"
               onClick={onToggleCollapse}
-              className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition cursor-pointer"
-              title="Kecilkan Sidebar"
+              className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition cursor-pointer sm:hidden"
+              title="Tutup Sidebar"
             >
-              <ChevronLeft className="h-5 w-5 hidden sm:block" />
-              <X className="h-5 w-5 sm:hidden" />
+              <X className="h-5 w-5" />
             </button>
           )}
         </header>

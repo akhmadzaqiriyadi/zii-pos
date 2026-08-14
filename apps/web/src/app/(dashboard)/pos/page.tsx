@@ -62,17 +62,6 @@ export default function POSDashboardPage() {
                 <span className="text-xs font-semibold text-slate-500 bg-white px-3 py-1.5 rounded-full border border-slate-200 shadow-xs">
                   {products.length} dari {totalCount} Item Ditampilkan
                 </span>
-
-                {!isCartOpen && (
-                  <button
-                    type="button"
-                    onClick={() => setIsCartOpen(true)}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-600 text-white text-xs font-bold shadow-xs hover:bg-emerald-700 transition cursor-pointer shrink-0"
-                  >
-                    <PanelRightOpen className="h-4 w-4" />
-                    <span>Buka Keranjang ({totalQty})</span>
-                  </button>
-                )}
               </div>
             </header>
 
@@ -108,15 +97,16 @@ export default function POSDashboardPage() {
         />
 
         {/* Floating Cart Button when collapsed */}
-        {!isCartOpen && totalQty > 0 && (
+        {!isCartOpen && (
           <button
             type="button"
             onClick={() => setIsCartOpen(true)}
-            className="fixed bottom-6 right-6 z-40 flex items-center gap-3 rounded-2xl bg-emerald-600 px-5 py-3.5 text-white shadow-xl shadow-emerald-600/30 hover:bg-emerald-700 transition cursor-pointer active:scale-95 animate-bounce"
+            className="fixed bottom-6 right-6 z-40 flex items-center gap-3 rounded-2xl bg-emerald-600 px-5 py-3.5 text-white shadow-xl shadow-emerald-600/30 hover:bg-emerald-700 transition cursor-pointer active:scale-95"
           >
             <ShoppingCart className="h-5 w-5" />
             <span className="text-sm font-extrabold">
-              Keranjang ({totalQty}) • {formatRupiah(totalAmount)}
+              Keranjang ({totalQty})
+              {totalAmount > 0 ? ` • ${formatRupiah(totalAmount)}` : ""}
             </span>
             <ChevronRight className="h-4 w-4" />
           </button>
