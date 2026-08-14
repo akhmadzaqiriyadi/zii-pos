@@ -160,62 +160,7 @@ export function CartSidebar({
         {/* Cart Summary & Action Area */}
         {cart.length > 0 && (
           <footer className="shrink-0 border-t border-slate-200 p-4 sm:p-5 bg-slate-50/80 space-y-4">
-            <fieldset className="space-y-2.5 border-0 p-0 m-0">
-              <div>
-                <label
-                  htmlFor="cart-customer-name"
-                  className="block text-[11px] font-bold text-slate-600 mb-1"
-                >
-                  Nama Pelanggan
-                </label>
-                <Input
-                  id="cart-customer-name"
-                  type="text"
-                  placeholder="Contoh: Budi / Umum"
-                  value={customerName}
-                  onChange={(e) => onCustomerNameChange(e.target.value)}
-                  className="bg-white"
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="cart-customer-phone"
-                  className="block text-[11px] font-bold text-slate-600 mb-1"
-                >
-                  No. WhatsApp
-                </label>
-                <Input
-                  id="cart-customer-phone"
-                  type="tel"
-                  placeholder="081234567890 (Struk WA)"
-                  value={customerPhone}
-                  onChange={(e) => onCustomerPhoneChange(e.target.value)}
-                  className="bg-white"
-                />
-              </div>
-            </fieldset>
-
-            <div className="flex flex-wrap items-center justify-between gap-2 text-xs font-semibold text-slate-600">
-              <span>Metode Bayar:</span>
-              <div className="flex space-x-1">
-                {(["cash", "qris", "transfer"] as const).map((method) => (
-                  <button
-                    type="button"
-                    key={method}
-                    onClick={() => onPaymentMethodChange(method)}
-                    className={`rounded-lg px-2.5 py-1 text-[10px] font-extrabold uppercase transition cursor-pointer ${
-                      paymentMethod === method
-                        ? "bg-emerald-600 text-white shadow-xs"
-                        : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-100"
-                    }`}
-                  >
-                    {method}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between border-t border-slate-200 pt-3">
+            <div className="flex items-center justify-between border-b border-slate-200 pb-3">
               <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">
                 Total Tagihan
               </span>
@@ -229,7 +174,7 @@ export function CartSidebar({
               size="lg"
               className="w-full text-base font-extrabold py-6 shadow-lg shadow-emerald-600/20"
             >
-              BAYAR SEKARANG
+              PROSES BAYAR ({formatRupiah(totalAmount)})
             </Button>
           </footer>
         )}
