@@ -6,7 +6,7 @@ import { TransactionService } from "./transaction.service";
 export class TransactionController {
   static async createTransaction(req: AuthenticatedRequest, res: Response) {
     try {
-      const tenantId = req.tenantId || "demo-tenant-01";
+      const tenantId = req.tenantId || "tenant-default";
       const { customerName, customerPhone, paymentMethod, items } = req.body;
 
       if (!paymentMethod || !items) {
@@ -40,7 +40,7 @@ export class TransactionController {
 
   static async getTransactions(req: AuthenticatedRequest, res: Response) {
     try {
-      const tenantId = req.tenantId || "demo-tenant-01";
+      const tenantId = req.tenantId || "tenant-default";
       const {
         page,
         limit,

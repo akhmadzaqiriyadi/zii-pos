@@ -11,8 +11,8 @@ export function tenantMiddleware(
   res: Response,
   next: NextFunction,
 ) {
-  // Extract tenantId from Header (x-tenant-id) or fallback to demo tenant for MVP
-  const tenantId = (req.headers["x-tenant-id"] as string) || "demo-tenant-01";
+  // Extract tenantId from Header (x-tenant-id) or fallback to default tenant
+  const tenantId = (req.headers["x-tenant-id"] as string) || "tenant-default";
 
   if (!tenantId) {
     return ApiResponse.error(res, "Tenant ID is required", 401);

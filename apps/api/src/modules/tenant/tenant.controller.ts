@@ -6,7 +6,7 @@ import { TenantService } from "./tenant.service";
 export class TenantController {
   static async getProfile(req: AuthenticatedRequest, res: Response) {
     try {
-      const tenantId = req.tenantId || "demo-tenant-01";
+      const tenantId = req.tenantId || "tenant-default";
       const tenant = await TenantService.getTenantProfile(tenantId);
       return ApiResponse.success(
         res,
@@ -25,7 +25,7 @@ export class TenantController {
 
   static async updateProfile(req: AuthenticatedRequest, res: Response) {
     try {
-      const tenantId = req.tenantId || "demo-tenant-01";
+      const tenantId = req.tenantId || "tenant-default";
       const { name, logoUrl, phone, address, receiptFooter } = req.body;
 
       const updated = await TenantService.updateTenantProfile(tenantId, {

@@ -6,7 +6,7 @@ import { ProductService } from "./product.service";
 export class ProductController {
   static async getProducts(req: AuthenticatedRequest, res: Response) {
     try {
-      const tenantId = req.tenantId || "demo-tenant-01";
+      const tenantId = req.tenantId || "tenant-default";
       const {
         page,
         limit,
@@ -49,7 +49,7 @@ export class ProductController {
 
   static async createProduct(req: AuthenticatedRequest, res: Response) {
     try {
-      const tenantId = req.tenantId || "demo-tenant-01";
+      const tenantId = req.tenantId || "tenant-default";
       const product = await ProductService.createProduct(tenantId, req.body);
       return ApiResponse.success(
         res,
@@ -69,7 +69,7 @@ export class ProductController {
 
   static async updateProduct(req: AuthenticatedRequest, res: Response) {
     try {
-      const tenantId = req.tenantId || "demo-tenant-01";
+      const tenantId = req.tenantId || "tenant-default";
       const id = req.params.id as string;
       const product = await ProductService.updateProduct(
         tenantId,
@@ -94,7 +94,7 @@ export class ProductController {
 
   static async deleteProduct(req: AuthenticatedRequest, res: Response) {
     try {
-      const tenantId = req.tenantId || "demo-tenant-01";
+      const tenantId = req.tenantId || "tenant-default";
       const id = req.params.id as string;
       await ProductService.deleteProduct(tenantId, id);
       return ApiResponse.success(res, "Berhasil menghapus produk", { id }, 200);
