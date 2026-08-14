@@ -1,7 +1,6 @@
 "use client";
 
-import type { Product } from "@zii/types";
-import { AlertCircle, Edit2, Plus, Search } from "lucide-react";
+import { AlertCircle, Plus, Search } from "lucide-react";
 import { useState } from "react";
 import { DashboardLayout } from "../../../components/layout/dashboard-layout";
 import { Badge } from "../../../components/ui/badge";
@@ -17,22 +16,11 @@ export default function ProductsPage() {
   const [filterType, setFilterType] = useState("all");
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
   const { products, totalCount, isLoading, refetch } = usePosProducts(
     search,
     filterType,
   );
-
-  const handleOpenAddModal = () => {
-    setSelectedProduct(null);
-    setIsModalOpen(true);
-  };
-
-  const handleOpenEditModal = (product: Product) => {
-    setSelectedProduct(product);
-    setIsModalOpen(true);
-  };
 
   return (
     <DashboardLayout requiredRole="owner">
@@ -47,7 +35,7 @@ export default function ProductsPage() {
             </p>
           </div>
           <Button
-            onClick={handleOpenAddModal}
+            onClick={() => setIsModalOpen(true)}
             className="gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold"
           >
             <Plus className="h-4 w-4" />
@@ -124,19 +112,18 @@ export default function ProductsPage() {
                   <th className="px-4 py-3">Tipe</th>
                   <th className="px-4 py-3">Harga</th>
                   <th className="px-4 py-3">Stok</th>
-                  <th className="px-4 py-3 text-right">Aksi</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
                 {isLoading ? (
                   <tr>
-                    <td colSpan={5} className="py-8 text-center text-slate-400">
+                    <td colSpan={4} className="py-8 text-center text-slate-400">
                       Memuat data produk...
                     </td>
                   </tr>
                 ) : products.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="py-8 text-center text-slate-400">
+                    <td colSpan={4} className="py-8 text-center text-slate-400">
                       Tidak ada produk yang sesuai.
                     </td>
                   </tr>
@@ -190,17 +177,6 @@ export default function ProductsPage() {
                             </span>
                           )}
                         </td>
-                        <td className="px-4 py-3 text-right">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleOpenEditModal(item)}
-                            className="text-xs text-slate-600 hover:text-emerald-600 gap-1"
-                          >
-                            <Edit2 className="h-3.5 w-3.5" />
-                            <span>Edit</span>
-                          </Button>
-                        </td>
                       </tr>
                     );
                   })
@@ -210,11 +186,10 @@ export default function ProductsPage() {
           </div>
         </Card>
 
-        {/* Modal Form Tambah & Edit Produk */}
+        {/* Modal Form Tambah Produk Baru */}
         <ProductFormModal
           isOpen={isModalOpen}
           onOpenChange={setIsModalOpen}
-          productToEdit={selectedProduct}
           onSuccess={() => refetch()}
         />
       </main>

@@ -39,37 +39,7 @@ export function useProductMutations() {
     },
   });
 
-  const updateMutation = useMutation<
-    Product,
-    Error,
-    { id: string; data: ProductFormInput }
-  >({
-    mutationFn: async ({ id, data }) => {
-      try {
-        return await fetchApi<Product>(`/api/v1/products/${id}`, {
-          method: "PUT",
-          body: JSON.stringify(data),
-        });
-      } catch {
-        // Fallback for UI optimistic preview if backend route is not ready
-        return {
-          id,
-          tenantId: "demo-tenant-01",
-          name: data.name,
-          price: data.price,
-          stock: data.isService ? 999 : data.stock,
-          isService: data.isService,
-          createdAt: new Date(),
-        };
-      }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["products"] });
-    },
-  });
-
   return {
     createMutation,
-    updateMutation,
   };
 }

@@ -1,6 +1,5 @@
 "use client";
 
-import type { Product } from "@zii/types";
 import { Package, Save } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "../../../components/ui/button";
@@ -16,40 +15,31 @@ import { useProductMutations } from "../hooks/useProductMutations";
 interface ProductFormModalProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
-  productToEdit?: Product | null;
   onSuccess?: () => void;
 }
 
 export function ProductFormModal({
   isOpen,
   onOpenChange,
-  productToEdit,
   onSuccess,
 }: ProductFormModalProps) {
-  const isEditing = !!productToEdit;
-
   const [name, setName] = useState("");
   const [priceInput, setPriceInput] = useState("");
-  const [stockInput, setStockInput] = useState("");
+  const [stockInput, setStockInput] = useState("10");
   const [isService, setIsService] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
-  const { createMutation, updateMutation } = useProductMutations();
+  const { createMutation } = useProductMutations();
 
   useEffect(() => {
-    if (productToEdit) {
-      setName(productToEdit.name);
-      setPriceInput(productToEdit.price.toString());
-      setStockInput(productToEdit.stock.toString());
-      setIsService(productToEdit.isService);
-    } else {
+    if (isOpen) {
       setName("");
       setPriceInput("");
       setStockInput("10");
       setIsService(false);
+      setErrorMsg("");
     }
-    setErrorMsg("");
-  }, [productToEdit]);
+  }, [isOpen]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -74,27 +64,15 @@ export function ProductFormModal({
       isService,
     };
 
-    if (isEditing && productToEdit) {
-      updateMutation.mutate(
-        { id: productToEdit.id, data: payload },
-        {
-          onSuccess: () => {
-            onOpenChange(false);
-            if (onSuccess) onSuccess();
-          },
-        },
-      );
-    } else {
-      createMutation.mutate(payload, {
-        onSuccess: () => {
-          onOpenChange(false);
-          if (onSuccess) onSuccess();
-        },
-      });
-    }
+    createMutation.mutate(payload, {
+      onSuccess: () => {
+        onOpenChange(false);
+        if (onSuccess) onSuccess();
+      },
+    });
   };
 
-  const isPending = createMutation.isPending || updateMutation.isPending;
+  const isPending = createMutation.isPending;
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
@@ -102,9 +80,7 @@ export function ProductFormModal({
         <DialogHeader className="mb-4">
           <DialogTitle className="text-xl font-bold text-slate-900 flex items-center gap-2">
             <Package className="h-5 w-5 text-emerald-600" />
-            <span>
-              {isEditing ? "Edit Detail Produk" : "Tambah Produk Baru"}
-            </span>
+            <span>Tambah Produk Baru</span>
           </DialogTitle>
           <p className="text-xs text-slate-500">
             Isi formulir data produk atau jasa untuk dimasukkan ke sistem POS.
@@ -212,13 +188,7 @@ export function ProductFormModal({
               className="w-full gap-2 py-5 font-bold bg-emerald-600 hover:bg-emerald-700 text-white"
             >
               <Save className="h-4 w-4" />
-              <span>
-                {isPending
-                  ? "Menyimpan..."
-                  : isEditing
-                    ? "Update Produk"
-                    : "Simpan Produk Baru"}
-              </span>
+              <span>{isPending ? "Menyimpan..." : "Simpan Produk Baru"}</span>
             </Button>
           </div>
         </form>
