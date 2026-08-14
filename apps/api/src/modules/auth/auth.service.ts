@@ -79,14 +79,14 @@ export class AuthService {
         throw err;
       }
       // Instant dev mode registration fallback when DB is disconnected
-      const demoTenant = {
+      const devTenant = {
         id: `tenant-${Date.now()}`,
         name: input.tenantName,
-        phone: input.phone || "081299887766",
-        address: input.address || "Jl. Merdeka No. 45, Jakarta",
-        receiptFooter: "Terima kasih telah berbelanja di toko kami!",
+        phone: input.phone || "",
+        address: input.address || "",
+        receiptFooter: "Terima kasih telah berbelanja!",
       };
-      const demoUser = {
+      const devUser = {
         id: `user-${Date.now()}`,
         name: input.ownerName,
         email: input.email,
@@ -94,15 +94,15 @@ export class AuthService {
       };
 
       const token = jwt.sign(
-        { userId: demoUser.id, tenantId: demoTenant.id, role: demoUser.role },
+        { userId: devUser.id, tenantId: devTenant.id, role: devUser.role },
         env.JWT_SECRET,
         { expiresIn: "7d" },
       );
 
       return {
         token,
-        tenant: demoTenant,
-        user: demoUser,
+        tenant: devTenant,
+        user: devUser,
       };
     }
   }
@@ -143,10 +143,10 @@ export class AuthService {
         }
       }
     } catch {
-      // Fallback demo handling if DB is disconnected
+      // Dev mode fallback handling when DB is disconnected
     }
 
-    // Dev mode demo fallback credentials for instant login testing
+    // Dev mode credentials for instant login testing when PostgreSQL is unseeded
     if (
       (input.email === "zaqi@zii.id" ||
         input.email === "kasir@zii.id" ||
@@ -155,28 +155,28 @@ export class AuthService {
     ) {
       const isOwner =
         input.email.includes("zaqi") || !input.email.includes("kasir");
-      const demoUser = {
+      const devUser = {
         id: isOwner ? "user-zaqi-01" : "user-kasir-01",
-        name: isOwner ? "Zaqi (PM Owner)" : "Budi (Kasir)",
+        name: isOwner ? "Zaqi (Owner)" : "Kasir",
         email: input.email,
         role: isOwner ? "owner" : "cashier",
       };
-      const demoTenant = {
-        id: "demo-tenant-01",
-        name: "ZII Distro & Laundry Studio",
-        logoUrl: "https://placehold.co/120x120/1e293b/ffffff?text=ZII+STORE",
-        phone: "0812-9988-7766",
-        address: "Jl. Merdeka Raya No. 45, Jakarta",
-        receiptFooter: "Terima kasih telah berbelanja di ZII Store!",
+      const devTenant = {
+        id: "tenant-dev-01",
+        name: "ZII POS Merchant Store",
+        logoUrl: "",
+        phone: "08123456789",
+        address: "Jl. Sudirman No. 1, Jakarta",
+        receiptFooter: "Terima kasih telah berbelanja di ZII POS!",
       };
 
       const token = jwt.sign(
-        { userId: demoUser.id, tenantId: demoTenant.id, role: demoUser.role },
+        { userId: devUser.id, tenantId: devTenant.id, role: devUser.role },
         env.JWT_SECRET,
         { expiresIn: "7d" },
       );
 
-      return { token, tenant: demoTenant, user: demoUser };
+      return { token, tenant: devTenant, user: devUser };
     }
 
     throw new Error("Email atau password tidak valid.");

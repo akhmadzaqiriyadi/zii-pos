@@ -44,11 +44,11 @@ export function usePosDashboard() {
 
   const merchant = {
     name: tenant?.name || "ZII POS Store",
-    phone: tenant?.phone || "0812-9988-7766",
-    address: tenant?.address || "Jl. Merdeka Raya No. 45, Jakarta",
+    phone: tenant?.phone || "-",
+    address: tenant?.address || "-",
     receiptFooter:
       tenant?.receiptFooter ||
-      "Terima kasih telah berbelanja di ZII Store! Simpan nota ini sebagai bukti garansi.",
+      "Terima kasih telah berbelanja! Simpan nota ini sebagai bukti transaksi.",
   };
 
   const handleOpenPaymentModal = () => {

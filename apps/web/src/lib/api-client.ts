@@ -7,20 +7,23 @@ export async function fetchApi<T>(
   options?: RequestInit,
 ): Promise<T> {
   const token = getCookie("zii_auth_token");
-  const tenantId = getCookie("zii_tenant_id") || "demo-tenant-01";
+  const tenantId = getCookie("zii_tenant_id") || "";
 
   const response = await fetch(`${API_BASE_URL}${endpoint}`, {
     headers: {
       "Content-Type": "application/json",
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      "x-tenant-id": tenantId,
+      ...(tenantId ? { "x-tenant-id": tenantId } : {}),
       ...(options?.headers || {}),
     },
     ...options,
   });
 
   if (!response.ok) {
-    throw new Error(`API Error: ${response.statusText}`);
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(
+      errorData?.error?.message || `API Error: ${response.statusText}`,
+    );
   }
 
   const json = await response.json();
