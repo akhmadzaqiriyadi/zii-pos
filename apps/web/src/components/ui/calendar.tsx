@@ -132,7 +132,8 @@ export function Calendar({
         onSelectRange(cellDate, null);
       } else if (startDate && !endDate) {
         if (cellDate < startDate) {
-          onSelectRange(cellDate, null);
+          // Auto-swap if clicked date is earlier than start date
+          onSelectRange(cellDate, startDate);
         } else {
           onSelectRange(startDate, cellDate);
         }
@@ -149,6 +150,17 @@ export function Calendar({
         className,
       )}
     >
+      {/* Range Mode Instruction Banner */}
+      {isRangeMode && (
+        <div className="mb-2.5 px-2 py-1 rounded-lg bg-emerald-50 border border-emerald-200/80 text-[10px] font-bold text-emerald-700 text-center">
+          {!startDate
+            ? "Pilih Tanggal Mulai"
+            : !endDate
+              ? "Pilih Tanggal Akhir"
+              : "Rentang Tanggal Terpilih"}
+        </div>
+      )}
+
       {/* Month & Year Navigation Header */}
       <div className="flex items-center justify-between mb-3 px-1">
         <span className="text-xs font-extrabold text-slate-800">

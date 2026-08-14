@@ -153,11 +153,24 @@ export function DateRangePicker({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const sortedDates = React.useMemo(() => {
+    if (!startDate && !endDate) return { start: "", end: "" };
+    if (startDate && endDate && startDate > endDate) {
+      return { start: endDate, end: startDate };
+    }
+    return { start: startDate, end: endDate };
+  }, [startDate, endDate]);
+
   const handleRangeSelect = (start: Date | null, end: Date | null) => {
-    if (start) onStartDateChange(toYMD(start));
-    if (end) {
-      onEndDateChange(toYMD(end));
+    if (start && end) {
+      const sortedStart = start <= end ? start : end;
+      const sortedEnd = start <= end ? end : start;
+      onStartDateChange(toYMD(sortedStart));
+      onEndDateChange(toYMD(sortedEnd));
       setIsOpen(false);
+    } else if (start) {
+      onStartDateChange(toYMD(start));
+      onEndDateChange("");
     }
   };
 
@@ -179,11 +192,15 @@ export function DateRangePicker({
       >
         <CalendarIcon className="h-4 w-4 text-emerald-600 shrink-0" />
         <span>
-          {startDate ? formatDisplayDate(startDate) : "Pilih Tanggal"}
+          {sortedDates.start
+            ? formatDisplayDate(sortedDates.start)
+            : "Pilih Tanggal Mulai"}
         </span>
         <span className="text-slate-400 font-bold">-</span>
         <span>
-          {endDate ? formatDisplayDate(endDate) : "Sampai Tanggal"}
+          {sortedDates.end
+            ? formatDisplayDate(sortedDates.end)
+            : "Pilih Tanggal Akhir"}
         </span>
         {(startDate || endDate) && (
           <span
