@@ -9,7 +9,7 @@ interface AuthUser {
   id: string;
   name: string;
   email: string;
-  role: "owner" | "cashier";
+  role: "owner" | "cashier" | "superadmin" | string;
 }
 
 interface AuthTenant {

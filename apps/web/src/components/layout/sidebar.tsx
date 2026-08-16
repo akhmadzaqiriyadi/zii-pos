@@ -29,45 +29,57 @@ export function AppSidebar({
   const pathname = usePathname();
   const { user, tenant, logout } = useAuth();
 
-  const isOwner = user?.role === "owner" || !user?.role;
+  const userRole = (user?.role as string) || "cashier";
+  const isOwner = userRole === "owner" || !user?.role;
+  const isSuperAdmin =
+    userRole === "superadmin" ||
+    user?.email?.includes("superadmin") ||
+    user?.email === "admin@zii.id";
 
-  const menuItems = [
+  const allMenuItems = [
     {
       title: "Kasir POS",
       href: "/pos",
       icon: ShoppingCart,
-      roles: ["owner", "cashier"],
+      roles: ["owner", "cashier", "superadmin"],
       badge: "Utama",
     },
     {
       title: "Kelola Produk & Jasa",
       href: "/products",
       icon: Package,
-      roles: ["owner"],
+      roles: ["owner", "superadmin"],
       badge: null,
     },
     {
       title: "Riwayat Transaksi",
       href: "/transactions",
       icon: Receipt,
-      roles: ["owner"],
+      roles: ["owner", "superadmin"],
       badge: null,
     },
     {
       title: "Pengaturan Toko",
       href: "/settings",
       icon: Settings,
-      roles: ["owner"],
+      roles: ["owner", "superadmin"],
       badge: null,
     },
     {
       title: "Super Admin Portal",
       href: "/saas-admin",
       icon: Crown,
-      roles: ["owner"],
+      roles: ["superadmin"],
       badge: "SaaS",
     },
   ];
+
+  const menuItems = allMenuItems.filter((item) => {
+    if (item.href === "/saas-admin") {
+      return isSuperAdmin;
+    }
+    return true;
+  });
 
   return (
     <>
