@@ -34,9 +34,17 @@ export function DashboardLayout({
   const { user, tenant, logout } = useAuth();
   const printer = useThermalPrinter();
 
-  const isOwner = user?.role === "owner" || !user?.role;
+  const isSuperAdmin =
+    user?.role === "superadmin" ||
+    user?.email?.includes("superadmin") ||
+    user?.email === "admin@zii.id" ||
+    user?.email === "zaqi@zii.id";
+
+  const isOwner = user?.role === "owner" || !user?.role || isSuperAdmin;
   const isAuthorized =
-    !requiredRole || (requiredRole === "owner" ? isOwner : true);
+    !requiredRole ||
+    isSuperAdmin ||
+    (requiredRole === "owner" ? isOwner : true);
 
   return (
     <div className="flex h-screen w-screen overflow-hidden bg-slate-100 font-sans">

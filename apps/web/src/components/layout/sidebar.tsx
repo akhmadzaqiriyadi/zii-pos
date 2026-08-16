@@ -30,12 +30,12 @@ export function AppSidebar({
   const { user, tenant, logout } = useAuth();
 
   const userRole = (user?.role as string) || "cashier";
-  const isOwner = userRole === "owner" || !user?.role;
   const isSuperAdmin =
     userRole === "superadmin" ||
     user?.email?.includes("superadmin") ||
     user?.email === "admin@zii.id" ||
     user?.email === "zaqi@zii.id";
+  const isOwner = userRole === "owner" || !user?.role || isSuperAdmin;
 
   const allMenuItems = [
     {
