@@ -161,6 +161,26 @@ async function main() {
     },
   });
 
+  const userZaqi = await db.user.create({
+    data: {
+      tenantId: tenantDistro.id,
+      name: "Zaqi (PM Owner)",
+      email: "zaqi@zii.id",
+      passwordHash,
+      role: "owner",
+    },
+  });
+
+  const userIlham = await db.user.create({
+    data: {
+      tenantId: tenantDistro.id,
+      name: "Ilham (Fullstack Lead)",
+      email: "ilham@zii.id",
+      passwordHash,
+      role: "owner",
+    },
+  });
+
   // 4. Create Realistic Products & Services for Tenant 1 (Distro)
   const p1 = await db.product.create({
     data: {
