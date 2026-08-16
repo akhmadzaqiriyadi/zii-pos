@@ -5,16 +5,18 @@ import type React from "react";
 import { createContext, useContext, useEffect, useState } from "react";
 import { deleteCookie, getCookie, setCookie } from "../../../lib/cookies";
 
-interface AuthUser {
+export interface AuthUser {
   id: string;
   name: string;
   email: string;
   role: "owner" | "cashier";
 }
 
-interface AuthTenant {
+export interface AuthTenant {
   id: string;
   name: string;
+  subdomain?: string | null;
+  status?: "trial" | "active" | "expired" | "suspended" | string;
   logoUrl?: string | null;
   phone?: string | null;
   address?: string | null;
@@ -66,6 +68,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // Clear if incomplete
         deleteCookie("zii_auth_token");
         deleteCookie("zii_tenant_id");
+        deleteCookie("zii_tenant_status");
+        deleteCookie("zii_tenant_subdomain");
         localStorage.removeItem("zii_user");
         localStorage.removeItem("zii_tenant");
       }
@@ -97,9 +101,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         tenant: loggedTenant,
       } = body.data;
 
-      // Save credentials to Cookies (so Middleware can access on Server)
+      // Save credentials & tenant status to Cookies (accessible by Edge Middleware)
       setCookie("zii_auth_token", jwtToken, 7);
       setCookie("zii_tenant_id", loggedTenant.id, 7);
+      setCookie("zii_tenant_status", loggedTenant.status || "trial", 7);
+
+      const tenantSubdomain =
+        loggedTenant.subdomain ||
+        (typeof window !== "undefined"
+          ? window.location.hostname
+              .replace(".localhost", "")
+              .replace(".ziipos.com", "")
+          : "");
+      if (tenantSubdomain && tenantSubdomain !== "localhost") {
+        setCookie("zii_tenant_subdomain", tenantSubdomain, 7);
+      }
 
       // Save profiles to LocalStorage (for fast Client UI rendering on reload)
       localStorage.setItem("zii_user", JSON.stringify(loggedUser));
@@ -135,9 +151,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         tenant: registeredTenant,
       } = body.data;
 
-      // Save credentials to Cookies (so Middleware can access on Server)
+      // Save credentials & tenant status to Cookies
       setCookie("zii_auth_token", jwtToken, 7);
       setCookie("zii_tenant_id", registeredTenant.id, 7);
+      setCookie("zii_tenant_status", registeredTenant.status || "trial", 7);
+
+      const registeredSubdomain =
+        registeredTenant.subdomain ||
+        (typeof window !== "undefined"
+          ? window.location.hostname
+              .replace(".localhost", "")
+              .replace(".ziipos.com", "")
+          : "");
+      if (registeredSubdomain && registeredSubdomain !== "localhost") {
+        setCookie("zii_tenant_subdomain", registeredSubdomain, 7);
+      }
 
       // Save profiles to LocalStorage
       localStorage.setItem("zii_user", JSON.stringify(registeredUser));
@@ -156,6 +184,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Delete Cookies
     deleteCookie("zii_auth_token");
     deleteCookie("zii_tenant_id");
+    deleteCookie("zii_tenant_status");
+    deleteCookie("zii_tenant_subdomain");
 
     // Clear LocalStorage
     localStorage.removeItem("zii_user");

@@ -1,12 +1,42 @@
 /**
- * Client-side utility functions to read, write, and delete cookies.
+ * Client-side utility functions to read, write, and delete cookies with dynamic subdomain support.
  */
 
-export function setCookie(name: string, value: string, days = 7) {
+/**
+ * Resolves the cookie domain scope.
+ * In production (*.ziipos.com), returns ".ziipos.com" for cross-subdomain sharing.
+ * In local development (localhost / 127.0.0.1), returns undefined (host-only cookie).
+ */
+export function getCookieDomain(): string | undefined {
+  if (typeof window === "undefined") return undefined;
+  const hostname = window.location.hostname;
+
+  if (hostname.endsWith("ziipos.com")) {
+    return ".ziipos.com";
+  }
+
+  return undefined;
+}
+
+export function setCookie(
+  name: string,
+  value: string,
+  days = 7,
+  customDomain?: string,
+) {
   if (typeof document === "undefined") return;
   const expires = new Date();
   expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
-  document.cookie = `${name}=${encodeURIComponent(value)};expires=${expires.toUTCString()};path=/;SameSite=Lax`;
+
+  const domain = customDomain ?? getCookieDomain();
+  const domainAttribute = domain ? `;domain=${domain}` : "";
+  const isSecure =
+    typeof window !== "undefined" && window.location.protocol === "https:";
+  const secureAttribute = isSecure ? ";Secure" : "";
+
+  document.cookie = `${name}=${encodeURIComponent(
+    value,
+  )};expires=${expires.toUTCString()};path=/${domainAttribute};SameSite=Lax${secureAttribute}`;
 }
 
 export function getCookie(name: string): string | null {
@@ -23,7 +53,10 @@ export function getCookie(name: string): string | null {
   return null;
 }
 
-export function deleteCookie(name: string) {
+export function deleteCookie(name: string, customDomain?: string) {
   if (typeof document === "undefined") return;
-  document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;SameSite=Lax`;
+  const domain = customDomain ?? getCookieDomain();
+  const domainAttribute = domain ? `;domain=${domain}` : "";
+
+  document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/${domainAttribute};SameSite=Lax`;
 }
