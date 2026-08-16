@@ -19,18 +19,24 @@ import {
   DialogTitle,
 } from "../../../components/ui/dialog";
 import { formatRupiah } from "../../../lib/utils";
-import type { CheckoutResult } from "../services/subscriptionApi";
+import {
+  type CheckoutResult,
+  SubscriptionApiService,
+} from "../services/subscriptionApi";
 
 interface PaymentCheckoutModalProps {
   checkoutData: CheckoutResult | null;
   onClose: () => void;
+  onSimulateSuccess: () => void;
 }
 
 export function PaymentCheckoutModal({
   checkoutData,
   onClose,
+  onSimulateSuccess,
 }: PaymentCheckoutModalProps) {
   const [copied, setCopied] = useState(false);
+  const [isSimulating, setIsSimulating] = useState(false);
 
   if (!checkoutData) return null;
 
@@ -40,6 +46,25 @@ export function PaymentCheckoutModal({
       setCopied(true);
       toast.success("String QRIS berhasil disalin ke clipboard!");
       setTimeout(() => setCopied(false), 2000);
+    }
+  };
+
+  const handleSimulatePayment = async () => {
+    setIsSimulating(true);
+    try {
+      await SubscriptionApiService.simulatePaymentWebhook(
+        checkoutData.invoiceId,
+        checkoutData.amount,
+      );
+      toast.success(
+        "⚡ Webhook Midtrans Sukses! Lisensi toko berhasil di-upgrade ke ACTIVE!",
+      );
+      onSimulateSuccess();
+      onClose();
+    } catch (err: any) {
+      toast.error(err.message || "Gagal memproses webhook simulasi.");
+    } finally {
+      setIsSimulating(false);
     }
   };
 
@@ -115,23 +140,39 @@ export function PaymentCheckoutModal({
             )}
           </div>
 
-          {/* Direct Midtrans Payment Gateway Link */}
-          {checkoutData.paymentUrl && (
-            <a
-              href={checkoutData.paymentUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="block"
+          {/* Development Webhook Trigger & Midtrans Snap Link */}
+          <div className="space-y-2">
+            <Button
+              type="button"
+              onClick={handleSimulatePayment}
+              disabled={isSimulating}
+              className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-md shadow-emerald-600/20 py-5 gap-2 cursor-pointer"
             >
-              <Button
-                type="button"
-                className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-md shadow-emerald-600/20 py-5 gap-2 cursor-pointer"
+              <span>
+                {isSimulating
+                  ? "Mengirim Webhook Pembayaran..."
+                  : "⚡ Simulasi Pembayaran QRIS Sukses (Tembak Webhook)"}
+              </span>
+            </Button>
+
+            {checkoutData.paymentUrl && (
+              <a
+                href={checkoutData.paymentUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="block text-center"
               >
-                <span>Bayar via Payment Gateway (Midtrans)</span>
-                <ExternalLink className="h-4 w-4" />
-              </Button>
-            </a>
-          )}
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="w-full border-slate-200 text-slate-600 hover:bg-slate-50 text-xs font-semibold rounded-xl py-4 gap-1.5"
+                >
+                  <span>Buka Page Sandbox Midtrans</span>
+                  <ExternalLink className="h-3.5 w-3.5" />
+                </Button>
+              </a>
+            )}
+          </div>
         </div>
 
         <div className="flex items-center justify-between border-t border-slate-100 pt-3">

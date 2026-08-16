@@ -22,6 +22,7 @@ export default function MerchantBillingPage() {
     setCheckoutData,
     handleCheckout,
     isCheckoutPending,
+    refetchSubscription,
   } = useMerchantBilling();
 
   return (
@@ -88,6 +89,7 @@ export default function MerchantBillingPage() {
         <PaymentCheckoutModal
           checkoutData={checkoutData}
           onClose={() => setCheckoutData(null)}
+          onSimulateSuccess={refetchSubscription}
         />
       </main>
     </DashboardLayout>

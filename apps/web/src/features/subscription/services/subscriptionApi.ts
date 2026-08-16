@@ -77,4 +77,26 @@ export class SubscriptionApiService {
     }
     return body.data;
   }
+
+  static async simulatePaymentWebhook(
+    invoiceId: string,
+    amount: number,
+  ): Promise<void> {
+    const res = await fetch(`${API_BASE_URL}/api/v1/subscriptions/webhook`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        order_id: invoiceId,
+        transaction_status: "settlement",
+        fraud_status: "accept",
+        gross_amount: String(amount),
+        payment_type: "qris",
+        transaction_time: new Date().toISOString(),
+      }),
+    });
+    const body = await res.json();
+    if (!res.ok || !body.success) {
+      throw new Error(body.message || "Gagal mensimulasikan webhook pembayaran.");
+    }
+  }
 }
