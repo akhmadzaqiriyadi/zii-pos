@@ -22,22 +22,22 @@ export function RegisterForm() {
   return (
     <section className="w-full max-w-lg space-y-6">
       <header className="flex flex-col items-center space-y-2 text-center">
-        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shadow-md">
+        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-200 shadow-xs">
           <Store className="h-6 w-6" />
         </div>
-        <h1 className="text-2xl font-bold tracking-tight text-white">
+        <h1 className="text-2xl font-bold tracking-tight text-slate-900">
           Daftar Merchant Baru
         </h1>
-        <p className="text-sm text-slate-400">
+        <p className="text-sm text-slate-500">
           Buat tenant toko Anda dan akun admin owner dalam 1 langkah mudah
         </p>
       </header>
 
-      <Card className="border-slate-800 bg-slate-900/50 p-6 shadow-xl backdrop-blur-sm">
+      <Card className="border-slate-200 bg-white p-6 shadow-xl shadow-slate-200/50">
         <CardContent className="p-0">
           <form onSubmit={onSubmit} className="space-y-4">
             {formError && (
-              <div className="flex items-center gap-2 rounded-xl bg-red-500/10 border border-red-500/20 p-3.5 text-sm text-red-400">
+              <div className="flex items-center gap-2 rounded-xl bg-red-50 border border-red-200 p-3.5 text-sm text-red-600">
                 <AlertCircle className="h-4 w-4 shrink-0" />
                 <span>{formError}</span>
               </div>
@@ -45,35 +45,35 @@ export function RegisterForm() {
 
             {/* Section 1: Toko / Merchant Info */}
             <fieldset className="space-y-3 border-0 p-0 m-0">
-              <legend className="text-xs font-bold uppercase tracking-wider text-emerald-400 mb-2">
+              <legend className="text-xs font-bold uppercase tracking-wider text-emerald-600 mb-2">
                 Informasi Toko / Tenant
               </legend>
 
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <div className="space-y-1.5">
                   <label
-                    className="text-xs font-semibold text-slate-300 block"
+                    className="text-xs font-semibold text-slate-700 block"
                     htmlFor="tenantName"
                   >
                     Nama Toko / Merchant *
                   </label>
                   <div className="relative">
-                    <Store className="absolute left-3.5 top-3 h-4 w-4 text-slate-500" />
+                    <Store className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
                     <input
                       id="tenantName"
                       type="text"
                       placeholder="Contoh: Barber Premium"
                       {...register("tenantName")}
-                      className={`flex h-10 w-full rounded-xl border bg-slate-950/60 pl-10 pr-3.5 py-2 text-sm text-white transition placeholder:text-slate-500 focus:outline-none focus:ring-2 disabled:cursor-not-allowed disabled:opacity-50 ${
+                      className={`flex h-10 w-full rounded-xl border bg-slate-50 pl-10 pr-3.5 py-2 text-sm text-slate-900 transition placeholder:text-slate-400 focus:outline-none focus:ring-2 disabled:cursor-not-allowed disabled:opacity-50 ${
                         errors.tenantName
                           ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
-                          : "border-slate-800 focus:border-emerald-500 focus:ring-emerald-500/20"
+                          : "border-slate-200 focus:border-emerald-500 focus:ring-emerald-500/20"
                       }`}
                       disabled={isSubmitting}
                     />
                   </div>
                   {errors.tenantName && (
-                    <p className="text-[11px] text-red-400 font-medium mt-1">
+                    <p className="text-[11px] text-red-500 font-medium mt-1">
                       {errors.tenantName.message}
                     </p>
                   )}
@@ -81,19 +81,19 @@ export function RegisterForm() {
 
                 <div className="space-y-1.5">
                   <label
-                    className="text-xs font-semibold text-slate-300 block"
+                    className="text-xs font-semibold text-slate-700 block"
                     htmlFor="phone"
                   >
                     Nomor Telepon Toko
                   </label>
                   <div className="relative">
-                    <Phone className="absolute left-3.5 top-3 h-4 w-4 text-slate-500" />
+                    <Phone className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
                     <input
                       id="phone"
                       type="text"
                       placeholder="Contoh: 0812XXXXXXXX"
                       {...register("phone")}
-                      className="flex h-10 w-full rounded-xl border border-slate-800 bg-slate-950/60 pl-10 pr-3.5 py-2 text-sm text-white transition placeholder:text-slate-500 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 disabled:cursor-not-allowed disabled:opacity-50"
+                      className="flex h-10 w-full rounded-xl border border-slate-200 bg-slate-50 pl-10 pr-3.5 py-2 text-sm text-slate-900 transition placeholder:text-slate-400 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 disabled:cursor-not-allowed disabled:opacity-50"
                       disabled={isSubmitting}
                     />
                   </div>
@@ -102,56 +102,56 @@ export function RegisterForm() {
 
               <div className="space-y-1.5">
                 <label
-                  className="text-xs font-semibold text-slate-300 block"
+                  className="text-xs font-semibold text-slate-700 block"
                   htmlFor="address"
                 >
                   Alamat Toko
                 </label>
                 <div className="relative">
-                  <MapPin className="absolute left-3.5 top-3.5 h-4 w-4 text-slate-500" />
+                  <MapPin className="absolute left-3.5 top-3.5 h-4 w-4 text-slate-400" />
                   <textarea
                     id="address"
                     placeholder="Masukkan alamat toko lengkap..."
                     {...register("address")}
-                    className="flex min-h-[70px] w-full rounded-xl border border-slate-800 bg-slate-950/60 pl-10 pr-3.5 py-2 text-sm text-white transition placeholder:text-slate-500 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 disabled:cursor-not-allowed disabled:opacity-50 resize-none"
+                    className="flex min-h-[70px] w-full rounded-xl border border-slate-200 bg-slate-50 pl-10 pr-3.5 py-2 text-sm text-slate-900 transition placeholder:text-slate-400 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 disabled:cursor-not-allowed disabled:opacity-50 resize-none"
                     disabled={isSubmitting}
                   />
                 </div>
               </div>
             </fieldset>
 
-            <hr className="border-slate-800 my-4" />
+            <hr className="border-slate-100 my-4" />
 
             {/* Section 2: Owner Account Info */}
             <fieldset className="space-y-3 border-0 p-0 m-0">
-              <legend className="text-xs font-bold uppercase tracking-wider text-emerald-400 mb-2">
+              <legend className="text-xs font-bold uppercase tracking-wider text-emerald-600 mb-2">
                 Kredensial Akun Owner
               </legend>
 
               <div className="space-y-1.5">
                 <label
-                  className="text-xs font-semibold text-slate-300 block"
+                  className="text-xs font-semibold text-slate-700 block"
                   htmlFor="ownerName"
                 >
                   Nama Lengkap Owner *
                 </label>
                 <div className="relative">
-                  <User className="absolute left-3.5 top-3 h-4 w-4 text-slate-500" />
+                  <User className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
                   <input
                     id="ownerName"
                     type="text"
                     placeholder="Nama lengkap Anda"
                     {...register("ownerName")}
-                    className={`flex h-10 w-full rounded-xl border bg-slate-950/60 pl-10 pr-3.5 py-2 text-sm text-white transition placeholder:text-slate-500 focus:outline-none focus:ring-2 disabled:cursor-not-allowed disabled:opacity-50 ${
+                    className={`flex h-10 w-full rounded-xl border bg-slate-50 pl-10 pr-3.5 py-2 text-sm text-slate-900 transition placeholder:text-slate-400 focus:outline-none focus:ring-2 disabled:cursor-not-allowed disabled:opacity-50 ${
                       errors.ownerName
                         ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
-                        : "border-slate-800 focus:border-emerald-500 focus:ring-emerald-500/20"
+                        : "border-slate-200 focus:border-emerald-500 focus:ring-emerald-500/20"
                     }`}
                     disabled={isSubmitting}
                   />
                 </div>
                 {errors.ownerName && (
-                  <p className="text-[11px] text-red-400 font-medium mt-1">
+                  <p className="text-[11px] text-red-500 font-medium mt-1">
                     {errors.ownerName.message}
                   </p>
                 )}
@@ -160,28 +160,28 @@ export function RegisterForm() {
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <div className="space-y-1.5">
                   <label
-                    className="text-xs font-semibold text-slate-300 block"
+                    className="text-xs font-semibold text-slate-700 block"
                     htmlFor="email"
                   >
                     Email Owner *
                   </label>
                   <div className="relative">
-                    <Mail className="absolute left-3.5 top-3 h-4 w-4 text-slate-500" />
+                    <Mail className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
                     <input
                       id="email"
                       type="email"
                       placeholder="nama@email.com"
                       {...register("email")}
-                      className={`flex h-10 w-full rounded-xl border bg-slate-950/60 pl-10 pr-3.5 py-2 text-sm text-white transition placeholder:text-slate-500 focus:outline-none focus:ring-2 disabled:cursor-not-allowed disabled:opacity-50 ${
+                      className={`flex h-10 w-full rounded-xl border bg-slate-50 pl-10 pr-3.5 py-2 text-sm text-slate-900 transition placeholder:text-slate-400 focus:outline-none focus:ring-2 disabled:cursor-not-allowed disabled:opacity-50 ${
                         errors.email
                           ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
-                          : "border-slate-800 focus:border-emerald-500 focus:ring-emerald-500/20"
+                          : "border-slate-200 focus:border-emerald-500 focus:ring-emerald-500/20"
                       }`}
                       disabled={isSubmitting}
                     />
                   </div>
                   {errors.email && (
-                    <p className="text-[11px] text-red-400 font-medium mt-1">
+                    <p className="text-[11px] text-red-500 font-medium mt-1">
                       {errors.email.message}
                     </p>
                   )}
@@ -189,28 +189,28 @@ export function RegisterForm() {
 
                 <div className="space-y-1.5">
                   <label
-                    className="text-xs font-semibold text-slate-300 block"
+                    className="text-xs font-semibold text-slate-700 block"
                     htmlFor="password"
                   >
                     Password *
                   </label>
                   <div className="relative">
-                    <KeyRound className="absolute left-3.5 top-3 h-4 w-4 text-slate-500" />
+                    <KeyRound className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
                     <input
                       id="password"
                       type="password"
                       placeholder="Minimal 6 karakter"
                       {...register("password")}
-                      className={`flex h-10 w-full rounded-xl border bg-slate-950/60 pl-10 pr-3.5 py-2 text-sm text-white transition placeholder:text-slate-500 focus:outline-none focus:ring-2 disabled:cursor-not-allowed disabled:opacity-50 ${
+                      className={`flex h-10 w-full rounded-xl border bg-slate-50 pl-10 pr-3.5 py-2 text-sm text-slate-900 transition placeholder:text-slate-400 focus:outline-none focus:ring-2 disabled:cursor-not-allowed disabled:opacity-50 ${
                         errors.password
                           ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
-                          : "border-slate-800 focus:border-emerald-500 focus:ring-emerald-500/20"
+                          : "border-slate-200 focus:border-emerald-500 focus:ring-emerald-500/20"
                       }`}
                       disabled={isSubmitting}
                     />
                   </div>
                   {errors.password && (
-                    <p className="text-[11px] text-red-400 font-medium mt-1">
+                    <p className="text-[11px] text-red-500 font-medium mt-1">
                       {errors.password.message}
                     </p>
                   )}
@@ -220,7 +220,7 @@ export function RegisterForm() {
 
             <Button
               type="submit"
-              className="w-full h-11 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-medium shadow-lg shadow-emerald-600/10 transition mt-4 justify-center"
+              className="w-full h-11 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold shadow-md shadow-emerald-600/20 transition mt-4 justify-center"
               disabled={isSubmitting}
             >
               {isSubmitting ? (
@@ -235,11 +235,11 @@ export function RegisterForm() {
           </form>
         </CardContent>
 
-        <CardFooter className="mt-6 border-slate-800/80 pt-4 justify-center text-xs text-slate-400">
+        <CardFooter className="mt-6 border-t border-slate-100 pt-4 justify-center text-xs text-slate-500">
           Sudah punya akun?{" "}
           <Link
             href="/login"
-            className="text-emerald-400 hover:text-emerald-300 font-semibold transition ml-1"
+            className="text-emerald-600 hover:text-emerald-700 font-semibold transition ml-1"
           >
             Masuk ke Toko Anda
           </Link>
