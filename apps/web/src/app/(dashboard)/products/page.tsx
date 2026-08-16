@@ -148,14 +148,13 @@ export default function ProductsPage() {
                   <TableHead>Tipe</TableHead>
                   <TableHead>Harga</TableHead>
                   <TableHead>Stok</TableHead>
-                  <TableHead className="text-right">Aksi</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {isLoading ? (
                   <TableRow>
                     <TableCell
-                      colSpan={5}
+                      colSpan={4}
                       className="py-8 text-center text-slate-400"
                     >
                       Memuat data produk...
@@ -164,7 +163,7 @@ export default function ProductsPage() {
                 ) : products.length === 0 ? (
                   <TableRow>
                     <TableCell
-                      colSpan={5}
+                      colSpan={4}
                       className="py-8 text-center text-slate-400"
                     >
                       Tidak ada produk yang sesuai.
@@ -217,27 +216,6 @@ export default function ProductsPage() {
                               {item.stock}
                             </span>
                           )}
-                        </TableCell>
-                        <TableCell className="text-right space-x-1">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleOpenEditModal(item)}
-                            className="text-xs text-slate-600 hover:text-emerald-600 gap-1 rounded-lg"
-                          >
-                            <Edit2 className="h-3.5 w-3.5" />
-                            <span>Edit</span>
-                          </Button>
-
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleDeleteProduct(item)}
-                            className="text-xs text-slate-400 hover:text-rose-600 hover:bg-rose-50 gap-1 rounded-lg"
-                          >
-                            <Trash2 className="h-3.5 w-3.5" />
-                            <span>Hapus</span>
-                          </Button>
                         </TableCell>
                       </TableRow>
                     );
