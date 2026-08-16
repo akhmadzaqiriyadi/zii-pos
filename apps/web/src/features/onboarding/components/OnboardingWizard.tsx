@@ -47,57 +47,62 @@ export function OnboardingWizard() {
       {/* Stepper Progress Bar */}
       <nav
         aria-label="Progress Stepper"
-        className="relative flex items-center justify-between max-w-xl mx-auto px-10"
+        className="flex items-center justify-center max-w-xl mx-auto px-6 w-full"
       >
-        {/* Background Gray Line Track */}
-        <div className="absolute top-[22px] left-[62px] right-[62px] h-0.5 bg-slate-200 -translate-y-1/2 z-0" />
+        <ol className="flex items-center w-full">
+          {steps.map((step, index) => {
+            const isCompleted = currentStep > step.number;
+            const isCurrent = currentStep === step.number;
+            const Icon = step.icon;
+            const isLast = index === steps.length - 1;
 
-        {/* Active Green Progress Line */}
-        <div className="absolute top-[22px] left-[62px] right-[62px] h-0.5 -translate-y-1/2 z-0">
-          <div
-            className="h-full bg-emerald-600 transition-all duration-300 rounded-full"
-            style={{
-              width:
-                currentStep === 1 ? "0%" : currentStep === 2 ? "50%" : "100%",
-            }}
-          />
-        </div>
-
-        {steps.map((step) => {
-          const isCompleted = currentStep > step.number;
-          const isCurrent = currentStep === step.number;
-          const Icon = step.icon;
-
-          return (
-            <div
-              key={step.number}
-              className="relative z-10 flex flex-col items-center space-y-2"
-            >
-              <div
-                className={`flex h-11 w-11 items-center justify-center rounded-full font-bold text-sm transition-all duration-300 shadow-xs ${
-                  isCompleted
-                    ? "bg-emerald-600 text-white border-2 border-emerald-600"
-                    : isCurrent
-                      ? "bg-white text-emerald-600 border-2 border-emerald-600 ring-4 ring-emerald-50"
-                      : "bg-white text-slate-400 border-2 border-slate-200"
-                }`}
+            return (
+              <li
+                key={step.number}
+                className={`flex items-center ${isLast ? "w-auto shrink-0" : "w-full"}`}
               >
-                {isCompleted ? (
-                  <Check className="h-5 w-5" />
-                ) : (
-                  <Icon className="h-5 w-5" />
+                {/* Step Circle & Label */}
+                <div className="flex flex-col items-center shrink-0">
+                  <div
+                    className={`flex h-11 w-11 items-center justify-center rounded-full font-bold text-sm transition-all duration-300 shadow-xs ${
+                      isCompleted
+                        ? "bg-emerald-600 text-white border-2 border-emerald-600"
+                        : isCurrent
+                          ? "bg-white text-emerald-600 border-2 border-emerald-600 ring-4 ring-emerald-50"
+                          : "bg-white text-slate-400 border-2 border-slate-200"
+                    }`}
+                  >
+                    {isCompleted ? (
+                      <Check className="h-5 w-5" />
+                    ) : (
+                      <Icon className="h-5 w-5" />
+                    )}
+                  </div>
+                  <span
+                    className={`text-xs font-semibold mt-2 whitespace-nowrap ${
+                      isCurrent || isCompleted
+                        ? "text-slate-900"
+                        : "text-slate-400"
+                    }`}
+                  >
+                    {step.label}
+                  </span>
+                </div>
+
+                {/* Connecting Line (Only between steps, NEVER after the last step) */}
+                {!isLast && (
+                  <div className="flex-1 h-0.5 mx-3 -mt-6 bg-slate-200 rounded-full overflow-hidden">
+                    <div
+                      className={`h-full bg-emerald-600 transition-all duration-300 ${
+                        currentStep > step.number ? "w-full" : "w-0"
+                      }`}
+                    />
+                  </div>
                 )}
-              </div>
-              <span
-                className={`text-xs font-semibold ${
-                  isCurrent || isCompleted ? "text-slate-900" : "text-slate-400"
-                }`}
-              >
-                {step.label}
-              </span>
-            </div>
-          );
-        })}
+              </li>
+            );
+          })}
+        </ol>
       </nav>
 
       {/* Form Step Container Card */}
