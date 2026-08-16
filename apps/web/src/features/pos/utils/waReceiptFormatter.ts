@@ -60,26 +60,26 @@ export function formatWhatsAppReceipt({
     .join("\n\n");
 
   const lines = [
-    `*STRUK BUKTI PEMBAYARAN LUNAS*`,
-    `*========================================*`,
+    "*STRUK BUKTI PEMBAYARAN LUNAS*",
+    "*========================================*",
     `*TOKO:* *${merchant.name.toUpperCase()}*`,
     merchant.address ? `*Alamat:* ${merchant.address}` : "",
     merchant.phone ? `*Telp:* ${merchant.phone}` : "",
-    `----------------------------------------`,
+    "----------------------------------------",
     transactionId ? `*ID Transaksi:* #${transactionId}` : "",
     `*Tanggal:* ${now}`,
     customerName ? `*Pelanggan:* ${customerName}` : "",
     `*Metode Bayar:* *${paymentMethod.toUpperCase()}*`,
-    `----------------------------------------`,
-    `*DETAIL ITEM BELANJA:*`,
+    "----------------------------------------",
+    "*DETAIL ITEM BELANJA:*",
     itemsList,
-    `----------------------------------------`,
+    "----------------------------------------",
     `*TOTAL BELANJA:* *${formatRupiah(totalAmount)}*`,
-    `*========================================*`,
+    "*========================================*",
     merchant.receiptFooter
       ? `_${merchant.receiptFooter}_`
       : "_Terima kasih telah berbelanja di toko kami!_",
-    `_Powered by ZII POS SaaS_`,
+    "_Powered by ZII POS SaaS_",
   ].filter(Boolean);
 
   return lines.join("\n");

@@ -54,7 +54,7 @@ export function formatEscPosReceipt(data: ReceiptData): Uint8Array {
 
     let name = item.productName;
     if (name.length > nameMaxLen) {
-      name = name.substring(0, nameMaxLen - 1) + ".";
+      name = `${name.substring(0, nameMaxLen - 1)}.`;
     }
 
     const padLen = Math.max(

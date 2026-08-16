@@ -8,7 +8,7 @@ import { Calendar } from "./calendar";
 function formatDisplayDate(dateStr: string): string {
   if (!dateStr) return "";
   const d = new Date(dateStr);
-  if (isNaN(d.getTime())) return dateStr;
+  if (Number.isNaN(d.getTime())) return dateStr;
   return new Intl.DateTimeFormat("id-ID", {
     day: "numeric",
     month: "short",
@@ -44,7 +44,7 @@ export function DatePicker({
   const selectedDateObj = React.useMemo(() => {
     if (!value) return null;
     const d = new Date(value);
-    return isNaN(d.getTime()) ? null : d;
+    return Number.isNaN(d.getTime()) ? null : d;
   }, [value]);
 
   React.useEffect(() => {
