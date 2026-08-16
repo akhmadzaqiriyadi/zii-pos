@@ -34,7 +34,8 @@ export function AppSidebar({
   const isSuperAdmin =
     userRole === "superadmin" ||
     user?.email?.includes("superadmin") ||
-    user?.email === "admin@zii.id";
+    user?.email === "admin@zii.id" ||
+    user?.email === "zaqi@zii.id";
 
   const allMenuItems = [
     {

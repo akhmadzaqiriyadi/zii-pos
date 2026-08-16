@@ -181,6 +181,16 @@ async function main() {
     },
   });
 
+  const userAdmin = await db.user.create({
+    data: {
+      tenantId: tenantDistro.id,
+      name: "Super Admin ZII",
+      email: "admin@zii.id",
+      passwordHash,
+      role: "superadmin",
+    },
+  });
+
   // 4. Create Realistic Products & Services for Tenant 1 (Distro)
   const p1 = await db.product.create({
     data: {
