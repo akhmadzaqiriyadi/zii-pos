@@ -100,4 +100,27 @@ export class SubscriptionController {
       return ApiResponse.error(res, message, error, 400);
     }
   }
+
+  static async downloadInvoicePdf(req: Request, res: Response) {
+    try {
+      const invoiceId = req.params.invoiceId as string;
+      if (!invoiceId) {
+        return ApiResponse.error(res, "Invoice ID wajib disertakan", null, 400);
+      }
+
+      const invoiceData =
+        await SubscriptionService.getInvoicePdfBuffer(invoiceId);
+
+      res.setHeader("Content-Type", "application/pdf");
+      res.setHeader(
+        "Content-Disposition",
+        `inline; filename="Invoice_ZII_${invoiceId.slice(0, 8)}.pdf"`,
+      );
+      return res.send(invoiceData);
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error ? error.message : "Gagal generate PDF invoice";
+      return ApiResponse.error(res, message, error, 404);
+    }
+  }
 }
