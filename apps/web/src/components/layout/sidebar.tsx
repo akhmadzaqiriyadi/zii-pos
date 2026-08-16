@@ -3,6 +3,7 @@
 import {
   ChevronLeft,
   ChevronRight,
+  Crown,
   LogOut,
   Package,
   Receipt,
@@ -58,6 +59,13 @@ export function AppSidebar({
       icon: Settings,
       roles: ["owner"],
       badge: null,
+    },
+    {
+      title: "Super Admin Portal",
+      href: "/saas-admin",
+      icon: Crown,
+      roles: ["owner"],
+      badge: "SaaS",
     },
   ];
 

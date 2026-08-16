@@ -27,7 +27,8 @@ export function middleware(request: NextRequest) {
     pathname === "/pos" || pathname.startsWith("/pos/") ||
     pathname === "/products" || pathname.startsWith("/products/") ||
     pathname === "/settings" || pathname.startsWith("/settings/") ||
-    pathname === "/transactions" || pathname.startsWith("/transactions/");
+    pathname === "/transactions" || pathname.startsWith("/transactions/") ||
+    pathname === "/saas-admin" || pathname.startsWith("/saas-admin/");
 
   // Authentication paths (guest only)
   const isAuthRoute =
@@ -59,6 +60,8 @@ export const config = {
     "/settings/:path*",
     "/transactions",
     "/transactions/:path*",
+    "/saas-admin",
+    "/saas-admin/:path*",
     "/login",
     "/register",
     "/onboarding",
