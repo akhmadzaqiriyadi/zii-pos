@@ -27,14 +27,19 @@ export function evaluateTrialGuard(
     pathname.startsWith("/pos") ||
     pathname.startsWith("/products") ||
     pathname.startsWith("/transactions") ||
-    pathname.startsWith("/settings");
+    pathname.startsWith("/settings") ||
+    pathname.startsWith("/saas-admin");
 
   const isOperationalRoute =
     pathname.startsWith("/pos") ||
     pathname.startsWith("/products") ||
     pathname.startsWith("/transactions");
 
-  const isAuthRoute = pathname === "/login" || pathname === "/register";
+  const isAuthRoute =
+    pathname === "/login" ||
+    pathname === "/register" ||
+    pathname === "/onboarding";
+
 
   // 1. Unauthenticated users trying to access protected routes
   if (isProtectedRoute && !token) {

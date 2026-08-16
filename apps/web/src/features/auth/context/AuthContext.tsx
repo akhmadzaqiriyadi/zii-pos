@@ -9,7 +9,7 @@ export interface AuthUser {
   id: string;
   name: string;
   email: string;
-  role: "owner" | "cashier";
+  role: "owner" | "cashier" | "superadmin" | string;
 }
 
 export interface AuthTenant {
@@ -105,6 +105,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setCookie("zii_auth_token", jwtToken, 7);
       setCookie("zii_tenant_id", loggedTenant.id, 7);
       setCookie("zii_tenant_status", loggedTenant.status || "trial", 7);
+      setCookie("zii_has_registered", "true", 365);
 
       const tenantSubdomain =
         loggedTenant.subdomain ||
@@ -155,6 +156,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setCookie("zii_auth_token", jwtToken, 7);
       setCookie("zii_tenant_id", registeredTenant.id, 7);
       setCookie("zii_tenant_status", registeredTenant.status || "trial", 7);
+      setCookie("zii_has_registered", "true", 365);
 
       const registeredSubdomain =
         registeredTenant.subdomain ||

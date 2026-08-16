@@ -8,6 +8,7 @@ export function middleware(request: NextRequest) {
   const subdomain = extractSubdomain(host);
   const token = request.cookies.get("zii_auth_token")?.value;
   const tenantStatus = request.cookies.get("zii_tenant_status")?.value;
+  const hasRegistered = request.cookies.get("zii_has_registered")?.value;
   const { pathname } = request.nextUrl;
 
   // Clone request headers to inject tenant subdomain metadata
@@ -16,7 +17,27 @@ export function middleware(request: NextRequest) {
     requestHeaders.set("x-tenant-subdomain", subdomain);
   }
 
-  // Evaluate authentication & trial expiration guard
+  // 1. Redirect legacy /register route to /onboarding
+  if (pathname === "/register") {
+    return NextResponse.redirect(new URL("/onboarding", request.url));
+  }
+
+  // 2. Route landing "/" based on user state
+  if (pathname === "/") {
+    if (token) {
+      const isExpired =
+        tenantStatus === "expired" || tenantStatus === "suspended";
+      return NextResponse.redirect(
+        new URL(isExpired ? "/settings?alert=license_expired" : "/pos", request.url),
+      );
+    }
+    if (hasRegistered) {
+      return NextResponse.redirect(new URL("/login", request.url));
+    }
+    return NextResponse.redirect(new URL("/onboarding", request.url));
+  }
+
+  // 3. Evaluate authentication & trial expiration guard
   const guard = evaluateTrialGuard(pathname, token, tenantStatus);
 
   if (!guard.allowed && guard.redirectTo) {
@@ -28,7 +49,7 @@ export function middleware(request: NextRequest) {
     return response;
   }
 
-  // Pass-through with injected headers
+  // 4. Pass-through with injected headers
   const response = NextResponse.next({
     request: {
       headers: requestHeaders,
@@ -44,13 +65,19 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - public files (images, icons)
-     */
-    "/((?!_next/static|_next/image|favicon.ico).*)",
+    "/",
+    "/pos",
+    "/pos/:path*",
+    "/products",
+    "/products/:path*",
+    "/settings",
+    "/settings/:path*",
+    "/transactions",
+    "/transactions/:path*",
+    "/saas-admin",
+    "/saas-admin/:path*",
+    "/login",
+    "/register",
+    "/onboarding",
   ],
 };
