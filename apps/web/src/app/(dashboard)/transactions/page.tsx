@@ -6,22 +6,20 @@ import {
   ChevronLeft,
   ChevronRight,
   CreditCard,
+  Download,
   Eye,
+  FileSpreadsheet,
   QrCode,
   Receipt,
   Search,
 } from "lucide-react";
+import React from "react";
+import { toast } from "sonner";
 import { DashboardLayout } from "../../../components/layout/dashboard-layout";
 import { Badge } from "../../../components/ui/badge";
 import { Button } from "../../../components/ui/button";
 import { Card, CardContent } from "../../../components/ui/card";
 import { DateRangePicker } from "../../../components/ui/date-picker";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "../../../components/ui/dialog";
 import { Input } from "../../../components/ui/input";
 import { Pagination } from "../../../components/ui/pagination";
 import {
@@ -57,6 +55,51 @@ export default function TransactionsPage() {
     isLoading,
   } = useTransactionsDashboard();
 
+  const handleExportCsv = () => {
+    if (!transactions || transactions.length === 0) {
+      toast.error("Tidak ada data transaksi untuk diekspor.");
+      return;
+    }
+
+    const headers = [
+      "ID Transaksi",
+      "Tanggal",
+      "Nama Pelanggan",
+      "No WhatsApp",
+      "Metode Pembayaran",
+      "Total Belanja (Rp)",
+      "Status",
+    ];
+
+    const rows = transactions.map((t) => [
+      t.id,
+      new Date(t.createdAt).toLocaleString("id-ID"),
+      `"${(t.customerName || "Umum").replace(/"/g, '""')}"`,
+      `"${t.customerPhone || "-"}"`,
+      (t.paymentMethod || "CASH").toUpperCase(),
+      t.totalAmount,
+      (t.status || "completed").toUpperCase(),
+    ]);
+
+    const csvContent = `\uFEFF${[
+      headers.join(","),
+      ...rows.map((e) => e.join(",")),
+    ].join("\n")}`;
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute(
+      "download",
+      `Laporan_Transaksi_ZII_POS_${new Date().toISOString().split("T")[0]}.csv`,
+    );
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    toast.success("Laporan Excel / CSV berhasil diunduh!");
+  };
+
   return (
     <DashboardLayout requiredRole="owner">
       <main className="p-4 sm:p-6 lg:p-8 w-full space-y-6">
@@ -70,6 +113,14 @@ export default function TransactionsPage() {
               belanja secara real-time.
             </p>
           </div>
+
+          <Button
+            onClick={handleExportCsv}
+            className="gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-5 px-4 rounded-xl shadow-md shadow-emerald-600/20 cursor-pointer self-start sm:self-auto"
+          >
+            <FileSpreadsheet className="h-4 w-4" />
+            <span>Ekspor Laporan Excel / CSV</span>
+          </Button>
         </header>
 
         {/* Metric Summary Cards */}
@@ -137,61 +188,80 @@ export default function TransactionsPage() {
                 <TableRow>
                   <TableCell
                     colSpan={6}
-                    className="py-8 text-center text-slate-400"
+                    className="h-48 text-center text-slate-400 font-medium"
                   >
-                    Memuat riwayat transaksi...
+                    Memuat data riwayat transaksi...
                   </TableCell>
                 </TableRow>
               ) : transactions.length === 0 ? (
                 <TableRow>
                   <TableCell
                     colSpan={6}
-                    className="py-8 text-center text-slate-400"
+                    className="h-48 text-center text-slate-400 font-medium"
                   >
-                    Tidak ada riwayat transaksi yang sesuai filter.
+                    Belum ada riwayat transaksi kasir yang tercatat.
                   </TableCell>
                 </TableRow>
               ) : (
-                transactions.map((trx) => (
-                  <TableRow key={trx.id}>
-                    <TableCell className="font-mono text-xs font-bold text-slate-900">
-                      {trx.id}
+                transactions.map((tx) => (
+                  <TableRow key={tx.id} className="hover:bg-slate-50/70">
+                    <TableCell className="font-mono text-xs font-bold text-slate-800">
+                      {tx.id.substring(0, 8)}...
                     </TableCell>
-                    <TableCell className="font-medium text-slate-800">
-                      {trx.customerName || "Umum"}
+                    <TableCell>
+                      <span className="font-semibold text-slate-800 text-xs block">
+                        {tx.customerName || "Umum"}
+                      </span>
+                      {tx.customerPhone && (
+                        <span className="text-[10px] text-slate-400 block">
+                          {tx.customerPhone}
+                        </span>
+                      )}
                     </TableCell>
                     <TableCell>
                       <Badge
                         variant={
-                          trx.paymentMethod === "cash"
+                          tx.paymentMethod === "cash"
                             ? "emerald"
-                            : trx.paymentMethod === "qris"
+                            : tx.paymentMethod === "qris"
                               ? "blue"
                               : "amber"
                         }
-                        className="uppercase text-[10px] font-bold"
+                        className="text-[10px] font-extrabold uppercase flex items-center gap-1 w-fit"
                       >
-                        {trx.paymentMethod}
+                        {tx.paymentMethod === "cash" && (
+                          <Banknote className="h-3 w-3" />
+                        )}
+                        {tx.paymentMethod === "qris" && (
+                          <QrCode className="h-3 w-3" />
+                        )}
+                        {tx.paymentMethod === "transfer" && (
+                          <CreditCard className="h-3 w-3" />
+                        )}
+                        <span>{tx.paymentMethod}</span>
                       </Badge>
                     </TableCell>
-                    <TableCell className="font-extrabold text-emerald-600">
-                      {formatRupiah(Number(trx.totalAmount))}
+                    <TableCell className="font-bold text-emerald-600 text-xs">
+                      {formatRupiah(tx.totalAmount)}
                     </TableCell>
                     <TableCell className="text-xs text-slate-500">
-                      {new Date(trx.createdAt).toLocaleString("id-ID", {
-                        dateStyle: "short",
-                        timeStyle: "short",
-                      })}
+                      {new Intl.DateTimeFormat("id-ID", {
+                        day: "numeric",
+                        month: "short",
+                        year: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      }).format(new Date(tx.createdAt))}
                     </TableCell>
                     <TableCell className="text-right">
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => setSelectedTransaction(trx)}
-                        className="text-xs text-slate-600 hover:text-emerald-600 gap-1 rounded-lg"
+                        onClick={() => setSelectedTransaction(tx)}
+                        className="gap-1.5 text-xs text-slate-600 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg cursor-pointer"
                       >
                         <Eye className="h-3.5 w-3.5" />
-                        <span>Lihat Item</span>
+                        <span>Lihat Nota</span>
                       </Button>
                     </TableCell>
                   </TableRow>
@@ -200,11 +270,11 @@ export default function TransactionsPage() {
             </TableBody>
           </Table>
 
-          {/* Pagination Footer */}
+          {/* Pagination */}
           <Pagination
-            page={meta.page}
+            page={page}
             totalPages={meta.totalPages}
-            totalItems={meta.totalItems}
+            totalItems={meta.totalCount}
             onPageChange={setPage}
             hasNextPage={meta.hasNextPage}
             hasPrevPage={meta.hasPrevPage}

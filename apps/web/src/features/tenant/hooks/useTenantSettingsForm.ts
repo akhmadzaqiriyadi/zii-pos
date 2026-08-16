@@ -20,18 +20,21 @@ export function useTenantSettingsForm() {
     resolver: zodResolver(tenantSettingsSchema),
     defaultValues: {
       storeName: "",
+      logoUrl: "",
       phone: "",
       address: "",
       receiptFooter: "",
     },
   });
 
-  const { reset, register, formState } = form;
+  const { reset, register, watch, formState } = form;
+  const currentLogoUrl = watch("logoUrl");
 
   useEffect(() => {
     if (tenant) {
       reset({
         storeName: tenant.name || "",
+        logoUrl: tenant.logoUrl || "",
         phone: tenant.phone || "",
         address: tenant.address || "",
         receiptFooter: tenant.receiptFooter || "Terima kasih telah berbelanja!",
@@ -46,6 +49,7 @@ export function useTenantSettingsForm() {
     try {
       await updateTenant({
         name: data.storeName,
+        logoUrl: data.logoUrl || undefined,
         phone: data.phone,
         address: data.address,
         receiptFooter: data.receiptFooter,
@@ -70,6 +74,7 @@ export function useTenantSettingsForm() {
     successMsg,
     errorMsg,
     register,
+    currentLogoUrl,
     errors: formState.errors,
   };
 }

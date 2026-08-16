@@ -50,4 +50,67 @@ export class TenantController {
       );
     }
   }
+
+  static async getCashiers(req: AuthenticatedRequest, res: Response) {
+    try {
+      const tenantId = req.tenantId || "tenant-default";
+      const data = await TenantService.getCashiers(tenantId);
+      return ApiResponse.success(res, "Daftar kasir berhasil diambil", data);
+    } catch (error: unknown) {
+      return ApiResponse.error(res, "Gagal mengambil daftar kasir", error, 500);
+    }
+  }
+
+  static async createCashier(req: AuthenticatedRequest, res: Response) {
+    try {
+      const tenantId = req.tenantId || "tenant-default";
+      const { name, email, password } = req.body;
+
+      if (!name || !email || !password) {
+        return ApiResponse.error(
+          res,
+          "Nama, email, dan password wajib diisi.",
+          null,
+          400,
+        );
+      }
+
+      const newCashier = await TenantService.createCashier(tenantId, {
+        name,
+        email,
+        password,
+      });
+
+      return ApiResponse.success(
+        res,
+        "Akun kasir baru berhasil ditambahkan!",
+        newCashier,
+        201,
+      );
+    } catch (error: unknown) {
+      return ApiResponse.error(
+        res,
+        error instanceof Error ? error.message : "Gagal menambahkan kasir baru",
+        error,
+        400,
+      );
+    }
+  }
+
+  static async deleteCashier(req: AuthenticatedRequest, res: Response) {
+    try {
+      const tenantId = req.tenantId || "tenant-default";
+      const { id } = req.params;
+
+      const result = await TenantService.deleteCashier(tenantId, id);
+      return ApiResponse.success(res, result.message);
+    } catch (error: unknown) {
+      return ApiResponse.error(
+        res,
+        error instanceof Error ? error.message : "Gagal menghapus kasir",
+        error,
+        400,
+      );
+    }
+  }
 }

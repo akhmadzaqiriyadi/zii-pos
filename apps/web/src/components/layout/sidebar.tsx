@@ -225,6 +225,30 @@ export function AppSidebar({
           })}
         </nav>
 
+        {/* Support Prioritas WA 24/7 (Paket Pro / Merchant) */}
+        {!isCollapsed && (
+          <div className="p-3">
+            <a
+              href="https://wa.me/6285292677431?text=Halo%20ZII%20POS%20Support%2C%20saya%20merchant%20ingin%20konsultasi%20fitur..."
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2.5 p-2.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 hover:bg-emerald-100 transition shadow-2xs group"
+            >
+              <div className="h-7 w-7 rounded-lg bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-xs">
+                💬
+              </div>
+              <div className="min-w-0">
+                <span className="font-extrabold text-[11px] block leading-tight text-emerald-900 group-hover:text-emerald-950">
+                  Support Prioritas WA
+                </span>
+                <span className="text-[9px] text-emerald-700 font-semibold block">
+                  Online 24/7 CS Toko
+                </span>
+              </div>
+            </a>
+          </div>
+        )}
+
         {/* Sidebar Footer / Toggle & Logout */}
         <footer className="border-t border-slate-200 p-3 space-y-2 bg-white">
           {isCollapsed && onToggleCollapse && (
