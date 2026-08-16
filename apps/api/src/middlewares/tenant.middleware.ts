@@ -12,7 +12,14 @@ export function tenantMiddleware(
   next: NextFunction,
 ) {
   // Extract tenantId from Header (x-tenant-id) or fallback to default tenant
-  const tenantId = (req.headers["x-tenant-id"] as string) || "tenant-default";
+  const rawTenantId = req.headers["x-tenant-id"];
+  let tenantId = "tenant-default";
+
+  if (typeof rawTenantId === "string") {
+    tenantId = rawTenantId.split(",")[0].trim();
+  } else if (Array.isArray(rawTenantId) && rawTenantId.length > 0) {
+    tenantId = rawTenantId[0].trim();
+  }
 
   if (!tenantId) {
     return ApiResponse.error(res, "Tenant ID is required", 401);

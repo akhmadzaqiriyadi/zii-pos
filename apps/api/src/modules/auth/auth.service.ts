@@ -28,10 +28,17 @@ export class AuthService {
 
     const passwordHash = await Bun.password.hash(input.password);
 
+    const baseSubdomain =
+      input.tenantName
+        .toLowerCase()
+        .replace(/[^a-z0-9]/g, "")
+        .slice(0, 30) || `tenant${Date.now().toString().slice(-6)}`;
+
     const result = await db.$transaction(async (tx) => {
       const tenant = await tx.tenant.create({
         data: {
           name: input.tenantName,
+          subdomain: baseSubdomain,
           phone: input.phone,
           address: input.address,
         },
