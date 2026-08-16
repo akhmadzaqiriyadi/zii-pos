@@ -38,7 +38,10 @@ const mockInvoice = {
   amount: 99000,
   status: "unpaid",
   createdAt: new Date(),
-  subscription: mockTenant.subscriptions[0],
+  subscription: {
+    ...mockTenant.subscriptions[0],
+    tenant: mockTenant,
+  },
 };
 
 mock.module("@zii/db", () => ({
@@ -80,6 +83,14 @@ mock.module("@zii/db", () => ({
       update: async (args: { data: Record<string, unknown> }) => ({
         ...mockInvoice,
         ...args.data,
+      }),
+    },
+    user: {
+      findFirst: async () => ({
+        id: "u-01",
+        name: "Zaqi Owner",
+        email: "zaqi@zii.id",
+        role: "owner",
       }),
     },
     $transaction: async (queries: unknown[]) => queries,
