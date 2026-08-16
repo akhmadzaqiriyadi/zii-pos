@@ -2,6 +2,7 @@
 
 import { Loader2, Search } from "lucide-react";
 import React from "react";
+import { Button } from "../../../components/ui/button";
 import { Card, CardContent } from "../../../components/ui/card";
 import { Input } from "../../../components/ui/input";
 import { Pagination } from "../../../components/ui/pagination";
@@ -71,18 +72,20 @@ export function TenantTable({
             {statusFilterOptions.map((f) => {
               const isActive = statusFilter === f.id;
               return (
-                <button
+                <Button
                   type="button"
+                  variant="ghost"
+                  size="sm"
                   key={f.id}
                   onClick={() => onStatusFilterChange(f.id)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
+                  className={`px-3 py-1.5 h-auto rounded-xl text-xs font-bold transition cursor-pointer ${
                     isActive
-                      ? "bg-slate-900 text-white shadow-xs"
+                      ? "bg-slate-900 text-white hover:bg-slate-800 shadow-xs"
                       : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                   }`}
                 >
                   {f.label}
-                </button>
+                </Button>
               );
             })}
           </fieldset>

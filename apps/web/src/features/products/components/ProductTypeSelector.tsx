@@ -1,5 +1,7 @@
 "use client";
 
+import { Button } from "../../../components/ui/button";
+
 interface ProductTypeSelectorProps {
   isService: boolean;
   onSelectType: (isService: boolean) => void;
@@ -15,28 +17,30 @@ export function ProductTypeSelector({
         Tipe Katalog
       </legend>
       <div className="grid grid-cols-2 gap-2">
-        <button
+        <Button
           type="button"
+          variant="outline"
           onClick={() => onSelectType(false)}
           className={`py-2 px-3 rounded-xl border text-xs font-bold transition cursor-pointer ${
             !isService
-              ? "border-blue-500 bg-blue-50 text-blue-700 shadow-xs"
+              ? "border-blue-500 bg-blue-50 text-blue-700 shadow-xs hover:bg-blue-100/60"
               : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
           }`}
         >
           📦 Barang Retail
-        </button>
-        <button
+        </Button>
+        <Button
           type="button"
+          variant="outline"
           onClick={() => onSelectType(true)}
           className={`py-2 px-3 rounded-xl border text-xs font-bold transition cursor-pointer ${
             isService
-              ? "border-amber-500 bg-amber-50 text-amber-700 shadow-xs"
+              ? "border-amber-500 bg-amber-50 text-amber-700 shadow-xs hover:bg-amber-100/60"
               : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
           }`}
         >
           ✂️ Jasa / Service
-        </button>
+        </Button>
       </div>
     </fieldset>
   );

@@ -101,18 +101,20 @@ export default function TransactionsPage() {
               <fieldset className="flex items-center gap-1.5 border-0 p-0 m-0">
                 {(["all", "cash", "qris", "transfer"] as const).map(
                   (method) => (
-                    <button
+                    <Button
                       type="button"
+                      variant="ghost"
+                      size="sm"
                       key={method}
                       onClick={() => setPaymentMethod(method)}
-                      className={`px-3 py-1.5 rounded-xl text-xs font-bold uppercase transition cursor-pointer ${
+                      className={`px-3 py-1.5 h-auto rounded-xl text-xs font-bold uppercase transition cursor-pointer ${
                         paymentMethod === method
                           ? "bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs"
                           : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                       }`}
                     >
                       {method}
-                    </button>
+                    </Button>
                   ),
                 )}
               </fieldset>

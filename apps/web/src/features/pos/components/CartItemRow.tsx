@@ -2,6 +2,7 @@
 
 import type { TransactionItem } from "@zii/types";
 import { Minus, Plus, Trash2 } from "lucide-react";
+import { Button } from "../../../components/ui/button";
 import { formatRupiah } from "../../../lib/utils";
 
 interface CartItemRowProps {
@@ -27,34 +28,37 @@ export function CartItemRow({
       </div>
       <div className="flex items-center space-x-2 shrink-0">
         <div className="flex items-center space-x-1 rounded-xl bg-white border border-slate-200 p-0.5 shadow-xs">
-          <button
-            type="button"
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={() => onUpdateQty(item.productId, -1)}
-            className="flex h-7 w-7 items-center justify-center rounded-lg text-slate-600 hover:bg-slate-100 transition cursor-pointer"
+            className="h-7 w-7 rounded-lg text-slate-600 hover:bg-slate-100"
             title="Kurangi Qty"
           >
             <Minus className="h-3.5 w-3.5" />
-          </button>
+          </Button>
           <span className="w-7 text-center text-xs font-extrabold text-slate-900">
             {item.qty}
           </span>
-          <button
-            type="button"
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={() => onUpdateQty(item.productId, 1)}
-            className="flex h-7 w-7 items-center justify-center rounded-lg text-slate-600 hover:bg-slate-100 transition cursor-pointer"
+            className="h-7 w-7 rounded-lg text-slate-600 hover:bg-slate-100"
             title="Tambah Qty"
           >
             <Plus className="h-3.5 w-3.5" />
-          </button>
+          </Button>
         </div>
-        <button
-          type="button"
+        <Button
+          variant="ghost"
+          size="icon"
           onClick={() => onRemoveItem(item.productId)}
-          className="flex h-8 w-8 items-center justify-center rounded-xl text-slate-400 hover:bg-rose-50 hover:text-rose-600 transition cursor-pointer"
+          className="h-8 w-8 rounded-xl text-slate-400 hover:bg-rose-50 hover:text-rose-600"
           title="Hapus Item"
         >
           <Trash2 className="h-4 w-4" />
-        </button>
+        </Button>
       </div>
     </article>
   );

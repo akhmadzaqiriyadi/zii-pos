@@ -94,50 +94,58 @@ export default function ProductsPage() {
 
               {/* Filter Buttons including Low Stock Filter */}
               <fieldset className="flex flex-wrap items-center gap-1.5 border-0 p-0 m-0">
-                <button
+                <Button
                   type="button"
+                  variant="ghost"
+                  size="sm"
                   onClick={() => setFilterType("all")}
-                  className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer ${
+                  className={`px-3.5 py-1.5 h-auto rounded-xl text-xs font-semibold transition cursor-pointer ${
                     filterType === "all"
                       ? "bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs"
                       : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                   }`}
                 >
                   Semua ({totalCount})
-                </button>
-                <button
+                </Button>
+                <Button
                   type="button"
+                  variant="ghost"
+                  size="sm"
                   onClick={() => setFilterType("retail")}
-                  className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer ${
+                  className={`px-3.5 py-1.5 h-auto rounded-xl text-xs font-semibold transition cursor-pointer ${
                     filterType === "retail"
-                      ? "bg-blue-600 text-white shadow-xs"
+                      ? "bg-blue-600 text-white hover:bg-blue-700 shadow-xs"
                       : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                   }`}
                 >
                   Retail
-                </button>
-                <button
+                </Button>
+                <Button
                   type="button"
+                  variant="ghost"
+                  size="sm"
                   onClick={() => setFilterType("service")}
-                  className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer ${
+                  className={`px-3.5 py-1.5 h-auto rounded-xl text-xs font-semibold transition cursor-pointer ${
                     filterType === "service"
-                      ? "bg-amber-600 text-white shadow-xs"
+                      ? "bg-amber-600 text-white hover:bg-amber-700 shadow-xs"
                       : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                   }`}
                 >
                   Jasa
-                </button>
-                <button
+                </Button>
+                <Button
                   type="button"
+                  variant="ghost"
+                  size="sm"
                   onClick={() => setFilterType("lowStock")}
-                  className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer ${
+                  className={`px-3.5 py-1.5 h-auto rounded-xl text-xs font-semibold transition cursor-pointer ${
                     filterType === "lowStock"
-                      ? "bg-rose-600 text-white shadow-xs"
+                      ? "bg-rose-600 text-white hover:bg-rose-700 shadow-xs"
                       : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                   }`}
                 >
                   Stok Menipis
-                </button>
+                </Button>
               </fieldset>
             </header>
 

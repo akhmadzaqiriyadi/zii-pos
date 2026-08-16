@@ -1,6 +1,7 @@
 "use client";
 
 import { CheckCircle } from "lucide-react";
+import { Button } from "../../../components/ui/button";
 import { FormGroup, FormLabel } from "../../../components/ui/form";
 import { Input } from "../../../components/ui/input";
 import { formatRupiah } from "../../../lib/utils";
@@ -40,27 +41,33 @@ export function PaymentCashCalculator({
 
       {/* Uang Presets */}
       <div className="flex flex-wrap gap-1.5">
-        <button
+        <Button
           type="button"
+          variant="outline"
+          size="sm"
           onClick={() => onPresetCash(totalAmount)}
-          className="px-2.5 py-1 text-[11px] font-medium bg-white border border-slate-300 rounded-lg hover:bg-slate-100 transition cursor-pointer"
+          className="h-7 px-2.5 text-[11px] font-semibold bg-white border-slate-300 hover:bg-slate-100 rounded-lg"
         >
           Uang Pas ({formatRupiah(totalAmount)})
-        </button>
-        <button
+        </Button>
+        <Button
           type="button"
+          variant="outline"
+          size="sm"
           onClick={() => onPresetCash(50000)}
-          className="px-2.5 py-1 text-[11px] font-medium bg-white border border-slate-300 rounded-lg hover:bg-slate-100 transition cursor-pointer"
+          className="h-7 px-2.5 text-[11px] font-semibold bg-white border-slate-300 hover:bg-slate-100 rounded-lg"
         >
           50.000
-        </button>
-        <button
+        </Button>
+        <Button
           type="button"
+          variant="outline"
+          size="sm"
           onClick={() => onPresetCash(100000)}
-          className="px-2.5 py-1 text-[11px] font-medium bg-white border border-slate-300 rounded-lg hover:bg-slate-100 transition cursor-pointer"
+          className="h-7 px-2.5 text-[11px] font-semibold bg-white border-slate-300 hover:bg-slate-100 rounded-lg"
         >
           100.000
-        </button>
+        </Button>
       </div>
 
       {/* Kembalian Real-Time Output */}

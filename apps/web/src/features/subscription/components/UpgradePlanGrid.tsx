@@ -44,23 +44,27 @@ export function UpgradePlanGrid({
 
         {/* Billing Cycle Switcher */}
         <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl border border-slate-200 shrink-0">
-          <button
+          <Button
             type="button"
+            variant="ghost"
+            size="sm"
             onClick={() => onCycleChange("monthly")}
             className={`px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer ${
               selectedCycle === "monthly"
-                ? "bg-white text-emerald-700 shadow-xs"
+                ? "bg-white text-emerald-700 shadow-xs hover:bg-white"
                 : "text-slate-600 hover:text-slate-900"
             }`}
           >
             Bulanan (Monthly)
-          </button>
-          <button
+          </Button>
+          <Button
             type="button"
+            variant="ghost"
+            size="sm"
             onClick={() => onCycleChange("yearly")}
             className={`px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer flex items-center gap-1.5 ${
               selectedCycle === "yearly"
-                ? "bg-white text-emerald-700 shadow-xs"
+                ? "bg-white text-emerald-700 shadow-xs hover:bg-white"
                 : "text-slate-600 hover:text-slate-900"
             }`}
           >
@@ -68,7 +72,7 @@ export function UpgradePlanGrid({
             <span className="bg-emerald-100 text-emerald-800 text-[9px] px-1.5 py-0.5 rounded-full font-black">
               HEMAT
             </span>
-          </button>
+          </Button>
         </div>
       </header>
 

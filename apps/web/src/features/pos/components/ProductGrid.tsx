@@ -3,6 +3,7 @@
 import type { Product } from "@zii/types";
 import { AlertCircle, Package, Plus, Search } from "lucide-react";
 import { Badge } from "../../../components/ui/badge";
+import { Button } from "../../../components/ui/button";
 import { Card } from "../../../components/ui/card";
 import { Input } from "../../../components/ui/input";
 import { Pagination } from "../../../components/ui/pagination";
@@ -52,50 +53,58 @@ export function ProductGrid({
 
         {/* Filter Pills */}
         <fieldset className="flex flex-wrap items-center gap-2 border-0 p-0 m-0">
-          <button
+          <Button
             type="button"
+            variant="ghost"
+            size="sm"
             onClick={() => onFilterTypeChange("all")}
-            className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition cursor-pointer ${
+            className={`px-3.5 py-1.5 h-auto rounded-full text-xs font-bold transition cursor-pointer ${
               filterType === "all"
                 ? "bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs"
                 : "bg-slate-100 text-slate-600 hover:bg-slate-200"
             }`}
           >
             Semua ({totalCount})
-          </button>
-          <button
+          </Button>
+          <Button
             type="button"
+            variant="ghost"
+            size="sm"
             onClick={() => onFilterTypeChange("retail")}
-            className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition cursor-pointer ${
+            className={`px-3.5 py-1.5 h-auto rounded-full text-xs font-bold transition cursor-pointer ${
               filterType === "retail"
                 ? "bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs"
                 : "bg-slate-100 text-slate-600 hover:bg-slate-200"
             }`}
           >
             Retail
-          </button>
-          <button
+          </Button>
+          <Button
             type="button"
+            variant="ghost"
+            size="sm"
             onClick={() => onFilterTypeChange("service")}
-            className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition cursor-pointer ${
+            className={`px-3.5 py-1.5 h-auto rounded-full text-xs font-bold transition cursor-pointer ${
               filterType === "service"
                 ? "bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs"
                 : "bg-slate-100 text-slate-600 hover:bg-slate-200"
             }`}
           >
             Jasa
-          </button>
-          <button
+          </Button>
+          <Button
             type="button"
+            variant="ghost"
+            size="sm"
             onClick={() => onFilterTypeChange("lowStock")}
-            className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition cursor-pointer ${
+            className={`px-3.5 py-1.5 h-auto rounded-full text-xs font-bold transition cursor-pointer ${
               filterType === "lowStock"
-                ? "bg-rose-600 text-white shadow-xs"
+                ? "bg-rose-600 text-white hover:bg-rose-700 shadow-xs"
                 : "bg-slate-100 text-slate-600 hover:bg-slate-200"
             }`}
           >
             Stok Menipis
-          </button>
+          </Button>
         </fieldset>
       </header>
 
