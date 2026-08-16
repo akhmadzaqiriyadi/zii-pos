@@ -178,7 +178,8 @@ export function TenantTable({
                         {t.name}
                       </p>
                       <p className="text-[11px] text-slate-400 font-normal">
-                        {t.phone || "No HP tidak diatur"} • {t.address || "Alamat tidak diatur"}
+                        {t.phone || "No HP tidak diatur"} •{" "}
+                        {t.address || "Alamat tidak diatur"}
                       </p>
                     </div>
                   </TableCell>
@@ -186,18 +187,28 @@ export function TenantTable({
                   <TableCell>
                     <div className="flex items-center gap-1.5 text-xs text-emerald-700 font-semibold bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200 inline-flex">
                       <Globe className="h-3.5 w-3.5 text-emerald-600" />
-                      <span>{t.subdomain ? `${t.subdomain}.ziipos.com` : "ziipos.com"}</span>
+                      <span>
+                        {t.subdomain
+                          ? `${t.subdomain}.ziipos.com`
+                          : "ziipos.com"}
+                      </span>
                     </div>
                   </TableCell>
 
                   <TableCell>
                     {t.subscription ? (
                       <div className="space-y-1">
-                        <Badge variant="emerald" className="capitalize text-[11px]">
+                        <Badge
+                          variant="emerald"
+                          className="capitalize text-[11px]"
+                        >
                           {t.subscription.planName}
                         </Badge>
                         <p className="text-[10px] text-slate-400">
-                          s/d {new Date(t.subscription.expiresAt).toLocaleDateString("id-ID")}
+                          s/d{" "}
+                          {new Date(
+                            t.subscription.expiresAt,
+                          ).toLocaleDateString("id-ID")}
                         </p>
                       </div>
                     ) : (
@@ -209,14 +220,26 @@ export function TenantTable({
 
                   <TableCell>
                     <div className="flex items-center gap-3 text-xs text-slate-600">
-                      <span className="flex items-center gap-1" title="Jumlah User Kasir">
-                        <Users className="h-3.5 w-3.5 text-slate-400" /> {t.totalUsers}
+                      <span
+                        className="flex items-center gap-1"
+                        title="Jumlah User Kasir"
+                      >
+                        <Users className="h-3.5 w-3.5 text-slate-400" />{" "}
+                        {t.totalUsers}
                       </span>
-                      <span className="flex items-center gap-1" title="Jumlah Produk">
-                        <Package className="h-3.5 w-3.5 text-slate-400" /> {t.totalProducts}
+                      <span
+                        className="flex items-center gap-1"
+                        title="Jumlah Produk"
+                      >
+                        <Package className="h-3.5 w-3.5 text-slate-400" />{" "}
+                        {t.totalProducts}
                       </span>
-                      <span className="flex items-center gap-1" title="Jumlah Transaksi">
-                        <ShoppingCart className="h-3.5 w-3.5 text-slate-400" /> {t.totalTransactions}
+                      <span
+                        className="flex items-center gap-1"
+                        title="Jumlah Transaksi"
+                      >
+                        <ShoppingCart className="h-3.5 w-3.5 text-slate-400" />{" "}
+                        {t.totalTransactions}
                       </span>
                     </div>
                   </TableCell>

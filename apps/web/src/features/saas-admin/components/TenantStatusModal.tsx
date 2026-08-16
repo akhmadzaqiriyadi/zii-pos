@@ -15,9 +15,7 @@ import type { MerchantTenant } from "../services/saasAdminApi";
 interface TenantStatusModalProps {
   tenant: MerchantTenant | null;
   onClose: () => void;
-  onConfirm: (
-    status: "active" | "trial" | "expired" | "suspended",
-  ) => void;
+  onConfirm: (status: "active" | "trial" | "expired" | "suspended") => void;
   isPending: boolean;
 }
 
@@ -48,7 +46,8 @@ export function TenantStatusModal({
     {
       value: "active",
       label: "ACTIVE (Berlangganan Aktif)",
-      description: "Toko memiliki akses penuh ke kasir POS dan fitur white-label.",
+      description:
+        "Toko memiliki akses penuh ke kasir POS dan fitur white-label.",
       color: "border-emerald-500 bg-emerald-50/50 text-emerald-800",
     },
     {
@@ -60,13 +59,15 @@ export function TenantStatusModal({
     {
       value: "suspended",
       label: "SUSPENDED (Dibekukan)",
-      description: "Akses kasir toko diblokir sementara karena pelanggaran/alasan khusus.",
+      description:
+        "Akses kasir toko diblokir sementara karena pelanggaran/alasan khusus.",
       color: "border-rose-500 bg-rose-50/50 text-rose-800",
     },
     {
       value: "expired",
       label: "EXPIRED (Lisensi Habis)",
-      description: "Masa berlangganan toko habis dan belum melakukan perpanjangan.",
+      description:
+        "Masa berlangganan toko habis dan belum melakukan perpanjangan.",
       color: "border-slate-400 bg-slate-100 text-slate-700",
     },
   ];

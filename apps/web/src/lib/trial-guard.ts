@@ -40,7 +40,6 @@ export function evaluateTrialGuard(
     pathname === "/register" ||
     pathname === "/onboarding";
 
-
   // 1. Unauthenticated users trying to access protected routes
   if (isProtectedRoute && !token) {
     return {

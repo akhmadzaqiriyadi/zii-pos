@@ -41,7 +41,8 @@ export function PlanDeleteModal({
             <span className="font-extrabold text-slate-900">
               "{planToDelete.name}"
             </span>{" "}
-            ({planToDelete.code})? Paket ini tidak akan lagi tampil di halaman pendaftaran merchant baru.
+            ({planToDelete.code})? Paket ini tidak akan lagi tampil di halaman
+            pendaftaran merchant baru.
           </p>
         </DialogHeader>
 

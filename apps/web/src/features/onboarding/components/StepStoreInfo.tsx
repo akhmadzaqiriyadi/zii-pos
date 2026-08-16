@@ -44,7 +44,8 @@ export function StepStoreInfo({ initialData, onSubmit }: StepStoreInfoProps) {
           Langkah 1: Identitas & Branding Toko
         </h2>
         <p className="text-xs text-slate-500">
-          Masukkan informasi usaha atau merchant toko Anda yang akan ditampilkan pada struk & invoice.
+          Masukkan informasi usaha atau merchant toko Anda yang akan ditampilkan
+          pada struk & invoice.
         </p>
       </header>
 

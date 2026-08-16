@@ -15,7 +15,10 @@ export function parseApiErrorMessage(
     const obj = err as Record<string, any>;
     if (typeof obj.message === "string" && obj.message.trim()) {
       rawMessage = obj.message;
-    } else if (typeof obj.error?.message === "string" && obj.error.message.trim()) {
+    } else if (
+      typeof obj.error?.message === "string" &&
+      obj.error.message.trim()
+    ) {
       rawMessage = obj.error.message;
     } else if (typeof obj.error === "string" && obj.error.trim()) {
       rawMessage = obj.error;

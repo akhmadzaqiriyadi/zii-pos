@@ -79,7 +79,8 @@ export function PaymentCheckoutModal({
             Invoice Pembayaran Lisensi SaaS
           </DialogTitle>
           <p className="text-xs text-slate-500">
-            Selesaikan pembayaran untuk mengaktifkan paket langganan tokomu secara instan.
+            Selesaikan pembayaran untuk mengaktifkan paket langganan tokomu
+            secara instan.
           </p>
         </DialogHeader>
 
@@ -114,7 +115,10 @@ export function PaymentCheckoutModal({
               <QrCode className="h-32 w-32 text-slate-900" />
             </div>
             <div className="space-y-1">
-              <Badge variant="emerald" className="text-[10px] font-extrabold uppercase">
+              <Badge
+                variant="emerald"
+                className="text-[10px] font-extrabold uppercase"
+              >
                 QRIS Pembayaran Instant
               </Badge>
               <p className="text-[11px] text-slate-500">

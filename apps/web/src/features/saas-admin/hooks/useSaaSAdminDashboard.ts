@@ -26,7 +26,8 @@ export function useSaaSAdminDashboard() {
   // 2. Query Tenants List
   const { data: tenantsResponse, isLoading: isLoadingTenants } = useQuery({
     queryKey: ["saasTenants", page, search, statusFilter],
-    queryFn: () => SaaSAdminApiService.getTenants(page, 10, search, statusFilter),
+    queryFn: () =>
+      SaaSAdminApiService.getTenants(page, 10, search, statusFilter),
   });
 
   // 3. Mutation Update Tenant Status
@@ -47,7 +48,9 @@ export function useSaaSAdminDashboard() {
       setSelectedTenantForStatus(null);
     },
     onError: (err: unknown) => {
-      toast.error(parseApiErrorMessage(err, "Gagal mengupdate status merchant."));
+      toast.error(
+        parseApiErrorMessage(err, "Gagal mengupdate status merchant."),
+      );
     },
   });
 

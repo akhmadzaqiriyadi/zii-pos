@@ -28,7 +28,10 @@ export function middleware(request: NextRequest) {
       const isExpired =
         tenantStatus === "expired" || tenantStatus === "suspended";
       return NextResponse.redirect(
-        new URL(isExpired ? "/settings?alert=license_expired" : "/pos", request.url),
+        new URL(
+          isExpired ? "/settings?alert=license_expired" : "/pos",
+          request.url,
+        ),
       );
     }
     if (hasRegistered) {

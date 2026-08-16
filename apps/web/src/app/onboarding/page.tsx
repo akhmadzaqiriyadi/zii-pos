@@ -4,7 +4,8 @@ import { OnboardingWizard } from "../../features/onboarding/components/Onboardin
 
 export const metadata: Metadata = {
   title: "Pendaftaran Merchant — ZII POS SaaS",
-  description: "Daftarkan usaha Anda dan atur toko kasir Anda dalam 3 langkah mudah",
+  description:
+    "Daftarkan usaha Anda dan atur toko kasir Anda dalam 3 langkah mudah",
 };
 
 export default function OnboardingPage() {

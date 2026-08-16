@@ -96,7 +96,9 @@ export class SubscriptionApiService {
     });
     const body = await res.json();
     if (!res.ok || !body.success) {
-      throw new Error(body.message || "Gagal mensimulasikan webhook pembayaran.");
+      throw new Error(
+        body.message || "Gagal mensimulasikan webhook pembayaran.",
+      );
     }
   }
 }

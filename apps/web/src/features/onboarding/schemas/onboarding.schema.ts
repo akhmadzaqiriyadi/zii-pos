@@ -27,7 +27,9 @@ export const stepOwnerAccountSchema = z
       .max(50, "Nama owner maksimal 50 karakter."),
     email: z.string().email("Format email tidak valid."),
     password: z.string().min(6, "Password minimal 6 karakter."),
-    confirmPassword: z.string().min(6, "Konfirmasi password minimal 6 karakter."),
+    confirmPassword: z
+      .string()
+      .min(6, "Konfirmasi password minimal 6 karakter."),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Konfirmasi password tidak cocok.",

@@ -41,7 +41,8 @@ export default function SaaSPlansAdminPage() {
               </h1>
             </div>
             <p className="text-xs sm:text-sm text-slate-500">
-              Super Admin Portal — Tambah, edit harga promo, atur batas kasir (`maxCashiers`), dan kelola penawaran paket SaaS secara real-time.
+              Super Admin Portal — Tambah, edit harga promo, atur batas kasir
+              (`maxCashiers`), dan kelola penawaran paket SaaS secara real-time.
             </p>
           </div>
 

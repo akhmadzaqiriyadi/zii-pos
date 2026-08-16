@@ -44,7 +44,8 @@ export default function SaaSAdminPage() {
               </h1>
             </div>
             <p className="text-xs sm:text-sm text-slate-500">
-              Pemantauan performa bisnis SaaS komersial, pendapatan MRR, dan kontrol status lisensi seluruh merchant toko.
+              Pemantauan performa bisnis SaaS komersial, pendapatan MRR, dan
+              kontrol status lisensi seluruh merchant toko.
             </p>
           </div>
 

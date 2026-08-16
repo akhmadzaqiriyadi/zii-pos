@@ -6,8 +6,8 @@ import { toast } from "sonner";
 import { parseApiErrorMessage } from "../../../lib/form-helpers";
 import {
   type CreatePlanPayload,
-  type SaaSPlanAdmin,
   SaaSAdminApiService,
+  type SaaSPlanAdmin,
   type UpdatePlanPayload,
 } from "../services/saasAdminApi";
 
@@ -49,7 +49,9 @@ export function useSaaSPlansAdmin() {
     onSuccess: (updatedPlan) => {
       queryClient.invalidateQueries({ queryKey: ["saasAdminPlans"] });
       queryClient.invalidateQueries({ queryKey: ["activePlans"] });
-      toast.success(`Paket langganan "${updatedPlan.name}" berhasil diperbarui!`);
+      toast.success(
+        `Paket langganan "${updatedPlan.name}" berhasil diperbarui!`,
+      );
       setIsFormModalOpen(false);
       setSelectedPlanToEdit(null);
     },

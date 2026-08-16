@@ -26,13 +26,16 @@ export default function SettingsPage() {
                 </h3>
                 <p className="text-xs text-red-700 mt-0.5">
                   Akses kasir POS dan katalog produk dinonaktifkan sementara.
-                  Silakan lakukan perpanjangan paket langganan untuk mengaktifkan
-                  kembali operasional kasir.
+                  Silakan lakukan perpanjangan paket langganan untuk
+                  mengaktifkan kembali operasional kasir.
                 </p>
               </div>
             </div>
             <Link href="/settings/billing">
-              <Button size="sm" className="bg-red-600 hover:bg-red-700 text-white text-xs font-bold shrink-0">
+              <Button
+                size="sm"
+                className="bg-red-600 hover:bg-red-700 text-white text-xs font-bold shrink-0"
+              >
                 Perpanjang Sekarang
               </Button>
             </Link>
@@ -45,7 +48,8 @@ export default function SettingsPage() {
               Pengaturan White-Label Merchant
             </h1>
             <p className="text-xs sm:text-sm text-slate-500">
-              Atur nama toko, alamat, nomor telepon, dan pesan footer struk cetak / WhatsApp merchant kamu secara real-time.
+              Atur nama toko, alamat, nomor telepon, dan pesan footer struk
+              cetak / WhatsApp merchant kamu secara real-time.
             </p>
           </div>
 

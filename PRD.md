@@ -125,16 +125,17 @@ Seluruh endpoint baru didaftarkan secara konsisten di bawah prefix `/api/v1/`:
 
 
 ### 🎨 Isyadi (Frontend Lead — Onboarding, Super Admin Portal & Billing UI)
-- [ ] Implementasi Self-Service Merchant Onboarding Wizard 3 Langkah (`/onboarding`).
-- [ ] Implementasi Super Admin Portal Dashboard (`/saas-admin` — Card MRR, Tabel Merchant, Toggles).
-- [ ] Implementasi Dynamic Plan Management CRUD UI (`/saas-admin/plans` — Modal Tambah/Edit Paket & Batas Kasir).
-- [ ] Implementasi Merchant Subscription Billing Page (`/settings/billing` — Status Lisensi & Tombol Checkout Upgrade).
+- [x] Implementasi Self-Service Merchant Onboarding Wizard 3 Langkah (`/onboarding`).
+- [x] Implementasi Super Admin Portal Dashboard (`/saas-admin` — Card MRR, Tabel Merchant, Toggles).
+- [x] Implementasi Dynamic Plan Management CRUD UI (`/saas-admin/plans` — Modal Tambah/Edit Paket & Batas Kasir).
+- [x] Implementasi Merchant Subscription Billing Page (`/settings/billing` — Status Lisensi & Tombol Checkout Upgrade).
 
 ### ⚡ Ilham (Fullstack Lead — Auth Subdomain, Trial Guard & Invoice Lead)
-- [ ] Implementasi Subdomain Rewrite Middleware (`proxy.ts`) untuk `toko.ziipos.com`.
-- [ ] Implementasi Subdomain Auth Context & JWT Cookie Isolation.
-- [ ] Implementasi Trial Period Expiry Guard Middleware (Blokir akses kasir otomatis jika lisensi habis).
-- [ ] Implementasi PDF Invoice Generator & Email Handler untuk Notifikasi Pembayaran.
+- [x] Implementasi Subdomain Rewrite Middleware (`proxy.ts`) untuk `toko.ziipos.com`.
+- [x] Implementasi Subdomain Auth Context & JWT Cookie Isolation.
+- [x] Implementasi Trial Period Expiry Guard Middleware (Blokir akses kasir otomatis jika lisensi habis).
+- [x] Implementasi PDF Invoice Generator & Email Handler untuk Notifikasi Pembayaran.
+
 
 ---
 *Official ZII POS v2.0.0 PRD & TRD Document Approved by Founders (Zaqi, Isyadi, Ilham).*

@@ -1,6 +1,14 @@
 "use client";
 
-import { ArrowLeft, Check, Crown, Loader2, Sparkles, Store, Users } from "lucide-react";
+import {
+  ArrowLeft,
+  Check,
+  Crown,
+  Loader2,
+  Sparkles,
+  Store,
+  Users,
+} from "lucide-react";
 import React, { useState } from "react";
 import { Badge } from "../../../components/ui/badge";
 import { Button } from "../../../components/ui/button";
@@ -41,7 +49,8 @@ export function StepPlanSelection({
           Langkah 3: Pilih Paket Langganan & Aktivasi Usaha
         </h2>
         <p className="text-xs text-slate-500">
-          Pilih paket langganan yang sesuai dengan kapasitas operasional toko dan jumlah kasir Anda.
+          Pilih paket langganan yang sesuai dengan kapasitas operasional toko
+          dan jumlah kasir Anda.
         </p>
       </header>
 
@@ -54,7 +63,8 @@ export function StepPlanSelection({
         </div>
       ) : plans.length === 0 ? (
         <div className="p-6 text-center rounded-2xl bg-amber-50 border border-amber-200 text-amber-800 text-xs">
-          Tidak ada paket aktif saat ini. Pendaftaran akan menggunakan paket default trial.
+          Tidak ada paket aktif saat ini. Pendaftaran akan menggunakan paket
+          default trial.
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
@@ -113,7 +123,10 @@ export function StepPlanSelection({
                   </header>
 
                   <div className="flex items-center gap-2 pt-1 pb-2">
-                    <Badge variant="emerald" className="gap-1 text-[11px] py-0.5">
+                    <Badge
+                      variant="emerald"
+                      className="gap-1 text-[11px] py-0.5"
+                    >
                       <Users className="h-3 w-3" />
                       <span>
                         Hingga {plan.maxCashiers}{" "}

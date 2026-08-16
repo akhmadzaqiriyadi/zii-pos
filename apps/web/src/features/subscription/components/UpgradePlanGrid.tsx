@@ -37,7 +37,8 @@ export function UpgradePlanGrid({
             Pilihan Paket Upgrade & Perpanjangan Lisensi
           </h3>
           <p className="text-xs text-slate-500">
-            Tingkatkan batas kasir dan aktifkan fitur white-label untuk mengoptimalkan operasional bisnismu.
+            Tingkatkan batas kasir dan aktifkan fitur white-label untuk
+            mengoptimalkan operasional bisnismu.
           </p>
         </div>
 
@@ -74,7 +75,9 @@ export function UpgradePlanGrid({
       {isLoadingPlans ? (
         <div className="flex items-center justify-center py-12 space-x-2">
           <Loader2 className="h-6 w-6 animate-spin text-emerald-600" />
-          <span className="text-sm text-slate-500">Memuat opsi paket SaaS...</span>
+          <span className="text-sm text-slate-500">
+            Memuat opsi paket SaaS...
+          </span>
         </div>
       ) : activePlans.length === 0 ? (
         <Card className="p-6 text-center text-slate-400">
@@ -117,7 +120,10 @@ export function UpgradePlanGrid({
                 <CardContent className="p-0 space-y-5">
                   <header className="space-y-2 border-b border-slate-100 pb-4">
                     <div className="flex items-center justify-between">
-                      <Badge variant="blue" className="text-[10px] uppercase font-bold">
+                      <Badge
+                        variant="blue"
+                        className="text-[10px] uppercase font-bold"
+                      >
                         {plan.code}
                       </Badge>
                       <span className="text-[11px] font-semibold text-slate-400">
@@ -131,7 +137,9 @@ export function UpgradePlanGrid({
 
                     <div>
                       <span className="text-3xl font-black text-slate-900">
-                        {displayPrice === 0 ? "Gratis" : formatRupiah(displayPrice)}
+                        {displayPrice === 0
+                          ? "Gratis"
+                          : formatRupiah(displayPrice)}
                       </span>
                       {displayPrice > 0 && (
                         <span className="text-xs text-slate-400">

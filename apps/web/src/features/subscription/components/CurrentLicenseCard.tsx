@@ -51,7 +51,8 @@ export function CurrentLicenseCard({
               Lisensi Tidak Ditemukan
             </h3>
             <p className="text-xs text-amber-700">
-              Sistem tidak menemukan lisensi aktif untuk toko ini. Silakan pilih paket langganan di bawah.
+              Sistem tidak menemukan lisensi aktif untuk toko ini. Silakan pilih
+              paket langganan di bawah.
             </p>
           </div>
         </div>
@@ -156,8 +157,13 @@ export function CurrentLicenseCard({
           </div>
 
           <div className="flex items-center justify-between text-[11px] text-slate-400 font-medium">
-            <span>Mulai: {new Date(subscription.startsAt).toLocaleDateString("id-ID")}</span>
-            <span>Kadaluarsa: {new Date(expiresAt).toLocaleDateString("id-ID")}</span>
+            <span>
+              Mulai:{" "}
+              {new Date(subscription.startsAt).toLocaleDateString("id-ID")}
+            </span>
+            <span>
+              Kadaluarsa: {new Date(expiresAt).toLocaleDateString("id-ID")}
+            </span>
           </div>
         </div>
 

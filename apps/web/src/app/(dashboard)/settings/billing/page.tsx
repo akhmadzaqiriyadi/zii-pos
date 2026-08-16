@@ -34,7 +34,8 @@ export default function MerchantBillingPage() {
               Lisensi & Berlangganan SaaS Toko
             </h1>
             <p className="text-xs sm:text-sm text-slate-500">
-              Pantau sisa masa trial, perpanjang lisensi aktif, atau upgrade paket SaaS merchant kamu.
+              Pantau sisa masa trial, perpanjang lisensi aktif, atau upgrade
+              paket SaaS merchant kamu.
             </p>
           </div>
 

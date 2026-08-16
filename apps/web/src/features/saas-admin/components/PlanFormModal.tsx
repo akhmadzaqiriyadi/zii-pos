@@ -40,6 +40,17 @@ interface PlanFormModalProps {
   isPending: boolean;
 }
 
+function getInitialFeaturesText(jsonStr?: string) {
+  if (!jsonStr) return "";
+  try {
+    const arr = JSON.parse(jsonStr);
+    if (Array.isArray(arr)) return arr.join("\n");
+    return jsonStr;
+  } catch {
+    return jsonStr;
+  }
+}
+
 export function PlanFormModal({
   isOpen,
   onOpenChange,
@@ -49,17 +60,6 @@ export function PlanFormModal({
   isPending,
 }: PlanFormModalProps) {
   const isEditing = !!planToEdit;
-
-  const getInitialFeaturesText = (jsonStr?: string) => {
-    if (!jsonStr) return "";
-    try {
-      const arr = JSON.parse(jsonStr);
-      if (Array.isArray(arr)) return arr.join("\n");
-      return jsonStr;
-    } catch {
-      return jsonStr;
-    }
-  };
 
   const {
     register,
@@ -76,7 +76,8 @@ export function PlanFormModal({
       maxCashiers: 1,
       allowWhiteLabel: false,
       allowExportExcel: false,
-      featuresText: "1 Akun Kasir\nLaporan Transaksi Harian\nCetak Struk Thermal",
+      featuresText:
+        "1 Akun Kasir\nLaporan Transaksi Harian\nCetak Struk Thermal",
       isActive: true,
     },
   });
@@ -103,7 +104,8 @@ export function PlanFormModal({
         maxCashiers: 1,
         allowWhiteLabel: false,
         allowExportExcel: false,
-        featuresText: "1 Akun Kasir\nLaporan Transaksi Harian\nCetak Struk Thermal",
+        featuresText:
+          "1 Akun Kasir\nLaporan Transaksi Harian\nCetak Struk Thermal",
         isActive: true,
       });
     }
@@ -142,10 +144,13 @@ export function PlanFormModal({
             <Sparkles className="h-5 w-5" />
           </div>
           <DialogTitle className="text-xl font-bold text-slate-900">
-            {isEditing ? "Edit Paket Langganan SaaS" : "Tambah Paket Langganan Baru"}
+            {isEditing
+              ? "Edit Paket Langganan SaaS"
+              : "Tambah Paket Langganan Baru"}
           </DialogTitle>
           <p className="text-xs text-slate-500">
-            Atur harga, batas kasir, dan fitur penawaran paket SaaS secara dinamis.
+            Atur harga, batas kasir, dan fitur penawaran paket SaaS secara
+            dinamis.
           </p>
         </DialogHeader>
 
@@ -164,7 +169,9 @@ export function PlanFormModal({
                 className="flex h-10 w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2 text-sm text-slate-900 transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 disabled:opacity-60"
               />
               {errors.code && (
-                <p className="text-[11px] text-red-500 font-medium">{errors.code.message}</p>
+                <p className="text-[11px] text-red-500 font-medium">
+                  {errors.code.message}
+                </p>
               )}
             </div>
 
@@ -180,7 +187,9 @@ export function PlanFormModal({
                 className="flex h-10 w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2 text-sm text-slate-900 transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
               />
               {errors.name && (
-                <p className="text-[11px] text-red-500 font-medium">{errors.name.message}</p>
+                <p className="text-[11px] text-red-500 font-medium">
+                  {errors.name.message}
+                </p>
               )}
             </div>
           </div>
@@ -198,7 +207,9 @@ export function PlanFormModal({
                 className="flex h-10 w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2 text-sm text-slate-900 transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
               />
               {errors.price && (
-                <p className="text-[11px] text-red-500 font-medium">{errors.price.message}</p>
+                <p className="text-[11px] text-red-500 font-medium">
+                  {errors.price.message}
+                </p>
               )}
             </div>
 

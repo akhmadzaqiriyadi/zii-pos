@@ -1,6 +1,14 @@
 "use client";
 
-import { Check, Edit2, Loader2, Plus, Sparkles, Trash2, Users } from "lucide-react";
+import {
+  Check,
+  Edit2,
+  Loader2,
+  Plus,
+  Sparkles,
+  Trash2,
+  Users,
+} from "lucide-react";
 import React from "react";
 import { Badge } from "../../../components/ui/badge";
 import { Button } from "../../../components/ui/button";
@@ -31,7 +39,8 @@ export function PlanGridTable({
             Daftar Paket Langganan SaaS
           </h2>
           <p className="text-xs text-slate-500">
-            Kelola harga, batas kasir, dan penawaran fitur paket yang tersedia untuk merchant ZII POS.
+            Kelola harga, batas kasir, dan penawaran fitur paket yang tersedia
+            untuk merchant ZII POS.
           </p>
         </div>
 
@@ -79,7 +88,10 @@ export function PlanGridTable({
                 <CardContent className="p-0 space-y-5">
                   <header className="space-y-2 border-b border-slate-100 pb-4">
                     <div className="flex items-center justify-between">
-                      <Badge variant="blue" className="text-[10px] uppercase font-bold">
+                      <Badge
+                        variant="blue"
+                        className="text-[10px] uppercase font-bold"
+                      >
                         {plan.code}
                       </Badge>
 

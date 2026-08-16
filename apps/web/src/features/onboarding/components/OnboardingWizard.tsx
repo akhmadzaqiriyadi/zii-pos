@@ -39,26 +39,26 @@ export function OnboardingWizard() {
           Daftarkan Merchant Toko Anda
         </h1>
         <p className="text-sm text-slate-500 max-w-lg">
-          Transformasi operasional kasir toko Anda dengan sistem POS White-Label modern dalam 3 langkah mudah.
+          Transformasi operasional kasir toko Anda dengan sistem POS White-Label
+          modern dalam 3 langkah mudah.
         </p>
       </header>
 
       {/* Stepper Progress Bar */}
-      <nav aria-label="Progress Stepper" className="relative flex items-center justify-between max-w-xl mx-auto px-10">
+      <nav
+        aria-label="Progress Stepper"
+        className="relative flex items-center justify-between max-w-xl mx-auto px-10"
+      >
         {/* Background Gray Line Track */}
         <div className="absolute top-[22px] left-[62px] right-[62px] h-0.5 bg-slate-200 -translate-y-1/2 z-0" />
-        
+
         {/* Active Green Progress Line */}
         <div className="absolute top-[22px] left-[62px] right-[62px] h-0.5 -translate-y-1/2 z-0">
           <div
             className="h-full bg-emerald-600 transition-all duration-300 rounded-full"
             style={{
               width:
-                currentStep === 1
-                  ? "0%"
-                  : currentStep === 2
-                    ? "50%"
-                    : "100%",
+                currentStep === 1 ? "0%" : currentStep === 2 ? "50%" : "100%",
             }}
           />
         </div>
@@ -103,10 +103,7 @@ export function OnboardingWizard() {
       {/* Form Step Container Card */}
       <Card className="border-slate-200 bg-white p-6 sm:p-8 shadow-xl shadow-slate-200/50 rounded-2xl">
         {currentStep === 1 && (
-          <StepStoreInfo
-            initialData={storeData}
-            onSubmit={submitStoreInfo}
-          />
+          <StepStoreInfo initialData={storeData} onSubmit={submitStoreInfo} />
         )}
 
         {currentStep === 2 && (

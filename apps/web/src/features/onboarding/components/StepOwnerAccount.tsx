@@ -37,7 +37,8 @@ export function StepOwnerAccount({
           Langkah 2: Kredensial Akun Pemilik Toko (Owner)
         </h2>
         <p className="text-xs text-slate-500">
-          Buat akun administrator utama untuk mengelola kasir, stok produk, dan laporan keuangan toko Anda.
+          Buat akun administrator utama untuk mengelola kasir, stok produk, dan
+          laporan keuangan toko Anda.
         </p>
       </header>
 
