@@ -1,88 +1,86 @@
-# ZII POS — Product & Technical Requirement Document (PRD & TRD) v1.0 📄
+# ZII POS — Product & Technical Requirement Document (PRD & TRD) v2.0 📄
 
-![Product Name](https://img.shields.io/badge/Product-ZII_POS_SaaS-0f172a?style=for-the-badge)
-![Monorepo Architecture](https://img.shields.io/badge/Architecture-Bun_Monorepo_v1.0.0--mvp-emerald?style=for-the-badge)
-![Status](https://img.shields.io/badge/Status-Sprint_1_Completed_100%25-brightgreen?style=for-the-badge)
-
----
-
-## 📌 1. Executive Summary & Vision
-
-**ZII POS** adalah sistem Kasir & Point of Sale (POS) berbasis **Multi-Tenant SaaS White-Label** yang dirancang khusus untuk memenuhi kebutuhan **General Retail** (Toko Baju/Distro, Mini Market, Toko Kelontong, Minimarket) dan **General Service** (Laundry, Barbershop, Service Hp/Sepatu, Barbershop).
-
-### 🎯 Key Value Propositions:
-1. **White-Label Branding:** Setiap merchant/toko dapat mengubah Nama Toko, Logo, Alamat, Nomor Kontak, dan Pesan Footer Struk Cetak secara mandiri.
-2. **Multi-Tenant Architecture:** Isolasi data tingkat database menggunakan `tenantId` pada setiap query.
-3. **Dual Industry Support:** Mendukung produk fisik (dengan pelacakan stok otomatis) dan produk jasa/service (tanpa pemotongan stok).
-4. **Integration Ready:** Cetak Struk Thermal (58mm/80mm) & Kirim Struk Otomatis via WhatsApp.
+![Product Name](https://img.shields.io/badge/Product-ZII_POS_SaaS_v2.0.0-0f172a?style=for-the-badge)
+![Monorepo Architecture](https://img.shields.io/badge/Architecture-Bun_Monorepo_v2.0.0-emerald?style=for-the-badge)
+![Status](https://img.shields.io/badge/Status-v2.0_Planning_%26_Design_Approved-blue?style=for-the-badge)
 
 ---
 
-## 🏛️ 2. Arsitektur Data & Database Schema (Prisma ORM)
+## 📌 1. Executive Summary & Vision (v2.0.0 Commercial SaaS)
 
-Arsitektur database terdiri dari 5 tabel utama:
+**ZII POS v2.0.0** mentransformasi ZII POS dari aplikasi kasir internal menjadi **Platform Multi-Tenant SaaS Komersial Mandiri**. Platform ini memungkinkan merchant untuk mendaftar mandiri (*Self-Service Onboarding*), memilih/membeli paket langganan secara otomatis, dan mendapatkan subdomain toko sendiri (`toko.ziipos.com`) dengan tampilan 100% *Clean White-Label*.
+
+### 🎯 Key Value Propositions v2.0:
+1. **Self-Service Merchant Onboarding:** Calon toko mendaftar, mengatur logo, dan memilih paket langganan dalam 3 langkah mudah.
+2. **Subdomain Custom Routing:** Setiap merchant mendapat subdomain terisolasi (e.g. `ziidistro.ziipos.com`).
+3. **Dynamic SaaS Package CRUD:** Founders (*Zaqi, Isyadi, Ilham*) dapat mengatur nama paket, harga promo, batas kasir, dan fitur secara dinamis dari portal Super Admin.
+4. **Automated Auto-Billing Payment Gateway:** Pembelian & perpanjangan lisensi terverifikasi otomatis 24/7 via Webhook Midtrans/Xendit.
+5. **Super Admin SaaS Portal (`/saas-admin`):** Dashboard pemantauan total merchant, Monthly Recurring Revenue (MRR), & kontrol lisensi toko.
+
+---
+
+## 🏛️ 2. Extended Database Schema (Prisma ORM)
+
+Skema database diperluas dengan **3 Tabel Baru (`Plan`, `Subscription`, `Invoice`)** dan penambahan kolom `subdomain` serta `status` pada tabel `Tenant`:
 
 ```prisma
 model Tenant {
   id            String        @id @default(uuid())
+  subdomain     String?       @unique // e.g. "ziidistro" -> ziidistro.ziipos.com
   name          String
   logoUrl       String?
   phone         String?
   address       String?
   receiptFooter String?       @default("Terima kasih telah berbelanja!")
+  status        String        @default("trial") // trial | active | expired | suspended
   createdAt     DateTime      @default(now())
   users         User[]
   products      Product[]
   transactions  Transaction[]
+  subscriptions Subscription[]
 }
 
-model User {
-  id           String        @id @default(uuid())
-  tenantId     String
-  name         String
-  email        String        @unique
-  passwordHash String
-  role         String        @default("cashier") // owner | cashier
-  createdAt    DateTime      @default(now())
-  tenant       Tenant        @relation(fields: [tenantId], references: [id])
-  transactions Transaction[]
+// 📦 TABEL BARU: Dynamic SaaS Plan Management (CRUD Paket Dinamis)
+model Plan {
+  id               String         @id @default(uuid())
+  code             String         @unique // starter | pro | enterprise
+  name             String         // e.g. "Pro Merchant White-Label"
+  price            Decimal        @db.Decimal(12, 2)
+  billingCycle     String         @default("monthly") // monthly | yearly
+  maxCashiers      Int            @default(1) // Batas jumlah user kasir
+  allowWhiteLabel  Boolean        @default(false)
+  allowExportExcel Boolean        @default(false)
+  featuresJson     String         // JSON Array daftar fitur paket
+  isActive         Boolean        @default(true)
+  createdAt        DateTime       @default(now())
+  subscriptions    Subscription[]
 }
 
-model Product {
-  id        String   @id @default(uuid())
+// 💳 TABEL BARU: Tenant Subscription Lisensi Toko
+model Subscription {
+  id        String    @id @default(uuid())
   tenantId  String
-  name      String
-  price     Decimal  @db.Decimal(12, 2)
-  stock     Int      @default(0)
-  isService Boolean  @default(false)
-  createdAt DateTime @default(now())
-  tenant    Tenant   @relation(fields: [tenantId], references: [id])
+  planId    String
+  status    String    @default("trial") // trial | active | expired | suspended
+  startsAt  DateTime  @default(now())
+  expiresAt DateTime
+  autoRenew Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  tenant    Tenant    @relation(fields: [tenantId], references: [id])
+  plan      Plan      @relation(fields: [planId], references: [id])
+  invoices  Invoice[]
 }
 
-model Transaction {
-  id            String            @id @default(uuid())
-  tenantId      String
-  userId        String
-  customerName  String            @default("Umum")
-  customerPhone String?
-  paymentMethod String            @default("cash") // cash | qris | transfer
-  totalAmount   Decimal           @db.Decimal(12, 2)
-  status        String            @default("completed") // completed | pending | cancelled
-  createdAt     DateTime          @default(now())
-  tenant        Tenant            @relation(fields: [tenantId], references: [id])
-  user          User              @relation(fields: [userId], references: [id])
-  items         TransactionItem[]
-}
-
-model TransactionItem {
-  id            String      @id @default(uuid())
-  transactionId String
-  productId     String
-  productName   String
-  price         Decimal     @db.Decimal(12, 2)
-  qty           Int
-  subtotal      Decimal     @db.Decimal(12, 2)
-  transaction   Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+// 🧾 TABEL BARU: Invoice Pembayaran Lisensi SaaS
+model SubscriptionInvoice {
+  id                 String       @id @default(uuid())
+  subscriptionId     String
+  amount             Decimal      @db.Decimal(12, 2)
+  paymentGatewayTxId String?
+  status             String       @default("unpaid") // unpaid | paid | failed
+  paidAt             DateTime?
+  createdAt          DateTime     @default(now())
+  subscription       Subscription @relation(fields: [subscriptionId], references: [id])
 }
 ```
 
@@ -90,44 +88,52 @@ model TransactionItem {
 
 ## 📡 3. REST API Contract & Endpoints (`apps/api`)
 
-Seluruh endpoint REST API telah terintegrasi dengan **Zod Auto OpenAPI Generator** dan dapat dicoba secara interaktif di **Scalar UI (`http://localhost:4000/docs`)**:
+Seluruh endpoint baru didaftarkan secara konsisten di bawah prefix `/api/v1/`:
 
-| Method | Endpoint | Description | Status Codes | Status |
-|:---|:---|:---|:---|:---|
-| `POST` | `/api/v1/auth/register-tenant` | Registrasi Toko Baru & Owner | `201`, `400`, `500` | ✅ PASS |
-| `POST` | `/api/v1/auth/login` | Login Kasir / Owner & JWT Token | `200`, `401`, `500` | ✅ PASS |
-| `GET` | `/api/v1/tenants/profile` | Ambil Profil Toko & Setting White-Label | `200`, `401`, `404`, `500` | ✅ PASS |
-| `PUT` | `/api/v1/tenants/profile` | Update Setting White-Label Struk | `200`, `400`, `401`, `403`, `500` | ✅ PASS |
-| `GET` | `/api/v1/products` | Katalog Produk (dengan Search, Filter & Paginasi) | `200`, `401`, `500` | ✅ PASS |
-| `POST` | `/api/v1/products` | Tambah Produk Baru | `201`, `400`, `401`, `500` | ✅ PASS |
-| `PUT` | `/api/v1/products/:id` | Update Detail Produk | `200`, `400`, `401`, `500` | ✅ PASS |
-| `DELETE` | `/api/v1/products/:id` | Hapus Produk | `200`, `400`, `401`, `500` | ✅ PASS |
-| `GET` | `/api/v1/transactions` | Riwayat Transaksi (Filter Tanggal, Pembayaran & Paginasi) | `200`, `401`, `500` | ✅ PASS |
-| `POST` | `/api/v1/transactions` | Simpan Transaksi Kasir & Potong Stok | `201`, `400`, `401`, `404`, `500` | ✅ PASS |
+### 👑 A. Portal Super Admin API (`/api/v1/saas-admin`)
+| Method | Endpoint | Description | Roles Allowed |
+|:---|:---|:---|:---|
+| `GET` | `/api/v1/saas-admin/metrics` | Rekap Total Merchant, Trial Aktif, MRR, & Churn Rate | Super Admin |
+| `GET` | `/api/v1/saas-admin/tenants` | Daftar Seluruh Toko Terdaftar & Status Lisensi | Super Admin |
+| `PUT` | `/api/v1/saas-admin/tenants/:id/status` | Suspend / Modifikasi Lisensi Toko Manual | Super Admin |
+
+### 📦 B. Dynamic Plan CRUD API (`/api/v1/plans`)
+| Method | Endpoint | Description | Roles Allowed |
+|:---|:---|:---|:---|
+| `GET` | `/api/v1/plans` | Fetch Daftar Paket Aktif (Public Onboarding) | Public |
+| `POST` | `/api/v1/saas-admin/plans` | Tambah Paket Langganan Baru | Super Admin |
+| `PUT` | `/api/v1/saas-admin/plans/:id` | Edit Harga, Batas Kasir, & Fitur Paket | Super Admin |
+| `DELETE` | `/api/v1/saas-admin/plans/:id` | Nonaktifkan / Soft Delete Paket | Super Admin |
+
+### 💳 C. Subscription & Billing API (`/api/v1/subscriptions`)
+| Method | Endpoint | Description | Roles Allowed |
+|:---|:---|:---|:---|
+| `GET` | `/api/v1/subscriptions/current` | Ambil Detail Lisensi & Sisa Masa Trial Toko | Merchant Owner |
+| `POST` | `/api/v1/subscriptions/checkout` | Generate QRIS / Invoice Payment Gateway | Merchant Owner |
+| `POST` | `/api/v1/subscriptions/webhook` | Receive Automated Payment Success Callback | Payment Gateway |
 
 ---
 
-## 👨‍💻 4. Execution Plan & Task Distribution (Status: 100% Completed)
+## 👨‍💻 4. Execution Plan & Developer Task Assignments (Sprint v2.0.0)
 
-### 👨‍💻 Zaqi (PM Engineer, Backend & Integration Lead)
-- [x] Setup Monorepo Bun Workspaces & Directory Structure.
-- [x] Setup Database Schema Prisma ORM 5 Tabel & Seeder Script (`bun db:seed`).
-- [x] Implementasi Scalar API Reference Documentation (`/docs`) & Pino Logger.
-- [x] Implementasi CRUD API Products & Transactions DB Persistence (dengan Pagination & Search Filter).
-- [x] Implementasi Bun Unit Testing Suite (11 PASS).
-- [ ] Driver Cetak Struk Thermal 58mm/80mm (`useThermalPrinter.ts`) — *Siap dikoding oleh Zaqi*.
-- [ ] Auto-Send WhatsApp Receipt Integration (`whatsappService.ts`) — *Siap dikoding oleh Zaqi*.
+### 👨‍💻 Zaqi (PM Engineer, Integration & Backend Lead)
+- [ ] Migrate & Push Extended Database Schema (Prisma Models `Plan`, `Subscription`, `Invoice`, & `Tenant.subdomain`).
+- [ ] Implementasi Service & Controller REST API Super Admin (`saas-admin.service.ts`).
+- [ ] Implementasi Service & Controller Dynamic Plan CRUD (`plan.service.ts`).
+- [ ] Implementasi Automated Payment Gateway Webhook Receiver (`subscription.service.ts`).
+- [ ] Penambahan Unit Tests untuk Logika Lisensi, Expiry Check, & Signature Verification.
 
-### 🎨 Isyadi (Frontend Lead — Core POS & Products Catalog UI)
-- [x] Setup Project Next.js 16 + Custom Radix UI Primitives + Tailwind CSS.
-- [x] Layout Utama POS (Grid Katalog Produk + Sidebar Keranjang Belanja).
-- [x] Modal Pembayaran (Pilih Tunai / QRIS + Hitung Kembalian).
-- [x] Integrasi TanStack Query v5 untuk fetch & mutate data Produk & Transaksi dari Express API.
-- [x] Search Bar & Filter Pencarian Produk Real-Time di Layar Kasir.
-- [x] Modal Form Tambah & Edit Produk Baru di `/products` dengan Zod Schema & React Hook Form.
+### 🎨 Isyadi (Frontend Lead — Onboarding, Super Admin Portal & Billing UI)
+- [ ] Implementasi Self-Service Merchant Onboarding Wizard 3 Langkah (`/onboarding`).
+- [ ] Implementasi Super Admin Portal Dashboard (`/saas-admin` — Card MRR, Tabel Merchant, Toggles).
+- [ ] Implementasi Dynamic Plan Management CRUD UI (`/saas-admin/plans` — Modal Tambah/Edit Paket & Batas Kasir).
+- [ ] Implementasi Merchant Subscription Billing Page (`/settings/billing` — Status Lisensi & Tombol Checkout Upgrade).
 
-### ⚡ Ilham (Fullstack Lead — Auth API & Auth UI)
-- [x] Endpoint Backend Auth (`POST /api/v1/auth/register-tenant` & `POST /api/v1/auth/login`).
-- [x] Halaman Login & Register Merchant UI (`/login` & `/register`) dengan Zod Schema & React Hook Form.
-- [x] Client Auth Context & Cookie Token Handler di Next.js.
-- [x] Protected Route Middleware untuk Halaman Kasir & Dashboard Owner.
+### ⚡ Ilham (Fullstack Lead — Auth Subdomain, Trial Guard & Invoice Lead)
+- [ ] Implementasi Subdomain Rewrite Middleware (`proxy.ts`) untuk `toko.ziipos.com`.
+- [ ] Implementasi Subdomain Auth Context & JWT Cookie Isolation.
+- [ ] Implementasi Trial Period Expiry Guard Middleware (Blokir akses kasir otomatis jika lisensi habis).
+- [ ] Implementasi PDF Invoice Generator & Email Handler untuk Notifikasi Pembayaran.
+
+---
+*Official ZII POS v2.0.0 PRD & TRD Document Approved by Founders (Zaqi, Isyadi, Ilham).*
