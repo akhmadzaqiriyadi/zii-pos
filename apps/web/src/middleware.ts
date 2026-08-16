@@ -7,9 +7,10 @@ export function middleware(request: NextRequest) {
 
   // Paths requiring authentication
   const isProtectedRoute =
-    pathname.startsWith("/pos") ||
-    pathname.startsWith("/products") ||
-    pathname.startsWith("/settings");
+    pathname === "/pos" || pathname.startsWith("/pos/") ||
+    pathname === "/products" || pathname.startsWith("/products/") ||
+    pathname === "/settings" || pathname.startsWith("/settings/") ||
+    pathname === "/transactions" || pathname.startsWith("/transactions/");
 
   // Authentication paths (guest only)
   const isAuthRoute = pathname === "/login" || pathname === "/register";
@@ -17,7 +18,6 @@ export function middleware(request: NextRequest) {
   if (isProtectedRoute && !token) {
     // Redirect unauthenticated users to the login page
     const loginUrl = new URL("/login", request.url);
-    // Keep target url in redirect for user convenience (optional)
     return NextResponse.redirect(loginUrl);
   }
 
@@ -31,9 +31,14 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
+    "/pos",
     "/pos/:path*",
+    "/products",
     "/products/:path*",
+    "/settings",
     "/settings/:path*",
+    "/transactions",
+    "/transactions/:path*",
     "/login",
     "/register",
   ],
