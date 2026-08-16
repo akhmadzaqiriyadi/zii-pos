@@ -57,6 +57,43 @@ function getAuthHeaders() {
   };
 }
 
+export interface SaaSPlanAdmin {
+  id: string;
+  code: string;
+  name: string;
+  price: number;
+  billingCycle: string;
+  maxCashiers: number;
+  allowWhiteLabel: boolean;
+  allowExportExcel: boolean;
+  featuresJson: string;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface CreatePlanPayload {
+  code: string;
+  name: string;
+  price: number;
+  billingCycle?: "monthly" | "yearly";
+  maxCashiers: number;
+  allowWhiteLabel?: boolean;
+  allowExportExcel?: boolean;
+  featuresJson: string;
+  isActive?: boolean;
+}
+
+export interface UpdatePlanPayload {
+  name?: string;
+  price?: number;
+  billingCycle?: "monthly" | "yearly";
+  maxCashiers?: number;
+  allowWhiteLabel?: boolean;
+  allowExportExcel?: boolean;
+  featuresJson?: string;
+  isActive?: boolean;
+}
+
 export class SaaSAdminApiService {
   static async getMetrics(): Promise<SaaSMetrics> {
     const res = await fetch(`${API_BASE_URL}/api/v1/saas-admin/metrics`, {
@@ -115,5 +152,57 @@ export class SaaSAdminApiService {
       throw new Error(body.message || "Gagal mengubah status merchant.");
     }
     return body.data;
+  }
+
+  // --- SaaS Plan CRUD APIs ---
+  static async getAllPlans(): Promise<SaaSPlanAdmin[]> {
+    const res = await fetch(`${API_BASE_URL}/api/v1/saas-admin/plans`, {
+      headers: getAuthHeaders(),
+    });
+    const body = await res.json();
+    if (!res.ok || !body.success) {
+      throw new Error(body.message || "Gagal memuat daftar paket SaaS.");
+    }
+    return body.data || [];
+  }
+
+  static async createPlan(data: CreatePlanPayload): Promise<SaaSPlanAdmin> {
+    const res = await fetch(`${API_BASE_URL}/api/v1/saas-admin/plans`, {
+      method: "POST",
+      headers: getAuthHeaders(),
+      body: JSON.stringify(data),
+    });
+    const body = await res.json();
+    if (!res.ok || !body.success) {
+      throw new Error(body.message || "Gagal membuat paket langganan baru.");
+    }
+    return body.data;
+  }
+
+  static async updatePlan(
+    id: string,
+    data: UpdatePlanPayload,
+  ): Promise<SaaSPlanAdmin> {
+    const res = await fetch(`${API_BASE_URL}/api/v1/saas-admin/plans/${id}`, {
+      method: "PUT",
+      headers: getAuthHeaders(),
+      body: JSON.stringify(data),
+    });
+    const body = await res.json();
+    if (!res.ok || !body.success) {
+      throw new Error(body.message || "Gagal memperbarui paket langganan.");
+    }
+    return body.data;
+  }
+
+  static async deletePlan(id: string): Promise<void> {
+    const res = await fetch(`${API_BASE_URL}/api/v1/saas-admin/plans/${id}`, {
+      method: "DELETE",
+      headers: getAuthHeaders(),
+    });
+    const body = await res.json();
+    if (!res.ok || !body.success) {
+      throw new Error(body.message || "Gagal menonaktifkan paket.");
+    }
   }
 }
