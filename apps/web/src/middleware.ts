@@ -13,7 +13,10 @@ export function middleware(request: NextRequest) {
     pathname === "/transactions" || pathname.startsWith("/transactions/");
 
   // Authentication paths (guest only)
-  const isAuthRoute = pathname === "/login" || pathname === "/register";
+  const isAuthRoute =
+    pathname === "/login" ||
+    pathname === "/register" ||
+    pathname === "/onboarding";
 
   if (isProtectedRoute && !token) {
     // Redirect unauthenticated users to the login page
@@ -22,7 +25,7 @@ export function middleware(request: NextRequest) {
   }
 
   if (isAuthRoute && token) {
-    // Redirect authenticated users trying to access login/register to /pos
+    // Redirect authenticated users trying to access login/register/onboarding to /pos
     return NextResponse.redirect(new URL("/pos", request.url));
   }
 
@@ -41,5 +44,6 @@ export const config = {
     "/transactions/:path*",
     "/login",
     "/register",
+    "/onboarding",
   ],
 };
