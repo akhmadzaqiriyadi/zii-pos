@@ -44,20 +44,24 @@ export function OnboardingWizard() {
       </header>
 
       {/* Stepper Progress Bar */}
-      <nav aria-label="Progress Stepper" className="relative flex items-center justify-between max-w-xl mx-auto px-4">
-        {/* Connecting Line */}
-        <div className="absolute top-1/2 left-8 right-8 h-1 bg-slate-200 -translate-y-1/2 -z-0" />
-        <div
-          className="absolute top-1/2 left-8 h-1 bg-emerald-500 -translate-y-1/2 transition-all duration-300 -z-0"
-          style={{
-            width:
-              currentStep === 1
-                ? "0%"
-                : currentStep === 2
-                  ? "50%"
-                  : "100%",
-          }}
-        />
+      <nav aria-label="Progress Stepper" className="relative flex items-center justify-between max-w-xl mx-auto px-10">
+        {/* Background Gray Line Track */}
+        <div className="absolute top-[22px] left-[62px] right-[62px] h-0.5 bg-slate-200 -translate-y-1/2 z-0" />
+        
+        {/* Active Green Progress Line */}
+        <div className="absolute top-[22px] left-[62px] right-[62px] h-0.5 -translate-y-1/2 z-0">
+          <div
+            className="h-full bg-emerald-600 transition-all duration-300 rounded-full"
+            style={{
+              width:
+                currentStep === 1
+                  ? "0%"
+                  : currentStep === 2
+                    ? "50%"
+                    : "100%",
+            }}
+          />
+        </div>
 
         {steps.map((step) => {
           const isCompleted = currentStep > step.number;
