@@ -100,6 +100,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // Save credentials to Cookies (so Middleware can access on Server)
       setCookie("zii_auth_token", jwtToken, 7);
       setCookie("zii_tenant_id", loggedTenant.id, 7);
+      setCookie("zii_has_registered", "true", 365);
 
       // Save profiles to LocalStorage (for fast Client UI rendering on reload)
       localStorage.setItem("zii_user", JSON.stringify(loggedUser));
@@ -138,6 +139,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // Save credentials to Cookies (so Middleware can access on Server)
       setCookie("zii_auth_token", jwtToken, 7);
       setCookie("zii_tenant_id", registeredTenant.id, 7);
+      setCookie("zii_has_registered", "true", 365);
 
       // Save profiles to LocalStorage
       localStorage.setItem("zii_user", JSON.stringify(registeredUser));
