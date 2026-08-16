@@ -46,10 +46,10 @@ export function OnboardingWizard() {
       {/* Stepper Progress Bar */}
       <nav aria-label="Progress Stepper" className="relative flex items-center justify-between max-w-xl mx-auto px-10">
         {/* Background Gray Line Track */}
-        <div className="absolute top-[22px] left-[62px] right-[62px] h-0.5 bg-slate-200 -translate-y-1/2 z-0" />
+        <div className="absolute top-[22px] left-[68px] right-[68px] h-0.5 bg-slate-200 -translate-y-1/2 z-0" />
         
         {/* Active Green Progress Line */}
-        <div className="absolute top-[22px] left-[62px] right-[62px] h-0.5 -translate-y-1/2 z-0">
+        <div className="absolute top-[22px] left-[68px] right-[68px] h-0.5 -translate-y-1/2 z-0">
           <div
             className="h-full bg-emerald-600 transition-all duration-300 rounded-full"
             style={{
@@ -74,7 +74,7 @@ export function OnboardingWizard() {
               className="relative z-10 flex flex-col items-center space-y-2"
             >
               <div
-                className={`flex h-11 w-11 items-center justify-center rounded-full font-bold text-sm transition-all duration-300 shadow-xs ${
+                className={`relative z-10 flex h-11 w-11 items-center justify-center rounded-full font-bold text-sm transition-all duration-300 shadow-xs ${
                   isCompleted
                     ? "bg-emerald-600 text-white border-2 border-emerald-600"
                     : isCurrent

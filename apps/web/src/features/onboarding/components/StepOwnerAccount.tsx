@@ -5,6 +5,7 @@ import { ArrowLeft, ArrowRight, KeyRound, Mail, User } from "lucide-react";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "../../../components/ui/button";
+import { Input } from "../../../components/ui/input";
 import {
   type StepOwnerAccountData,
   stepOwnerAccountSchema,
@@ -51,17 +52,13 @@ export function StepOwnerAccount({
             Nama Lengkap Pemilik Toko *
           </label>
           <div className="relative">
-            <User className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
-            <input
+            <User className="absolute left-3.5 top-3 h-4 w-4 text-slate-400 z-10" />
+            <Input
               id="ownerName"
               type="text"
               placeholder="Contoh: Ahmad Zaqi"
               {...register("ownerName")}
-              className={`flex h-10 w-full rounded-xl border bg-slate-50 pl-10 pr-3.5 py-2 text-sm text-slate-900 transition placeholder:text-slate-400 focus:outline-none focus:ring-2 ${
-                errors.ownerName
-                  ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
-                  : "border-slate-200 focus:border-emerald-500 focus:ring-emerald-500/20"
-              }`}
+              className={`pl-10 ${errors.ownerName ? "border-red-500" : ""}`}
             />
           </div>
           {errors.ownerName && (
@@ -80,17 +77,13 @@ export function StepOwnerAccount({
             Email Login Owner *
           </label>
           <div className="relative">
-            <Mail className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
-            <input
+            <Mail className="absolute left-3.5 top-3 h-4 w-4 text-slate-400 z-10" />
+            <Input
               id="email"
               type="email"
               placeholder="nama@email.com"
               {...register("email")}
-              className={`flex h-10 w-full rounded-xl border bg-slate-50 pl-10 pr-3.5 py-2 text-sm text-slate-900 transition placeholder:text-slate-400 focus:outline-none focus:ring-2 ${
-                errors.email
-                  ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
-                  : "border-slate-200 focus:border-emerald-500 focus:ring-emerald-500/20"
-              }`}
+              className={`pl-10 ${errors.email ? "border-red-500" : ""}`}
             />
           </div>
           {errors.email && (
@@ -110,17 +103,13 @@ export function StepOwnerAccount({
               Password *
             </label>
             <div className="relative">
-              <KeyRound className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
-              <input
+              <KeyRound className="absolute left-3.5 top-3 h-4 w-4 text-slate-400 z-10" />
+              <Input
                 id="password"
                 type="password"
                 placeholder="Minimal 6 karakter"
                 {...register("password")}
-                className={`flex h-10 w-full rounded-xl border bg-slate-50 pl-10 pr-3.5 py-2 text-sm text-slate-900 transition placeholder:text-slate-400 focus:outline-none focus:ring-2 ${
-                  errors.password
-                    ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
-                    : "border-slate-200 focus:border-emerald-500 focus:ring-emerald-500/20"
-                }`}
+                className={`pl-10 ${errors.password ? "border-red-500" : ""}`}
               />
             </div>
             {errors.password && (
@@ -138,17 +127,13 @@ export function StepOwnerAccount({
               Ulangi Password *
             </label>
             <div className="relative">
-              <KeyRound className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
-              <input
+              <KeyRound className="absolute left-3.5 top-3 h-4 w-4 text-slate-400 z-10" />
+              <Input
                 id="confirmPassword"
                 type="password"
                 placeholder="Ulangi password"
                 {...register("confirmPassword")}
-                className={`flex h-10 w-full rounded-xl border bg-slate-50 pl-10 pr-3.5 py-2 text-sm text-slate-900 transition placeholder:text-slate-400 focus:outline-none focus:ring-2 ${
-                  errors.confirmPassword
-                    ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
-                    : "border-slate-200 focus:border-emerald-500 focus:ring-emerald-500/20"
-                }`}
+                className={`pl-10 ${errors.confirmPassword ? "border-red-500" : ""}`}
               />
             </div>
             {errors.confirmPassword && (

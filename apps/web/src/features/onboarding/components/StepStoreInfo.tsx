@@ -5,6 +5,7 @@ import { ArrowRight, Globe, MapPin, Phone, Store } from "lucide-react";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "../../../components/ui/button";
+import { Input } from "../../../components/ui/input";
 import {
   type StepStoreInfoData,
   stepStoreInfoSchema,
@@ -58,17 +59,13 @@ export function StepStoreInfo({ initialData, onSubmit }: StepStoreInfoProps) {
             Nama Toko / Merchant *
           </label>
           <div className="relative">
-            <Store className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
-            <input
+            <Store className="absolute left-3.5 top-3 h-4 w-4 text-slate-400 z-10" />
+            <Input
               id="tenantName"
               type="text"
               placeholder="Contoh: Barber Premium Studio"
               {...register("tenantName")}
-              className={`flex h-10 w-full rounded-xl border bg-slate-50 pl-10 pr-3.5 py-2 text-sm text-slate-900 transition placeholder:text-slate-400 focus:outline-none focus:ring-2 ${
-                errors.tenantName
-                  ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
-                  : "border-slate-200 focus:border-emerald-500 focus:ring-emerald-500/20"
-              }`}
+              className={`pl-10 ${errors.tenantName ? "border-red-500" : ""}`}
             />
           </div>
           {errors.tenantName && (
@@ -87,13 +84,13 @@ export function StepStoreInfo({ initialData, onSubmit }: StepStoreInfoProps) {
             Preferensi Subdomain Usaha (White-Label)
           </label>
           <div className="relative flex items-center">
-            <Globe className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
-            <input
+            <Globe className="absolute left-3.5 top-3 h-4 w-4 text-slate-400 z-10" />
+            <Input
               id="subdomain"
               type="text"
               placeholder="ziidistro"
               {...register("subdomain")}
-              className="flex h-10 w-full rounded-xl border border-slate-200 bg-slate-50 pl-10 pr-28 py-2 text-sm text-slate-900 transition placeholder:text-slate-400 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+              className="pl-10 pr-28"
             />
             <span className="absolute right-3 text-xs font-semibold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-md border border-emerald-200">
               .ziipos.com
@@ -124,13 +121,13 @@ export function StepStoreInfo({ initialData, onSubmit }: StepStoreInfoProps) {
               Nomor Telepon Toko
             </label>
             <div className="relative">
-              <Phone className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
-              <input
+              <Phone className="absolute left-3.5 top-3 h-4 w-4 text-slate-400 z-10" />
+              <Input
                 id="phone"
                 type="text"
                 placeholder="Contoh: 0812XXXXXXXX"
                 {...register("phone")}
-                className="flex h-10 w-full rounded-xl border border-slate-200 bg-slate-50 pl-10 pr-3.5 py-2 text-sm text-slate-900 transition placeholder:text-slate-400 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+                className="pl-10"
               />
             </div>
           </div>
@@ -143,13 +140,13 @@ export function StepStoreInfo({ initialData, onSubmit }: StepStoreInfoProps) {
               Alamat Usaha
             </label>
             <div className="relative">
-              <MapPin className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
-              <input
+              <MapPin className="absolute left-3.5 top-3 h-4 w-4 text-slate-400 z-10" />
+              <Input
                 id="address"
                 type="text"
                 placeholder="Kota / Alamat lengkap toko"
                 {...register("address")}
-                className="flex h-10 w-full rounded-xl border border-slate-200 bg-slate-50 pl-10 pr-3.5 py-2 text-sm text-slate-900 transition placeholder:text-slate-400 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+                className="pl-10"
               />
             </div>
           </div>

@@ -9,6 +9,7 @@ import {
   CardFooter,
   CardHeader,
 } from "../../../components/ui/card";
+import { Input } from "../../../components/ui/input";
 import { useLoginForm } from "../hooks/useLoginForm";
 
 export function LoginForm() {
@@ -47,17 +48,13 @@ export function LoginForm() {
                 Email
               </label>
               <div className="relative">
-                <Mail className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
-                <input
+                <Mail className="absolute left-3.5 top-3 h-4 w-4 text-slate-400 z-10" />
+                <Input
                   id="email"
                   type="email"
                   placeholder="nama@email.com"
                   {...register("email")}
-                  className={`flex h-10 w-full rounded-xl border bg-slate-50 pl-10 pr-3.5 py-2 text-sm text-slate-900 transition placeholder:text-slate-400 focus:outline-none focus:ring-2 disabled:cursor-not-allowed disabled:opacity-50 ${
-                    errors.email
-                      ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
-                      : "border-slate-200 focus:border-emerald-500 focus:ring-emerald-500/20"
-                  }`}
+                  className={`pl-10 ${errors.email ? "border-red-500" : ""}`}
                   disabled={isSubmitting}
                 />
               </div>
@@ -78,17 +75,13 @@ export function LoginForm() {
                 </label>
               </div>
               <div className="relative">
-                <KeyRound className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
-                <input
+                <KeyRound className="absolute left-3.5 top-3 h-4 w-4 text-slate-400 z-10" />
+                <Input
                   id="password"
                   type="password"
                   placeholder="••••••••"
                   {...register("password")}
-                  className={`flex h-10 w-full rounded-xl border bg-slate-50 pl-10 pr-3.5 py-2 text-sm text-slate-900 transition placeholder:text-slate-400 focus:outline-none focus:ring-2 disabled:cursor-not-allowed disabled:opacity-50 ${
-                    errors.password
-                      ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
-                      : "border-slate-200 focus:border-emerald-500 focus:ring-emerald-500/20"
-                  }`}
+                  className={`pl-10 ${errors.password ? "border-red-500" : ""}`}
                   disabled={isSubmitting}
                 />
               </div>
