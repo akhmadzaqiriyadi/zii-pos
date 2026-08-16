@@ -1,5 +1,7 @@
 import React from "react";
 import type { FieldErrors, UseFormRegister } from "react-hook-form";
+import { Input } from "../../../components/ui/input";
+import { Textarea } from "../../../components/ui/textarea";
 import type { PlanFormData } from "../schemas/planForm.schema";
 
 interface PlanFormFieldsProps {
@@ -21,12 +23,12 @@ export function PlanFormFields({
           <label className="text-xs font-semibold text-slate-700 block">
             Kode Paket (Slug) *
           </label>
-          <input
+          <Input
             type="text"
             placeholder="starter / pro / enterprise"
             disabled={isEditing}
             {...register("code")}
-            className="flex h-10 w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2 text-sm text-slate-900 transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 disabled:opacity-60"
+            className="bg-slate-50 disabled:opacity-60"
           />
           {errors.code && (
             <p className="text-[11px] text-red-500 font-medium">
@@ -39,11 +41,11 @@ export function PlanFormFields({
           <label className="text-xs font-semibold text-slate-700 block">
             Nama Paket *
           </label>
-          <input
+          <Input
             type="text"
             placeholder="Contoh: Pro White-Label"
             {...register("name")}
-            className="flex h-10 w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2 text-sm text-slate-900 transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+            className="bg-slate-50"
           />
           {errors.name && (
             <p className="text-[11px] text-red-500 font-medium">
@@ -59,11 +61,11 @@ export function PlanFormFields({
           <label className="text-xs font-semibold text-slate-700 block">
             Harga (Rp) *
           </label>
-          <input
+          <Input
             type="number"
             placeholder="99000"
             {...register("price", { valueAsNumber: true })}
-            className="flex h-10 w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2 text-sm text-slate-900 transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+            className="bg-slate-50"
           />
           {errors.price && (
             <p className="text-[11px] text-red-500 font-medium">
@@ -78,7 +80,7 @@ export function PlanFormFields({
           </label>
           <select
             {...register("billingCycle")}
-            className="flex h-10 w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2 text-sm text-slate-900 transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+            className="flex h-10 w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2 text-sm text-slate-800 transition focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
           >
             <option value="monthly">Bulanan (Monthly)</option>
             <option value="yearly">Tahunan (Yearly)</option>
@@ -89,11 +91,11 @@ export function PlanFormFields({
           <label className="text-xs font-semibold text-slate-700 block">
             Batas Kasir (User) *
           </label>
-          <input
+          <Input
             type="number"
             placeholder="5"
             {...register("maxCashiers", { valueAsNumber: true })}
-            className="flex h-10 w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2 text-sm text-slate-900 transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+            className="bg-slate-50"
           />
           {errors.maxCashiers && (
             <p className="text-[11px] text-red-500 font-medium">
@@ -138,11 +140,11 @@ export function PlanFormFields({
         <label className="text-xs font-semibold text-slate-700 block">
           Daftar Fitur Penawaran (1 Fitur Per Baris) *
         </label>
-        <textarea
+        <Textarea
           rows={4}
           placeholder="Multi-kasir hingga 5 user&#10;Custom Logo & Header Struk&#10;Ekspor Laporan Excel / CSV"
           {...register("featuresText")}
-          className="flex w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-xs text-slate-900 transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+          className="bg-slate-50 text-xs"
         />
         {errors.featuresText && (
           <p className="text-[11px] text-red-500 font-medium">
