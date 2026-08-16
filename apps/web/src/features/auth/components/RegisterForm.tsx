@@ -13,6 +13,7 @@ import {
 import Link from "next/link";
 import { Button } from "../../../components/ui/button";
 import { Card, CardContent, CardFooter } from "../../../components/ui/card";
+import { FormError, FormGroup, FormLabel } from "../../../components/ui/form";
 import { Input } from "../../../components/ui/input";
 import { Textarea } from "../../../components/ui/textarea";
 import { useRegisterForm } from "../hooks/useRegisterForm";
@@ -52,13 +53,10 @@ export function RegisterForm() {
               </legend>
 
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                <div className="space-y-1.5">
-                  <label
-                    className="text-xs font-semibold text-slate-700 block"
-                    htmlFor="tenantName"
-                  >
-                    Nama Toko / Merchant *
-                  </label>
+                <FormGroup>
+                  <FormLabel htmlFor="tenantName" required>
+                    Nama Toko / Merchant
+                  </FormLabel>
                   <div className="relative">
                     <Store className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
                     <Input
@@ -74,20 +72,11 @@ export function RegisterForm() {
                       disabled={isSubmitting}
                     />
                   </div>
-                  {errors.tenantName && (
-                    <p className="text-[11px] text-red-500 font-medium mt-1">
-                      {errors.tenantName.message}
-                    </p>
-                  )}
-                </div>
+                  <FormError message={errors.tenantName?.message} />
+                </FormGroup>
 
-                <div className="space-y-1.5">
-                  <label
-                    className="text-xs font-semibold text-slate-700 block"
-                    htmlFor="phone"
-                  >
-                    Nomor Telepon Toko
-                  </label>
+                <FormGroup>
+                  <FormLabel htmlFor="phone">Nomor Telepon Toko</FormLabel>
                   <div className="relative">
                     <Phone className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
                     <Input
@@ -99,16 +88,11 @@ export function RegisterForm() {
                       disabled={isSubmitting}
                     />
                   </div>
-                </div>
+                </FormGroup>
               </div>
 
-              <div className="space-y-1.5">
-                <label
-                  className="text-xs font-semibold text-slate-700 block"
-                  htmlFor="address"
-                >
-                  Alamat Toko
-                </label>
+              <FormGroup>
+                <FormLabel htmlFor="address">Alamat Toko</FormLabel>
                 <div className="relative">
                   <MapPin className="absolute left-3.5 top-3.5 h-4 w-4 text-slate-400 z-10" />
                   <Textarea
@@ -119,7 +103,7 @@ export function RegisterForm() {
                     disabled={isSubmitting}
                   />
                 </div>
-              </div>
+              </FormGroup>
             </fieldset>
 
             <hr className="border-slate-100 my-4" />
@@ -130,13 +114,10 @@ export function RegisterForm() {
                 Kredensial Akun Owner
               </legend>
 
-              <div className="space-y-1.5">
-                <label
-                  className="text-xs font-semibold text-slate-700 block"
-                  htmlFor="ownerName"
-                >
-                  Nama Lengkap Owner *
-                </label>
+              <FormGroup>
+                <FormLabel htmlFor="ownerName" required>
+                  Nama Lengkap Owner
+                </FormLabel>
                 <div className="relative">
                   <User className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
                   <Input
@@ -152,21 +133,14 @@ export function RegisterForm() {
                     disabled={isSubmitting}
                   />
                 </div>
-                {errors.ownerName && (
-                  <p className="text-[11px] text-red-500 font-medium mt-1">
-                    {errors.ownerName.message}
-                  </p>
-                )}
-              </div>
+                <FormError message={errors.ownerName?.message} />
+              </FormGroup>
 
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                <div className="space-y-1.5">
-                  <label
-                    className="text-xs font-semibold text-slate-700 block"
-                    htmlFor="email"
-                  >
-                    Email Owner *
-                  </label>
+                <FormGroup>
+                  <FormLabel htmlFor="email" required>
+                    Email Owner
+                  </FormLabel>
                   <div className="relative">
                     <Mail className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
                     <Input
@@ -182,20 +156,13 @@ export function RegisterForm() {
                       disabled={isSubmitting}
                     />
                   </div>
-                  {errors.email && (
-                    <p className="text-[11px] text-red-500 font-medium mt-1">
-                      {errors.email.message}
-                    </p>
-                  )}
-                </div>
+                  <FormError message={errors.email?.message} />
+                </FormGroup>
 
-                <div className="space-y-1.5">
-                  <label
-                    className="text-xs font-semibold text-slate-700 block"
-                    htmlFor="password"
-                  >
-                    Password *
-                  </label>
+                <FormGroup>
+                  <FormLabel htmlFor="password" required>
+                    Password
+                  </FormLabel>
                   <div className="relative">
                     <KeyRound className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
                     <Input
@@ -211,12 +178,8 @@ export function RegisterForm() {
                       disabled={isSubmitting}
                     />
                   </div>
-                  {errors.password && (
-                    <p className="text-[11px] text-red-500 font-medium mt-1">
-                      {errors.password.message}
-                    </p>
-                  )}
-                </div>
+                  <FormError message={errors.password?.message} />
+                </FormGroup>
               </div>
             </fieldset>
 

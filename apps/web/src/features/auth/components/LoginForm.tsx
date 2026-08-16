@@ -4,6 +4,7 @@ import { AlertCircle, KeyRound, Loader2, Mail, Store } from "lucide-react";
 import Link from "next/link";
 import { Button } from "../../../components/ui/button";
 import { Card, CardContent, CardFooter } from "../../../components/ui/card";
+import { FormError, FormGroup, FormLabel } from "../../../components/ui/form";
 import { Input } from "../../../components/ui/input";
 import { useLoginForm } from "../hooks/useLoginForm";
 
@@ -35,13 +36,10 @@ export function LoginForm() {
               </div>
             )}
 
-            <div className="space-y-1.5">
-              <label
-                className="text-xs font-semibold text-slate-700 block"
-                htmlFor="email"
-              >
+            <FormGroup>
+              <FormLabel htmlFor="email" required>
                 Email
-              </label>
+              </FormLabel>
               <div className="relative">
                 <Mail className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
                 <Input
@@ -57,22 +55,13 @@ export function LoginForm() {
                   disabled={isSubmitting}
                 />
               </div>
-              {errors.email && (
-                <p className="text-[11px] text-red-500 font-medium mt-1">
-                  {errors.email.message}
-                </p>
-              )}
-            </div>
+              <FormError message={errors.email?.message} />
+            </FormGroup>
 
-            <div className="space-y-1.5">
-              <div className="flex items-center justify-between">
-                <label
-                  className="text-xs font-semibold text-slate-700 block"
-                  htmlFor="password"
-                >
-                  Password
-                </label>
-              </div>
+            <FormGroup>
+              <FormLabel htmlFor="password" required>
+                Password
+              </FormLabel>
               <div className="relative">
                 <KeyRound className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
                 <Input
@@ -88,12 +77,8 @@ export function LoginForm() {
                   disabled={isSubmitting}
                 />
               </div>
-              {errors.password && (
-                <p className="text-[11px] text-red-500 font-medium mt-1">
-                  {errors.password.message}
-                </p>
-              )}
-            </div>
+              <FormError message={errors.password?.message} />
+            </FormGroup>
 
             <Button
               type="submit"

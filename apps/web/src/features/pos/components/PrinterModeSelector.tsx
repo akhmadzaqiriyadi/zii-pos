@@ -1,6 +1,7 @@
 "use client";
 
 import { Bluetooth, Laptop, Usb } from "lucide-react";
+import { Label } from "../../../components/ui/label";
 import type { PrinterConnectionType } from "../hooks/useThermalPrinter";
 
 interface PrinterModeSelectorProps {
@@ -14,9 +15,9 @@ export function PrinterModeSelector({
 }: PrinterModeSelectorProps) {
   return (
     <div className="space-y-2">
-      <label className="block text-xs font-bold text-slate-800">
+      <Label className="text-slate-800 font-bold">
         Pilih Arsitektur Koneksi Printer:
-      </label>
+      </Label>
 
       <div className="grid grid-cols-1 gap-2.5">
         {/* Option 1: Direct USB WebSerial */}

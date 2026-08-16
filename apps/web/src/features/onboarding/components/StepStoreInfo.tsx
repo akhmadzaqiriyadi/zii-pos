@@ -5,6 +5,12 @@ import { ArrowRight, Globe, MapPin, Phone, Store } from "lucide-react";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "../../../components/ui/button";
+import {
+  FormError,
+  FormGroup,
+  FormHelperText,
+  FormLabel,
+} from "../../../components/ui/form";
 import { Input } from "../../../components/ui/input";
 import {
   type StepStoreInfoData,
@@ -52,13 +58,10 @@ export function StepStoreInfo({ initialData, onSubmit }: StepStoreInfoProps) {
 
       <div className="space-y-4">
         {/* Nama Toko */}
-        <div className="space-y-1.5">
-          <label
-            className="text-xs font-semibold text-slate-700 block"
-            htmlFor="tenantName"
-          >
-            Nama Toko / Merchant *
-          </label>
+        <FormGroup>
+          <FormLabel htmlFor="tenantName" required>
+            Nama Toko / Merchant
+          </FormLabel>
           <div className="relative">
             <Store className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
             <Input
@@ -73,21 +76,14 @@ export function StepStoreInfo({ initialData, onSubmit }: StepStoreInfoProps) {
               }`}
             />
           </div>
-          {errors.tenantName && (
-            <p className="text-[11px] text-red-500 font-medium mt-1">
-              {errors.tenantName.message}
-            </p>
-          )}
-        </div>
+          <FormError message={errors.tenantName?.message} />
+        </FormGroup>
 
         {/* Custom Subdomain Suggestion */}
-        <div className="space-y-1.5">
-          <label
-            className="text-xs font-semibold text-slate-700 block"
-            htmlFor="subdomain"
-          >
+        <FormGroup>
+          <FormLabel htmlFor="subdomain">
             Preferensi Subdomain Usaha (White-Label)
-          </label>
+          </FormLabel>
           <div className="relative flex items-center">
             <Globe className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
             <Input
@@ -102,29 +98,20 @@ export function StepStoreInfo({ initialData, onSubmit }: StepStoreInfoProps) {
             </span>
           </div>
           {autoSubdomain && (
-            <p className="text-[11px] text-slate-500 font-medium">
+            <FormHelperText>
               Domain toko kamu nanti:{" "}
               <span className="font-extrabold text-emerald-700">
                 {autoSubdomain}.ziipos.com
               </span>
-            </p>
+            </FormHelperText>
           )}
-          {errors.subdomain && (
-            <p className="text-[11px] text-red-500 font-medium mt-1">
-              {errors.subdomain.message}
-            </p>
-          )}
-        </div>
+          <FormError message={errors.subdomain?.message} />
+        </FormGroup>
 
         {/* Telepon & Alamat */}
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-          <div className="space-y-1.5">
-            <label
-              className="text-xs font-semibold text-slate-700 block"
-              htmlFor="phone"
-            >
-              Nomor Telepon Toko
-            </label>
+          <FormGroup>
+            <FormLabel htmlFor="phone">Nomor Telepon Toko</FormLabel>
             <div className="relative">
               <Phone className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
               <Input
@@ -135,15 +122,10 @@ export function StepStoreInfo({ initialData, onSubmit }: StepStoreInfoProps) {
                 className="bg-slate-50 pl-10 pr-3.5"
               />
             </div>
-          </div>
+          </FormGroup>
 
-          <div className="space-y-1.5">
-            <label
-              className="text-xs font-semibold text-slate-700 block"
-              htmlFor="address"
-            >
-              Alamat Usaha
-            </label>
+          <FormGroup>
+            <FormLabel htmlFor="address">Alamat Usaha</FormLabel>
             <div className="relative">
               <MapPin className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
               <Input
@@ -154,7 +136,7 @@ export function StepStoreInfo({ initialData, onSubmit }: StepStoreInfoProps) {
                 className="bg-slate-50 pl-10 pr-3.5"
               />
             </div>
-          </div>
+          </FormGroup>
         </div>
       </div>
 

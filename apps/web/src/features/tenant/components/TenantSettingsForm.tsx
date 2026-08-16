@@ -8,6 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "../../../components/ui/card";
+import { FormError, FormGroup, FormLabel } from "../../../components/ui/form";
 import { Input } from "../../../components/ui/input";
 import { Textarea } from "../../../components/ui/textarea";
 import { useTenantSettingsForm } from "../hooks/useTenantSettingsForm";
@@ -40,87 +41,55 @@ export function TenantSettingsForm() {
             </div>
           )}
 
-          <div className="space-y-1">
-            <label
-              htmlFor="storeName"
-              className="block text-xs font-bold text-slate-700"
-            >
+          <FormGroup>
+            <FormLabel htmlFor="storeName" required>
               Nama Toko Merchant
-            </label>
+            </FormLabel>
             <Input
               id="storeName"
               placeholder="Contoh: ZII Distro & Laundry Studio"
               {...register("storeName")}
             />
-            {errors.storeName && (
-              <p className="text-[11px] text-red-500 font-medium mt-1">
-                {errors.storeName.message}
-              </p>
-            )}
-          </div>
+            <FormError message={errors.storeName?.message} />
+          </FormGroup>
 
-          <div className="space-y-1">
-            <label
-              htmlFor="phone"
-              className="block text-xs font-bold text-slate-700"
-            >
-              Nomor WhatsApp Toko
-            </label>
+          <FormGroup>
+            <FormLabel htmlFor="phone">Nomor WhatsApp Toko</FormLabel>
             <Input
               id="phone"
               placeholder="Contoh: 0812-9988-7766"
               {...register("phone")}
             />
-            {errors.phone && (
-              <p className="text-[11px] text-red-500 font-medium mt-1">
-                {errors.phone.message}
-              </p>
-            )}
-          </div>
+            <FormError message={errors.phone?.message} />
+          </FormGroup>
 
-          <div className="space-y-1">
-            <label
-              htmlFor="address"
-              className="block text-xs font-bold text-slate-700"
-            >
-              Alamat Toko
-            </label>
+          <FormGroup>
+            <FormLabel htmlFor="address">Alamat Toko</FormLabel>
             <Input
               id="address"
               placeholder="Contoh: Jl. Merdeka Raya No. 45, Jakarta"
               {...register("address")}
             />
-            {errors.address && (
-              <p className="text-[11px] text-red-500 font-medium mt-1">
-                {errors.address.message}
-              </p>
-            )}
-          </div>
+            <FormError message={errors.address?.message} />
+          </FormGroup>
 
-          <div className="space-y-1">
-            <label
-              htmlFor="receiptFooter"
-              className="block text-xs font-bold text-slate-700"
-            >
+          <FormGroup>
+            <FormLabel htmlFor="receiptFooter">
               Pesan Footer Struk Belanja
-            </label>
+            </FormLabel>
             <Textarea
               id="receiptFooter"
               rows={3}
               placeholder="Terima kasih telah berbelanja di ZII Store! Simpan nota ini sebagai bukti garansi."
               {...register("receiptFooter")}
             />
-            {errors.receiptFooter && (
-              <p className="text-[11px] text-red-500 font-medium mt-1">
-                {errors.receiptFooter.message}
-              </p>
-            )}
-          </div>
+            <FormError message={errors.receiptFooter?.message} />
+          </FormGroup>
 
           <Button
             type="submit"
             disabled={isUpdating}
-            className="gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-5 px-6 rounded-xl"
+            className="gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-5 px-6 rounded-xl cursor-pointer"
           >
             {isUpdating ? (
               <>

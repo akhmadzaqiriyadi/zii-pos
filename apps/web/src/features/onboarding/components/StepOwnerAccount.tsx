@@ -5,6 +5,7 @@ import { ArrowLeft, ArrowRight, KeyRound, Mail, User } from "lucide-react";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "../../../components/ui/button";
+import { FormError, FormGroup, FormLabel } from "../../../components/ui/form";
 import { Input } from "../../../components/ui/input";
 import {
   type StepOwnerAccountData,
@@ -45,13 +46,10 @@ export function StepOwnerAccount({
 
       <div className="space-y-4">
         {/* Nama Owner */}
-        <div className="space-y-1.5">
-          <label
-            className="text-xs font-semibold text-slate-700 block"
-            htmlFor="ownerName"
-          >
-            Nama Lengkap Pemilik Toko *
-          </label>
+        <FormGroup>
+          <FormLabel htmlFor="ownerName" required>
+            Nama Lengkap Pemilik Toko
+          </FormLabel>
           <div className="relative">
             <User className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
             <Input
@@ -66,21 +64,14 @@ export function StepOwnerAccount({
               }`}
             />
           </div>
-          {errors.ownerName && (
-            <p className="text-[11px] text-red-500 font-medium mt-1">
-              {errors.ownerName.message}
-            </p>
-          )}
-        </div>
+          <FormError message={errors.ownerName?.message} />
+        </FormGroup>
 
         {/* Email Owner */}
-        <div className="space-y-1.5">
-          <label
-            className="text-xs font-semibold text-slate-700 block"
-            htmlFor="email"
-          >
-            Email Login Owner *
-          </label>
+        <FormGroup>
+          <FormLabel htmlFor="email" required>
+            Email Login Owner
+          </FormLabel>
           <div className="relative">
             <Mail className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
             <Input
@@ -95,22 +86,15 @@ export function StepOwnerAccount({
               }`}
             />
           </div>
-          {errors.email && (
-            <p className="text-[11px] text-red-500 font-medium mt-1">
-              {errors.email.message}
-            </p>
-          )}
-        </div>
+          <FormError message={errors.email?.message} />
+        </FormGroup>
 
         {/* Password & Confirm Password */}
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-          <div className="space-y-1.5">
-            <label
-              className="text-xs font-semibold text-slate-700 block"
-              htmlFor="password"
-            >
-              Password *
-            </label>
+          <FormGroup>
+            <FormLabel htmlFor="password" required>
+              Password
+            </FormLabel>
             <div className="relative">
               <KeyRound className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
               <Input
@@ -125,20 +109,13 @@ export function StepOwnerAccount({
                 }`}
               />
             </div>
-            {errors.password && (
-              <p className="text-[11px] text-red-500 font-medium mt-1">
-                {errors.password.message}
-              </p>
-            )}
-          </div>
+            <FormError message={errors.password?.message} />
+          </FormGroup>
 
-          <div className="space-y-1.5">
-            <label
-              className="text-xs font-semibold text-slate-700 block"
-              htmlFor="confirmPassword"
-            >
-              Ulangi Password *
-            </label>
+          <FormGroup>
+            <FormLabel htmlFor="confirmPassword" required>
+              Ulangi Password
+            </FormLabel>
             <div className="relative">
               <KeyRound className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
               <Input
@@ -153,12 +130,8 @@ export function StepOwnerAccount({
                 }`}
               />
             </div>
-            {errors.confirmPassword && (
-              <p className="text-[11px] text-red-500 font-medium mt-1">
-                {errors.confirmPassword.message}
-              </p>
-            )}
-          </div>
+            <FormError message={errors.confirmPassword?.message} />
+          </FormGroup>
         </div>
       </div>
 

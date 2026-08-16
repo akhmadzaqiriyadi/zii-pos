@@ -9,9 +9,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "../../../components/ui/dialog";
+import { FormError, FormGroup, FormLabel } from "../../../components/ui/form";
 import { Input } from "../../../components/ui/input";
 import { useProductForm } from "../hooks/useProductForm";
-
 import { ProductTypeSelector } from "./ProductTypeSelector";
 
 interface ProductFormModalProps {
@@ -60,67 +60,46 @@ export function ProductFormModal({
           />
 
           {/* Nama Produk */}
-          <div className="space-y-1">
-            <label
-              htmlFor="product-name"
-              className="text-xs font-semibold text-slate-700 block"
-            >
+          <FormGroup>
+            <FormLabel htmlFor="product-name" required>
               Nama Produk / Jasa
-            </label>
+            </FormLabel>
             <Input
               id="product-name"
               placeholder="Contoh: Kaos Polos / Jasa Cuci Sepatu"
               {...register("name")}
             />
-            {errors.name && (
-              <p className="text-[11px] text-red-500 font-medium mt-1">
-                {errors.name.message}
-              </p>
-            )}
-          </div>
+            <FormError message={errors.name?.message} />
+          </FormGroup>
 
           {/* Harga */}
-          <div className="space-y-1">
-            <label
-              htmlFor="product-price"
-              className="text-xs font-semibold text-slate-700 block"
-            >
+          <FormGroup>
+            <FormLabel htmlFor="product-price" required>
               Harga Jual (Rp)
-            </label>
+            </FormLabel>
             <Input
               id="product-price"
               type="number"
               placeholder="50000"
               {...register("price", { valueAsNumber: true })}
             />
-            {errors.price && (
-              <p className="text-[11px] text-red-500 font-medium mt-1">
-                {errors.price.message}
-              </p>
-            )}
-          </div>
+            <FormError message={errors.price?.message} />
+          </FormGroup>
 
           {/* Stok Barang (jika bukan Jasa) */}
           {!isService && (
-            <div className="space-y-1">
-              <label
-                htmlFor="product-stock"
-                className="text-xs font-semibold text-slate-700 block"
-              >
+            <FormGroup>
+              <FormLabel htmlFor="product-stock" required>
                 Jumlah Stok Barang
-              </label>
+              </FormLabel>
               <Input
                 id="product-stock"
                 type="number"
                 placeholder="10"
                 {...register("stock", { valueAsNumber: true })}
               />
-              {errors.stock && (
-                <p className="text-[11px] text-red-500 font-medium mt-1">
-                  {errors.stock.message}
-                </p>
-              )}
-            </div>
+              <FormError message={errors.stock?.message} />
+            </FormGroup>
           )}
 
           {/* Tombol Simpan */}
@@ -128,7 +107,7 @@ export function ProductFormModal({
             <Button
               type="submit"
               disabled={isPending}
-              className="w-full gap-2 py-5 font-bold bg-emerald-600 hover:bg-emerald-700 text-white"
+              className="w-full gap-2 py-5 font-bold bg-emerald-600 hover:bg-emerald-700 text-white cursor-pointer"
             >
               <Save className="h-4 w-4" />
               <span>

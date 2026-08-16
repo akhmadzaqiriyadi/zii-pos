@@ -1,5 +1,11 @@
 import React from "react";
 import type { FieldErrors, UseFormRegister } from "react-hook-form";
+import {
+  FormError,
+  FormGroup,
+  FormLabel,
+  Label,
+} from "../../../components/ui/form";
 import { Input } from "../../../components/ui/input";
 import { Textarea } from "../../../components/ui/textarea";
 import type { PlanFormData } from "../schemas/planForm.schema";
@@ -19,139 +25,125 @@ export function PlanFormFields({
     <div className="space-y-4 py-2">
       {/* Kode & Nama Paket */}
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        <div className="space-y-1">
-          <label className="text-xs font-semibold text-slate-700 block">
-            Kode Paket (Slug) *
-          </label>
+        <FormGroup>
+          <FormLabel htmlFor="plan-code" required>
+            Kode Paket (Slug)
+          </FormLabel>
           <Input
+            id="plan-code"
             type="text"
             placeholder="starter / pro / enterprise"
             disabled={isEditing}
             {...register("code")}
             className="bg-slate-50 disabled:opacity-60"
           />
-          {errors.code && (
-            <p className="text-[11px] text-red-500 font-medium">
-              {errors.code.message}
-            </p>
-          )}
-        </div>
+          <FormError message={errors.code?.message} />
+        </FormGroup>
 
-        <div className="space-y-1">
-          <label className="text-xs font-semibold text-slate-700 block">
-            Nama Paket *
-          </label>
+        <FormGroup>
+          <FormLabel htmlFor="plan-name" required>
+            Nama Paket
+          </FormLabel>
           <Input
+            id="plan-name"
             type="text"
             placeholder="Contoh: Pro White-Label"
             {...register("name")}
             className="bg-slate-50"
           />
-          {errors.name && (
-            <p className="text-[11px] text-red-500 font-medium">
-              {errors.name.message}
-            </p>
-          )}
-        </div>
+          <FormError message={errors.name?.message} />
+        </FormGroup>
       </div>
 
       {/* Harga, Siklus Penagihan, dan Batas Kasir */}
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-        <div className="space-y-1">
-          <label className="text-xs font-semibold text-slate-700 block">
-            Harga (Rp) *
-          </label>
+        <FormGroup>
+          <FormLabel htmlFor="plan-price" required>
+            Harga (Rp)
+          </FormLabel>
           <Input
+            id="plan-price"
             type="number"
             placeholder="99000"
             {...register("price", { valueAsNumber: true })}
             className="bg-slate-50"
           />
-          {errors.price && (
-            <p className="text-[11px] text-red-500 font-medium">
-              {errors.price.message}
-            </p>
-          )}
-        </div>
+          <FormError message={errors.price?.message} />
+        </FormGroup>
 
-        <div className="space-y-1">
-          <label className="text-xs font-semibold text-slate-700 block">
-            Siklus Penagihan *
-          </label>
+        <FormGroup>
+          <FormLabel htmlFor="plan-billing-cycle" required>
+            Siklus Penagihan
+          </FormLabel>
           <select
+            id="plan-billing-cycle"
             {...register("billingCycle")}
             className="flex h-10 w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2 text-sm text-slate-800 transition focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
           >
             <option value="monthly">Bulanan (Monthly)</option>
             <option value="yearly">Tahunan (Yearly)</option>
           </select>
-        </div>
+        </FormGroup>
 
-        <div className="space-y-1">
-          <label className="text-xs font-semibold text-slate-700 block">
-            Batas Kasir (User) *
-          </label>
+        <FormGroup>
+          <FormLabel htmlFor="plan-max-cashiers" required>
+            Batas Kasir (User)
+          </FormLabel>
           <Input
+            id="plan-max-cashiers"
             type="number"
             placeholder="5"
             {...register("maxCashiers", { valueAsNumber: true })}
             className="bg-slate-50"
           />
-          {errors.maxCashiers && (
-            <p className="text-[11px] text-red-500 font-medium">
-              {errors.maxCashiers.message}
-            </p>
-          )}
-        </div>
+          <FormError message={errors.maxCashiers?.message} />
+        </FormGroup>
       </div>
 
       {/* Toggles / Checkboxes */}
       <div className="flex flex-wrap items-center gap-4 p-3.5 rounded-xl bg-slate-50 border border-slate-200">
-        <label className="flex items-center gap-2 text-xs font-semibold text-slate-700 cursor-pointer">
+        <Label className="flex items-center gap-2 cursor-pointer">
           <input
             type="checkbox"
             {...register("allowWhiteLabel")}
-            className="h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
+            className="h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer"
           />
           <span>Dukung White-Label Domain</span>
-        </label>
+        </Label>
 
-        <label className="flex items-center gap-2 text-xs font-semibold text-slate-700 cursor-pointer">
+        <Label className="flex items-center gap-2 cursor-pointer">
           <input
             type="checkbox"
             {...register("allowExportExcel")}
-            className="h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
+            className="h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer"
           />
           <span>Dukung Ekspor Laporan Excel</span>
-        </label>
+        </Label>
 
-        <label className="flex items-center gap-2 text-xs font-semibold text-slate-700 cursor-pointer">
+        <Label className="flex items-center gap-2 cursor-pointer">
           <input
             type="checkbox"
             {...register("isActive")}
-            className="h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
+            className="h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer"
           />
           <span>Paket Aktif (Tampil di Onboarding)</span>
-        </label>
+        </Label>
       </div>
 
       {/* Daftar Fitur */}
-      <div className="space-y-1">
-        <label className="text-xs font-semibold text-slate-700 block">
-          Daftar Fitur Penawaran (1 Fitur Per Baris) *
-        </label>
+      <FormGroup>
+        <FormLabel htmlFor="plan-features" required>
+          Daftar Fitur Penawaran (1 Fitur Per Baris)
+        </FormLabel>
         <Textarea
+          id="plan-features"
           rows={4}
           placeholder="Multi-kasir hingga 5 user&#10;Custom Logo & Header Struk&#10;Ekspor Laporan Excel / CSV"
           {...register("featuresText")}
           className="bg-slate-50 text-xs"
         />
-        {errors.featuresText && (
-          <p className="text-[11px] text-red-500 font-medium">
-            {errors.featuresText.message}
-          </p>
-        )}
-      </div>
+        <FormError message={errors.featuresText?.message} />
+      </FormGroup>
     </div>
   );
 }

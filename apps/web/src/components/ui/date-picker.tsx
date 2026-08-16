@@ -4,6 +4,7 @@ import { Calendar as CalendarIcon, X } from "lucide-react";
 import * as React from "react";
 import { cn } from "../../lib/utils";
 import { Calendar } from "./calendar";
+import { Label } from "./label";
 
 function formatDisplayDate(dateStr: string): string {
   if (!dateStr) return "";
@@ -72,11 +73,7 @@ export function DatePicker({
 
   return (
     <div ref={containerRef} className="relative inline-block w-full">
-      {label && (
-        <label className="block text-xs font-bold text-slate-700 mb-1">
-          {label}
-        </label>
-      )}
+      {label && <Label className="mb-1">{label}</Label>}
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}

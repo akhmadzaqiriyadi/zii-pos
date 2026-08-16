@@ -1,6 +1,7 @@
 "use client";
 
 import { CheckCircle } from "lucide-react";
+import { FormGroup, FormLabel } from "../../../components/ui/form";
 import { Input } from "../../../components/ui/input";
 import { formatRupiah } from "../../../lib/utils";
 
@@ -23,13 +24,10 @@ export function PaymentCashCalculator({
 }: PaymentCashCalculatorProps) {
   return (
     <fieldset className="mb-5 space-y-3 rounded-xl bg-slate-50 p-4 border border-slate-200 m-0">
-      <div>
-        <label
-          htmlFor="cash-received"
-          className="text-xs font-semibold text-slate-700 mb-1 block"
-        >
+      <FormGroup>
+        <FormLabel htmlFor="cash-received" required>
           Nominal Uang Diterima (Rp)
-        </label>
+        </FormLabel>
         <Input
           id="cash-received"
           type="number"
@@ -38,7 +36,7 @@ export function PaymentCashCalculator({
           onChange={(e) => onCashReceivedChange(e.target.value)}
           className="text-lg font-bold"
         />
-      </div>
+      </FormGroup>
 
       {/* Uang Presets */}
       <div className="flex flex-wrap gap-1.5">
