@@ -167,7 +167,7 @@ export function TenantTable({
           </p>
 
           <Pagination
-            currentPage={meta.page}
+            page={meta.page}
             totalPages={meta.totalPages}
             onPageChange={onPageChange}
           />
