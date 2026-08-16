@@ -49,12 +49,12 @@ export default function SaaSAdminPage() {
           </div>
 
           {/* Navigation Sub-Tabs */}
-          <nav className="flex items-center gap-2 bg-slate-100 p-1 rounded-xl border border-slate-200 shrink-0">
+          <nav className="flex items-center gap-2 bg-slate-100 p-1.5 rounded-xl border border-slate-200 shrink-0 shadow-2xs">
             <Link href="/saas-admin">
               <Button
                 variant="ghost"
                 size="sm"
-                className="gap-2 rounded-lg bg-white text-emerald-700 font-bold shadow-xs text-xs"
+                className="gap-2 rounded-lg bg-white text-emerald-700 font-bold shadow-xs text-xs cursor-pointer"
               >
                 <LayoutDashboard className="h-3.5 w-3.5" />
                 <span>Monitoring Merchant</span>
@@ -65,7 +65,7 @@ export default function SaaSAdminPage() {
               <Button
                 variant="ghost"
                 size="sm"
-                className="gap-2 rounded-lg text-slate-600 hover:text-slate-900 font-semibold text-xs"
+                className="gap-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-white/60 font-semibold text-xs transition cursor-pointer"
               >
                 <Layers className="h-3.5 w-3.5" />
                 <span>Kelola Paket SaaS</span>
