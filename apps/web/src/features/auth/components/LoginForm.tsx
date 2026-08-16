@@ -3,12 +3,8 @@
 import { AlertCircle, KeyRound, Loader2, Mail, Store } from "lucide-react";
 import Link from "next/link";
 import { Button } from "../../../components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "../../../components/ui/card";
+import { Card, CardContent, CardFooter } from "../../../components/ui/card";
+import { Input } from "../../../components/ui/input";
 import { useLoginForm } from "../hooks/useLoginForm";
 
 export function LoginForm() {
@@ -48,12 +44,12 @@ export function LoginForm() {
               </label>
               <div className="relative">
                 <Mail className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
-                <input
+                <Input
                   id="email"
                   type="email"
                   placeholder="nama@email.com"
                   {...register("email")}
-                  className={`flex h-10 w-full rounded-xl border bg-slate-50 pl-10 pr-3.5 py-2 text-sm text-slate-900 transition placeholder:text-slate-400 focus:outline-none focus:ring-2 disabled:cursor-not-allowed disabled:opacity-50 ${
+                  className={`bg-slate-50 pl-10 pr-3.5 ${
                     errors.email
                       ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
                       : "border-slate-200 focus:border-emerald-500 focus:ring-emerald-500/20"
@@ -79,12 +75,12 @@ export function LoginForm() {
               </div>
               <div className="relative">
                 <KeyRound className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
-                <input
+                <Input
                   id="password"
                   type="password"
                   placeholder="••••••••"
                   {...register("password")}
-                  className={`flex h-10 w-full rounded-xl border bg-slate-50 pl-10 pr-3.5 py-2 text-sm text-slate-900 transition placeholder:text-slate-400 focus:outline-none focus:ring-2 disabled:cursor-not-allowed disabled:opacity-50 ${
+                  className={`bg-slate-50 pl-10 pr-3.5 ${
                     errors.password
                       ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
                       : "border-slate-200 focus:border-emerald-500 focus:ring-emerald-500/20"
@@ -101,7 +97,7 @@ export function LoginForm() {
 
             <Button
               type="submit"
-              className="w-full h-11 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold shadow-md shadow-emerald-600/20 transition mt-2 justify-center"
+              className="w-full h-11 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold shadow-md shadow-emerald-600/20 transition mt-2 justify-center cursor-pointer"
               disabled={isSubmitting}
             >
               {isSubmitting ? (

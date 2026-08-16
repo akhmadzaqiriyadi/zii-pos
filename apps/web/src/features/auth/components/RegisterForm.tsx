@@ -13,6 +13,8 @@ import {
 import Link from "next/link";
 import { Button } from "../../../components/ui/button";
 import { Card, CardContent, CardFooter } from "../../../components/ui/card";
+import { Input } from "../../../components/ui/input";
+import { Textarea } from "../../../components/ui/textarea";
 import { useRegisterForm } from "../hooks/useRegisterForm";
 
 export function RegisterForm() {
@@ -59,12 +61,12 @@ export function RegisterForm() {
                   </label>
                   <div className="relative">
                     <Store className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
-                    <input
+                    <Input
                       id="tenantName"
                       type="text"
                       placeholder="Contoh: Barber Premium"
                       {...register("tenantName")}
-                      className={`flex h-10 w-full rounded-xl border bg-slate-50 pl-10 pr-3.5 py-2 text-sm text-slate-900 transition placeholder:text-slate-400 focus:outline-none focus:ring-2 disabled:cursor-not-allowed disabled:opacity-50 ${
+                      className={`bg-slate-50 pl-10 pr-3.5 ${
                         errors.tenantName
                           ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
                           : "border-slate-200 focus:border-emerald-500 focus:ring-emerald-500/20"
@@ -88,12 +90,12 @@ export function RegisterForm() {
                   </label>
                   <div className="relative">
                     <Phone className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
-                    <input
+                    <Input
                       id="phone"
                       type="text"
                       placeholder="Contoh: 0812XXXXXXXX"
                       {...register("phone")}
-                      className="flex h-10 w-full rounded-xl border border-slate-200 bg-slate-50 pl-10 pr-3.5 py-2 text-sm text-slate-900 transition placeholder:text-slate-400 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 disabled:cursor-not-allowed disabled:opacity-50"
+                      className="bg-slate-50 pl-10 pr-3.5"
                       disabled={isSubmitting}
                     />
                   </div>
@@ -108,12 +110,12 @@ export function RegisterForm() {
                   Alamat Toko
                 </label>
                 <div className="relative">
-                  <MapPin className="absolute left-3.5 top-3.5 h-4 w-4 text-slate-400" />
-                  <textarea
+                  <MapPin className="absolute left-3.5 top-3.5 h-4 w-4 text-slate-400 z-10" />
+                  <Textarea
                     id="address"
                     placeholder="Masukkan alamat toko lengkap..."
                     {...register("address")}
-                    className="flex min-h-[70px] w-full rounded-xl border border-slate-200 bg-slate-50 pl-10 pr-3.5 py-2 text-sm text-slate-900 transition placeholder:text-slate-400 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 disabled:cursor-not-allowed disabled:opacity-50 resize-none"
+                    className="min-h-[70px] bg-slate-50 pl-10 pr-3.5 text-sm resize-none"
                     disabled={isSubmitting}
                   />
                 </div>
@@ -137,12 +139,12 @@ export function RegisterForm() {
                 </label>
                 <div className="relative">
                   <User className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
-                  <input
+                  <Input
                     id="ownerName"
                     type="text"
                     placeholder="Nama lengkap Anda"
                     {...register("ownerName")}
-                    className={`flex h-10 w-full rounded-xl border bg-slate-50 pl-10 pr-3.5 py-2 text-sm text-slate-900 transition placeholder:text-slate-400 focus:outline-none focus:ring-2 disabled:cursor-not-allowed disabled:opacity-50 ${
+                    className={`bg-slate-50 pl-10 pr-3.5 ${
                       errors.ownerName
                         ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
                         : "border-slate-200 focus:border-emerald-500 focus:ring-emerald-500/20"
@@ -167,12 +169,12 @@ export function RegisterForm() {
                   </label>
                   <div className="relative">
                     <Mail className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
-                    <input
+                    <Input
                       id="email"
                       type="email"
                       placeholder="nama@email.com"
                       {...register("email")}
-                      className={`flex h-10 w-full rounded-xl border bg-slate-50 pl-10 pr-3.5 py-2 text-sm text-slate-900 transition placeholder:text-slate-400 focus:outline-none focus:ring-2 disabled:cursor-not-allowed disabled:opacity-50 ${
+                      className={`bg-slate-50 pl-10 pr-3.5 ${
                         errors.email
                           ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
                           : "border-slate-200 focus:border-emerald-500 focus:ring-emerald-500/20"
@@ -196,12 +198,12 @@ export function RegisterForm() {
                   </label>
                   <div className="relative">
                     <KeyRound className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
-                    <input
+                    <Input
                       id="password"
                       type="password"
                       placeholder="Minimal 6 karakter"
                       {...register("password")}
-                      className={`flex h-10 w-full rounded-xl border bg-slate-50 pl-10 pr-3.5 py-2 text-sm text-slate-900 transition placeholder:text-slate-400 focus:outline-none focus:ring-2 disabled:cursor-not-allowed disabled:opacity-50 ${
+                      className={`bg-slate-50 pl-10 pr-3.5 ${
                         errors.password
                           ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
                           : "border-slate-200 focus:border-emerald-500 focus:ring-emerald-500/20"
@@ -220,7 +222,7 @@ export function RegisterForm() {
 
             <Button
               type="submit"
-              className="w-full h-11 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold shadow-md shadow-emerald-600/20 transition mt-4 justify-center"
+              className="w-full h-11 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold shadow-md shadow-emerald-600/20 transition mt-4 justify-center cursor-pointer"
               disabled={isSubmitting}
             >
               {isSubmitting ? (
