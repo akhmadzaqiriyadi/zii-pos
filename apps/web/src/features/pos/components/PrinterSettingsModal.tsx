@@ -6,7 +6,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from "../../../components/ui/dialog";
-import type { PrinterConnectionType, PrinterStatus } from "../hooks/useThermalPrinter";
+import type {
+  PrinterConnectionType,
+  PrinterStatus,
+} from "../hooks/useThermalPrinter";
 import { PrinterModeSelector } from "./PrinterModeSelector";
 import { PrinterStatusCard } from "./PrinterStatusCard";
 
@@ -85,7 +88,9 @@ export function PrinterSettingsModal({
                   <Bluetooth className="h-4 w-4 text-blue-600" />
                 )}
                 <span>
-                  {isConnected ? "Sambungkan Ulang Bluetooth" : "Pairing Bluetooth POS-V29DD"}
+                  {isConnected
+                    ? "Sambungkan Ulang Bluetooth"
+                    : "Pairing Bluetooth POS-V29DD"}
                 </span>
               </Button>
             )}
@@ -100,15 +105,17 @@ export function PrinterSettingsModal({
                 <span>Test Print Struk 58mm</span>
               </Button>
 
-              {isConnected && (connectionType === "web_bluetooth" || connectionType === "web_usb") && (
-                <Button
-                  variant="ghost"
-                  onClick={onDisconnect}
-                  className="text-xs text-rose-600 hover:bg-rose-50 font-semibold"
-                >
-                  Putuskan
-                </Button>
-              )}
+              {isConnected &&
+                (connectionType === "web_bluetooth" ||
+                  connectionType === "web_usb") && (
+                  <Button
+                    variant="ghost"
+                    onClick={onDisconnect}
+                    className="text-xs text-rose-600 hover:bg-rose-50 font-semibold"
+                  >
+                    Putuskan
+                  </Button>
+                )}
             </div>
           </div>
         </div>

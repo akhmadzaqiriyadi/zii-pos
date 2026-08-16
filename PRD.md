@@ -117,11 +117,12 @@ Seluruh endpoint baru didaftarkan secara konsisten di bawah prefix `/api/v1/`:
 ## 👨‍💻 4. Execution Plan & Developer Task Assignments (Sprint v2.0.0)
 
 ### 👨‍💻 Zaqi (PM Engineer, Integration & Backend Lead)
-- [ ] Migrate & Push Extended Database Schema (Prisma Models `Plan`, `Subscription`, `Invoice`, & `Tenant.subdomain`).
-- [ ] Implementasi Service & Controller REST API Super Admin (`saas-admin.service.ts`).
-- [ ] Implementasi Service & Controller Dynamic Plan CRUD (`plan.service.ts`).
-- [ ] Implementasi Automated Payment Gateway Webhook Receiver (`subscription.service.ts`).
-- [ ] Penambahan Unit Tests untuk Logika Lisensi, Expiry Check, & Signature Verification.
+- [x] Migrate & Push Extended Database Schema (Prisma Models `Plan`, `Subscription`, `Invoice`, & `Tenant.subdomain`).
+- [x] Implementasi Service & Controller REST API Super Admin (`saas-admin.service.ts`).
+- [x] Implementasi Service & Controller Dynamic Plan CRUD (`plan.service.ts`).
+- [x] Implementasi Automated Payment Gateway Webhook Receiver (`subscription.service.ts`).
+- [x] Penambahan Unit Tests untuk Logika Lisensi, Expiry Check, & Signature Verification.
+
 
 ### 🎨 Isyadi (Frontend Lead — Onboarding, Super Admin Portal & Billing UI)
 - [ ] Implementasi Self-Service Merchant Onboarding Wizard 3 Langkah (`/onboarding`).

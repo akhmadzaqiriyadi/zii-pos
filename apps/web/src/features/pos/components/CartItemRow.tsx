@@ -10,7 +10,11 @@ interface CartItemRowProps {
   onRemoveItem: (productId: string) => void;
 }
 
-export function CartItemRow({ item, onUpdateQty, onRemoveItem }: CartItemRowProps) {
+export function CartItemRow({
+  item,
+  onUpdateQty,
+  onRemoveItem,
+}: CartItemRowProps) {
   return (
     <article className="flex items-center justify-between rounded-xl border border-slate-200/80 bg-slate-50/70 p-3 shadow-xs transition hover:border-slate-300 gap-2">
       <div className="flex-1 min-w-0 pr-1">

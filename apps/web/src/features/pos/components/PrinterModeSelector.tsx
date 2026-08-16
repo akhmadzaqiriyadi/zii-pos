@@ -35,7 +35,8 @@ export function PrinterModeSelector({
               Direct USB WebSerial (Bypass Driver macOS)
             </span>
             <span className="text-[11px] text-slate-500 block leading-normal mt-0.5">
-              Chrome langsung mengirim byte ESC/POS ke kabel USB. 100% Bebas driver Mac & Bebas kodingan XML!
+              Chrome langsung mengirim byte ESC/POS ke kabel USB. 100% Bebas
+              driver Mac & Bebas kodingan XML!
             </span>
           </div>
         </button>
@@ -56,7 +57,8 @@ export function PrinterModeSelector({
               Browser System Driver (CUPS 58mm)
             </span>
             <span className="text-[11px] text-slate-500 block leading-normal mt-0.5">
-              Mencetak via dialog sistem Mac OS jika driver CUPS thermal sudah terpasang.
+              Mencetak via dialog sistem Mac OS jika driver CUPS thermal sudah
+              terpasang.
             </span>
           </div>
         </button>
@@ -77,7 +79,8 @@ export function PrinterModeSelector({
               Direct Bluetooth ESC/POS (POS-V29DD)
             </span>
             <span className="text-[11px] text-slate-500 block leading-normal mt-0.5">
-              Koneksi Bluetooth nirkabel langsung dari Chrome untuk pengiriman byte ESC/POS tanpa kabel.
+              Koneksi Bluetooth nirkabel langsung dari Chrome untuk pengiriman
+              byte ESC/POS tanpa kabel.
             </span>
           </div>
         </button>

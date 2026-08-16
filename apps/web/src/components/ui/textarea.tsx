@@ -21,7 +21,9 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           )}
           {...props}
         />
-        {error && <span className="text-[10px] font-bold text-rose-500">{error}</span>}
+        {error && (
+          <span className="text-[10px] font-bold text-rose-500">{error}</span>
+        )}
       </div>
     );
   },

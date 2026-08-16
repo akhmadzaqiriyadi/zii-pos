@@ -214,10 +214,17 @@ export function Calendar({
               className={cn(
                 "h-8 w-8 rounded-xl text-xs font-semibold flex items-center justify-center transition cursor-pointer mx-auto",
                 !isCurrentMonth && "text-slate-300",
-                isCurrentMonth && !isSelected && "text-slate-700 hover:bg-slate-100",
-                today && !isSelected && "text-emerald-600 font-extrabold ring-1 ring-emerald-500/40 bg-emerald-50/50",
-                inRange && !isSelected && "bg-emerald-50 text-emerald-700 font-bold rounded-none first:rounded-l-xl last:rounded-r-xl",
-                isSelected && "bg-emerald-600 text-white font-extrabold shadow-sm hover:bg-emerald-700",
+                isCurrentMonth &&
+                  !isSelected &&
+                  "text-slate-700 hover:bg-slate-100",
+                today &&
+                  !isSelected &&
+                  "text-emerald-600 font-extrabold ring-1 ring-emerald-500/40 bg-emerald-50/50",
+                inRange &&
+                  !isSelected &&
+                  "bg-emerald-50 text-emerald-700 font-bold rounded-none first:rounded-l-xl last:rounded-r-xl",
+                isSelected &&
+                  "bg-emerald-600 text-white font-extrabold shadow-sm hover:bg-emerald-700",
               )}
             >
               {date.getDate()}

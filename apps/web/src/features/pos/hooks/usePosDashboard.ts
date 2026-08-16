@@ -158,7 +158,8 @@ export function usePosDashboard() {
 
   return {
     search: state.search,
-    setSearch: (search: string) => dispatch({ type: "SET_SEARCH", payload: search }),
+    setSearch: (search: string) =>
+      dispatch({ type: "SET_SEARCH", payload: search }),
     filterType: state.filterType,
     setFilterType: (filterType: string) =>
       dispatch({ type: "SET_FILTER_TYPE", payload: filterType }),

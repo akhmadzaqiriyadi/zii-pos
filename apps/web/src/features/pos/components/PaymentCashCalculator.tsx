@@ -74,9 +74,7 @@ export function PaymentCashCalculator({
           }`}
         >
           {isCashValid && <CheckCircle className="h-4 w-4" />}
-          {isCashValid
-            ? formatRupiah(changeAmount)
-            : "Uang Kurang"}
+          {isCashValid ? formatRupiah(changeAmount) : "Uang Kurang"}
         </span>
       </div>
     </fieldset>

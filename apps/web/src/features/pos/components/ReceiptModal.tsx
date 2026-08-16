@@ -49,7 +49,10 @@ export function ReceiptModal({
   const printer = useThermalPrinter();
 
   const handlePrint = async () => {
-    const savedType = (typeof window !== "undefined" && localStorage.getItem("zii_printer_type")) || printer.connectionType;
+    const savedType =
+      (typeof window !== "undefined" &&
+        localStorage.getItem("zii_printer_type")) ||
+      printer.connectionType;
 
     if (onPrintThermal) {
       onPrintThermal();
@@ -106,7 +109,9 @@ export function ReceiptModal({
             <header className="text-center border-b border-dashed border-slate-300 pb-2">
               <h4 className="font-bold text-slate-900">{merchant.name}</h4>
               <p className="text-[10px] text-slate-500">{merchant.address}</p>
-              <p className="text-[10px] text-slate-500">Tel: {merchant.phone}</p>
+              <p className="text-[10px] text-slate-500">
+                Tel: {merchant.phone}
+              </p>
             </header>
 
             <div className="space-y-1">

@@ -5,7 +5,10 @@ import { toast } from "sonner";
 
 import { formatEscPosReceipt } from "../utils/escPosFormatter";
 
-export type PrinterConnectionType = "browser_driver" | "web_bluetooth" | "web_usb";
+export type PrinterConnectionType =
+  | "browser_driver"
+  | "web_bluetooth"
+  | "web_usb";
 export type PrinterStatus = "connected" | "disconnected" | "connecting";
 
 export interface ThermalPrinterState {
@@ -16,16 +19,19 @@ export interface ThermalPrinterState {
 }
 
 export function useThermalPrinter() {
-  const [connectionType, setConnectionType] = useState<PrinterConnectionType>(
-    "browser_driver",
-  );
+  const [connectionType, setConnectionType] =
+    useState<PrinterConnectionType>("browser_driver");
   const [status, setStatus] = useState<PrinterStatus>("connected");
-  const [deviceName, setDeviceName] = useState<string>("Printer 58mm (System Driver)");
+  const [deviceName, setDeviceName] = useState<string>(
+    "Printer 58mm (System Driver)",
+  );
   const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const savedType = localStorage.getItem("zii_printer_type") as PrinterConnectionType;
+      const savedType = localStorage.getItem(
+        "zii_printer_type",
+      ) as PrinterConnectionType;
       const savedName = localStorage.getItem("zii_printer_name");
 
       if (savedType) setConnectionType(savedType);
@@ -43,7 +49,10 @@ export function useThermalPrinter() {
       setStatus("connected");
       setDeviceName("Printer 58mm (System Driver)");
       if (typeof window !== "undefined") {
-        localStorage.setItem("zii_printer_name", "Printer 58mm (System Driver)");
+        localStorage.setItem(
+          "zii_printer_name",
+          "Printer 58mm (System Driver)",
+        );
       }
       toast.success("Mode Printer diubah ke Browser System Driver 58mm");
     } else if (type === "web_usb") {
@@ -91,7 +100,9 @@ export function useThermalPrinter() {
     } catch (err: any) {
       setStatus("disconnected");
       if (err.name !== "NotFoundError") {
-        toast.error(`Koneksi Bluetooth gagal: ${err.message || "Perangkat tidak merespons"}`);
+        toast.error(
+          `Koneksi Bluetooth gagal: ${err.message || "Perangkat tidak merespons"}`,
+        );
       }
     }
   };
@@ -109,10 +120,16 @@ export function useThermalPrinter() {
     } else if (typeof rawReceiptData === "string") {
       const encoder = new TextEncoder();
       payloadBytes = new Uint8Array([
-        0x1b, 0x40,
+        0x1b,
+        0x40,
         ...Array.from(encoder.encode(rawReceiptData)),
-        0x0a, 0x0a, 0x0a, 0x0a,
-        0x1d, 0x56, 0x00,
+        0x0a,
+        0x0a,
+        0x0a,
+        0x0a,
+        0x1d,
+        0x56,
+        0x00,
       ]);
     }
 
@@ -140,14 +157,16 @@ export function useThermalPrinter() {
         if (payloadBytes) {
           try {
             if (!device.opened) await device.open();
-            if (device.configuration === null) await device.selectConfiguration(1);
+            if (device.configuration === null)
+              await device.selectConfiguration(1);
 
             const iface = device.configuration.interfaces[0];
             const altIface = iface?.alternates?.[0] || iface?.alternate;
             await device.claimInterface(iface?.interfaceNumber || 0);
 
             const outEndpoint =
-              altIface?.endpoints?.find((e: any) => e.direction === "out")?.endpointNumber || 1;
+              altIface?.endpoints?.find((e: any) => e.direction === "out")
+                ?.endpointNumber || 1;
 
             await device.transferOut(outEndpoint, payloadBytes);
             toast.success("Struk terkirim langsung ke printer thermal 58mm!");
@@ -191,9 +210,7 @@ export function useThermalPrinter() {
         phone: "0812-9988-7766",
         receiptFooter: "Terima kasih telah berbelanja!",
       },
-      cart: [
-        { productName: "Kaos Polos Combed 30s", qty: 1, subtotal: 65000 },
-      ],
+      cart: [{ productName: "Kaos Polos Combed 30s", qty: 1, subtotal: 65000 }],
       totalAmount: 65000,
       paymentMethod: "CASH",
     };

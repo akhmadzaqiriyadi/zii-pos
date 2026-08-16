@@ -1,8 +1,8 @@
 "use client";
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Button } from "./button";
 import { cn } from "../../lib/utils";
+import { Button } from "./button";
 
 export interface PaginationProps {
   page: number;
@@ -67,11 +67,7 @@ export function Pagination({
           {Array.from({ length: totalPages }, (_, i) => i + 1)
             .filter((p) => {
               // Show current page, first, last, and adjacent pages
-              return (
-                p === 1 ||
-                p === totalPages ||
-                Math.abs(p - page) <= 1
-              );
+              return p === 1 || p === totalPages || Math.abs(p - page) <= 1;
             })
             .map((p, idx, arr) => {
               const prevPage = arr[idx - 1];

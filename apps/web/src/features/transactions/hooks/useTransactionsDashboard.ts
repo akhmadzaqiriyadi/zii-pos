@@ -66,7 +66,8 @@ export function useTransactionsDashboard() {
 
   return {
     search: state.search,
-    setSearch: (search: string) => dispatch({ type: "SET_SEARCH", payload: search }),
+    setSearch: (search: string) =>
+      dispatch({ type: "SET_SEARCH", payload: search }),
     paymentMethod: state.paymentMethod,
     setPaymentMethod: (paymentMethod: string) =>
       dispatch({ type: "SET_PAYMENT_METHOD", payload: paymentMethod }),

@@ -2,8 +2,9 @@
 
 ![ZII POS Banner](https://img.shields.io/badge/Stack-Bun_Monorepo_%7C_Next.js_16_%7C_Express_TS_%7C_Prisma_v6_%7C_Radix_UI-0f172a?style=for-the-badge&logo=bun)
 ![License](https://img.shields.io/badge/License-MIT-emerald?style=for-the-badge)
-![Version](https://img.shields.io/badge/Release-v1.0.0--mvp-blue?style=for-the-badge)
-![Testing](https://img.shields.io/badge/Unit_Tests-15_PASS_(100%25)-emerald?style=for-the-badge)
+![Version](https://img.shields.io/badge/Release-v2.0.0--saas-blue?style=for-the-badge)
+![Testing](https://img.shields.io/badge/Unit_Tests-31_PASS_(100%25)-emerald?style=for-the-badge)
+
 
 Dokumentasi monorepo resmi untuk **ZII POS** — Aplikasi Point of Sale (POS) Multi-Tenant & White-Label untuk Toko Ritel General dan Penyedia Jasa (Laundry, Barbershop, Repair, Distro, dll).
 

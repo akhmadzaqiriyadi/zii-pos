@@ -46,7 +46,11 @@ function productsReducer(
     case "OPEN_ADD_MODAL":
       return { ...state, selectedProduct: null, isFormModalOpen: true };
     case "OPEN_EDIT_MODAL":
-      return { ...state, selectedProduct: action.payload, isFormModalOpen: true };
+      return {
+        ...state,
+        selectedProduct: action.payload,
+        isFormModalOpen: true,
+      };
     case "CLOSE_FORM_MODAL":
       return { ...state, isFormModalOpen: false, selectedProduct: null };
     case "SET_DELETE_PRODUCT":

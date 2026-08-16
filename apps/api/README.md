@@ -76,3 +76,28 @@ Atau ambil format JSON OpenAPI spesifikasi dinamis:
 | | | `?paymentMethod=cash\|qris\|transfer` : Filter pembayaran |
 | | | `?status=completed\|pending\|cancelled` : Filter status |
 | `POST` | `/api/v1/transactions` | Simpan transaksi baru & potong stok otomatis |
+
+### 📦 SaaS Plans Domain (`/api/v1/plans` & `/api/v1/saas-admin/plans`)
+| Method | Endpoint | Deskripsi | Roles |
+|:---|:---|:---|:---|
+| `GET` | `/api/v1/plans` | Fetch Daftar Paket Aktif | Public |
+| `GET` | `/api/v1/plans/:id` | Detail Paket SaaS | Public |
+| `GET` | `/api/v1/saas-admin/plans` | Daftar Seluruh Paket SaaS | Super Admin |
+| `POST` | `/api/v1/saas-admin/plans` | Tambah Paket Langganan Baru | Super Admin |
+| `PUT` | `/api/v1/saas-admin/plans/:id` | Edit Harga, Batas Kasir, & Fitur | Super Admin |
+| `DELETE` | `/api/v1/saas-admin/plans/:id` | Soft Delete / Nonaktifkan Paket | Super Admin |
+
+### 👑 Super Admin Domain (`/api/v1/saas-admin`)
+| Method | Endpoint | Deskripsi | Roles |
+|:---|:---|:---|:---|
+| `GET` | `/api/v1/saas-admin/metrics` | Rekap Total Merchant, Trial Aktif, MRR, & Churn Rate | Super Admin |
+| `GET` | `/api/v1/saas-admin/tenants` | Daftar Seluruh Toko Terdaftar & Status Lisensi | Super Admin |
+| `PUT` | `/api/v1/saas-admin/tenants/:id/status` | Suspend / Modifikasi Status Toko Manual | Super Admin |
+
+### 💎 Subscriptions & Billing Domain (`/api/v1/subscriptions`)
+| Method | Endpoint | Deskripsi | Roles |
+|:---|:---|:---|:---|
+| `GET` | `/api/v1/subscriptions/current` | Ambil Detail Lisensi & Sisa Masa Trial Toko | Merchant Owner |
+| `POST` | `/api/v1/subscriptions/checkout` | Generate QRIS / Invoice Payment Gateway | Merchant Owner |
+| `POST` | `/api/v1/subscriptions/webhook` | Automated Payment Callback Receiver (24/7) | Payment Gateway |
+

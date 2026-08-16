@@ -16,7 +16,9 @@ interface TransactionMetricCardsProps {
   summary: TransactionSummary;
 }
 
-export function TransactionMetricCards({ summary }: TransactionMetricCardsProps) {
+export function TransactionMetricCards({
+  summary,
+}: TransactionMetricCardsProps) {
   return (
     <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
       <Card className="p-5 border-emerald-200 bg-emerald-50/50">

@@ -154,13 +154,19 @@ export default function ProductsPage() {
               <TableBody>
                 {isLoading ? (
                   <TableRow>
-                    <TableCell colSpan={5} className="py-8 text-center text-slate-400">
+                    <TableCell
+                      colSpan={5}
+                      className="py-8 text-center text-slate-400"
+                    >
                       Memuat data produk...
                     </TableCell>
                   </TableRow>
                 ) : products.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={5} className="py-8 text-center text-slate-400">
+                    <TableCell
+                      colSpan={5}
+                      className="py-8 text-center text-slate-400"
+                    >
                       Tidak ada produk yang sesuai.
                     </TableCell>
                   </TableRow>
@@ -170,7 +176,9 @@ export default function ProductsPage() {
                     return (
                       <TableRow
                         key={item.id}
-                        className={isLowStock ? "bg-rose-50/40 hover:bg-rose-50/70" : ""}
+                        className={
+                          isLowStock ? "bg-rose-50/40 hover:bg-rose-50/70" : ""
+                        }
                       >
                         <TableCell className="font-semibold text-slate-800">
                           <div className="flex items-center gap-2">

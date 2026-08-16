@@ -34,7 +34,10 @@ mock.module("@zii/db", () => ({
       create: async () => ({ id: "tenant-test-01", name: "Test Store" }),
     },
     user: {
-      findFirst: async () => ({ id: "user-test-01", tenantId: "tenant-test-01" }),
+      findFirst: async () => ({
+        id: "user-test-01",
+        tenantId: "tenant-test-01",
+      }),
       create: async () => ({ id: "user-test-01", tenantId: "tenant-test-01" }),
     },
     product: {

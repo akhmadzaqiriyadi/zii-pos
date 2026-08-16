@@ -24,7 +24,8 @@ nextjs-portal,
 
 /* 58mm / 57mm Thermal Printer Print Layout (POS-V29DD & Standard Thermal) */
 @media print {
-  html, body {
+  html,
+  body {
     background: #ffffff !important;
     margin: 0 !important;
     padding: 0 !important;

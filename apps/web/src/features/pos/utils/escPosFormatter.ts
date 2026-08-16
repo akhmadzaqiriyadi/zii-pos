@@ -57,7 +57,10 @@ export function formatEscPosReceipt(data: ReceiptData): Uint8Array {
       name = name.substring(0, nameMaxLen - 1) + ".";
     }
 
-    const padLen = Math.max(1, maxLineLen - (qtyPrefix.length + name.length + priceStr.length));
+    const padLen = Math.max(
+      1,
+      maxLineLen - (qtyPrefix.length + name.length + priceStr.length),
+    );
     pushText(`${qtyPrefix}${name}${" ".repeat(padLen)}${priceStr}\n`);
   });
 

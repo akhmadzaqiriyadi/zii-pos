@@ -6,6 +6,9 @@ async function main() {
   console.log("🌱 Starting ZII POS Database Seeding...");
 
   // Clean existing data in reverse order of foreign keys
+  await db.subscriptionInvoice.deleteMany();
+  await db.subscription.deleteMany();
+  await db.plan.deleteMany();
   await db.transactionItem.deleteMany();
   await db.transaction.deleteMany();
   await db.product.deleteMany();
@@ -14,10 +17,69 @@ async function main() {
 
   const passwordHash = await Bun.password.hash("password123");
 
+  // 0. Create SaaS Plans
+  const planStarter = await db.plan.create({
+    data: {
+      code: "starter",
+      name: "Starter Trial Merchant",
+      price: 0,
+      billingCycle: "monthly",
+      maxCashiers: 1,
+      allowWhiteLabel: false,
+      allowExportExcel: false,
+      featuresJson: JSON.stringify([
+        "1 Akun Kasir",
+        "Laporan Transaksi Harian",
+        "Cetak Struk Thermal",
+      ]),
+      isActive: true,
+    },
+  });
+
+  const planPro = await db.plan.create({
+    data: {
+      code: "pro",
+      name: "Pro Merchant White-Label",
+      price: 99000,
+      billingCycle: "monthly",
+      maxCashiers: 5,
+      allowWhiteLabel: true,
+      allowExportExcel: true,
+      featuresJson: JSON.stringify([
+        "Multi-kasir hingga 5 user",
+        "Custom Logo & Header Struk",
+        "Ekspor Laporan Excel / CSV",
+        "Support Prioritas WA 24/7",
+      ]),
+      isActive: true,
+    },
+  });
+
+  const planEnterprise = await db.plan.create({
+    data: {
+      code: "enterprise",
+      name: "Enterprise Multi-Cabang",
+      price: 249000,
+      billingCycle: "monthly",
+      maxCashiers: 20,
+      allowWhiteLabel: true,
+      allowExportExcel: true,
+      featuresJson: JSON.stringify([
+        "Kasir Unlimited (Hingga 20 kasir)",
+        "100% White-Label & Custom Domain",
+        "Multi-cabang & API Integration",
+        "Dedicated Account Manager",
+      ]),
+      isActive: true,
+    },
+  });
+
   // 1. Create Demo Tenant 1 (Apparel Distro)
   const tenantDistro = await db.tenant.create({
     data: {
       name: "ZII Distro & Apparel Studio",
+      subdomain: "ziidistro",
+      status: "active",
       logoUrl: "https://placehold.co/120x120/1e293b/ffffff?text=ZII+DISTRO",
       phone: "0812-9988-7766",
       address: "Jl. Merdeka Raya No. 45, Jakarta Selatan",
@@ -26,15 +88,55 @@ async function main() {
     },
   });
 
+  const distroExpires = new Date();
+  distroExpires.setMonth(distroExpires.getMonth() + 1);
+
+  const subDistro = await db.subscription.create({
+    data: {
+      tenantId: tenantDistro.id,
+      planId: planPro.id,
+      status: "active",
+      startsAt: new Date(),
+      expiresAt: distroExpires,
+      autoRenew: true,
+    },
+  });
+
+  await db.subscriptionInvoice.create({
+    data: {
+      subscriptionId: subDistro.id,
+      amount: 99000,
+      status: "paid",
+      paidAt: new Date(),
+      paymentGatewayTxId: "MIDTRANS_SEED_01",
+    },
+  });
+
   // 2. Create Demo Tenant 2 (Barbershop & Grooming)
   const tenantBarber = await db.tenant.create({
     data: {
       name: "ZII Barbershop & Grooming",
+      subdomain: "ziibarber",
+      status: "trial",
       logoUrl: "https://placehold.co/120x120/0f172a/ffffff?text=ZII+BARBER",
       phone: "0819-8765-4321",
       address: "Jl. Sudirman Plaza No. 12, Bandung",
       receiptFooter:
         "Terima kasih telah memilih ZII Barbershop! Tunjukkan nota ini untuk mendapatkan diskon 10% di kunjungan berikutnya.",
+    },
+  });
+
+  const barberExpires = new Date();
+  barberExpires.setDate(barberExpires.getDate() + 14);
+
+  await db.subscription.create({
+    data: {
+      tenantId: tenantBarber.id,
+      planId: planStarter.id,
+      status: "trial",
+      startsAt: new Date(),
+      expiresAt: barberExpires,
+      autoRenew: true,
     },
   });
 

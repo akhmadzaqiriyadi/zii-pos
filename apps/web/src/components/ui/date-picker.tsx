@@ -87,7 +87,9 @@ export function DatePicker({
       >
         <div className="flex items-center gap-2 truncate">
           <CalendarIcon className="h-4 w-4 text-slate-400 shrink-0" />
-          <span className={value ? "text-slate-800 font-bold" : "text-slate-400"}>
+          <span
+            className={value ? "text-slate-800 font-bold" : "text-slate-400"}
+          >
             {value ? formatDisplayDate(value) : placeholder}
           </span>
         </div>

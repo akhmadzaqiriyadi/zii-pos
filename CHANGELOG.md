@@ -4,6 +4,26 @@ Semua perubahan penting pada proyek ZII POS dicatat dalam dokumen ini. Format be
 
 ---
 
+## [2.0.0-saas] - 2026-08-16
+
+### 📦 Added (Commercial SaaS Platform & Database Models)
+- **Extended Database Schema (Prisma ORM):** Added `Plan`, `Subscription`, `SubscriptionInvoice` tables, and updated `Tenant` model with unique `subdomain` and `status` (`trial` | `active` | `expired` | `suspended`).
+- **Dynamic SaaS Plan Management (`/api/v1/plans` & `/api/v1/saas-admin/plans`):** Full CRUD for subscription plans with configurable prices, cashier limits, white-label toggles, and Excel export permissions.
+- **Super Admin SaaS Metrics & Management Portal API (`/api/v1/saas-admin`):**
+  - `GET /api/v1/saas-admin/metrics`: Real-time calculation of Total Merchants, Active Trials, Active Paid Subscriptions, MRR (Monthly Recurring Revenue), and Churn Rate.
+  - `GET /api/v1/saas-admin/tenants`: Paginated list of registered stores with status filters and search.
+  - `PUT /api/v1/saas-admin/tenants/:id/status`: Manual store status management and license suspension.
+- **Automated Subscription & Payment Webhook Receiver (`/api/v1/subscriptions`):**
+  - `GET /api/v1/subscriptions/current`: License details, days remaining, cashier quota, and feature permissions.
+  - `POST /api/v1/subscriptions/checkout`: Generates payment gateway invoices, QRIS payload, and checkout URLs.
+  - `POST /api/v1/subscriptions/webhook`: Automated 24/7 payment callback verification via Midtrans SHA512 signature, invoice settlement, and automatic store license activation/renewal.
+- **Scalar OpenAPI Specification:** Registered Zod OpenAPI schemas for Plans, Super Admin, and Subscription modules (`/docs` and `/docs.json`).
+
+### 🧪 Testing & Quality
+- **31 Unit Tests Passed:** Added comprehensive unit test suites for Plan CRUD, Super Admin metrics & pagination, and Subscription webhook/signature verification with 100% pass rate (`bun test`).
+
+---
+
 ## [1.1.0] - 2026-08-14
 
 ### 🖨️ Added & Enhanced (Thermal Printing & Hardware Architecture)

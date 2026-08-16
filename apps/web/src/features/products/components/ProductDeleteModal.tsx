@@ -24,7 +24,10 @@ export function ProductDeleteModal({
   isPending,
 }: ProductDeleteModalProps) {
   return (
-    <Dialog open={!!productToDelete} onOpenChange={(open) => !open && onClose()}>
+    <Dialog
+      open={!!productToDelete}
+      onOpenChange={(open) => !open && onClose()}
+    >
       <DialogContent className="max-w-md p-6">
         <DialogHeader className="mb-2">
           <DialogTitle className="text-lg font-bold text-slate-900 flex items-center gap-2">
@@ -35,8 +38,8 @@ export function ProductDeleteModal({
 
         <p className="text-xs text-slate-600">
           Apakah Anda yakin ingin menghapus produk{" "}
-          <strong className="text-slate-900">{productToDelete?.name}</strong>? Tindakan ini
-          tidak dapat dibatalkan.
+          <strong className="text-slate-900">{productToDelete?.name}</strong>?
+          Tindakan ini tidak dapat dibatalkan.
         </p>
 
         <div className="flex justify-end gap-2 pt-4">

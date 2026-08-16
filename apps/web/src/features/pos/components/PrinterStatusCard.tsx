@@ -8,7 +8,10 @@ interface PrinterStatusCardProps {
   deviceName: string;
 }
 
-export function PrinterStatusCard({ status, deviceName }: PrinterStatusCardProps) {
+export function PrinterStatusCard({
+  status,
+  deviceName,
+}: PrinterStatusCardProps) {
   const isConnected = status === "connected";
   const isConnecting = status === "connecting";
 
@@ -46,7 +49,9 @@ export function PrinterStatusCard({ status, deviceName }: PrinterStatusCardProps
                 ? "Menghubungkan Printer..."
                 : "Printer Terputus"}
           </p>
-          <p className="text-[11px] opacity-75 mt-0.5 font-medium">{deviceName}</p>
+          <p className="text-[11px] opacity-75 mt-0.5 font-medium">
+            {deviceName}
+          </p>
         </div>
       </div>
 

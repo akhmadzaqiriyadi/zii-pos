@@ -116,7 +116,11 @@ export function ProductGrid({
         /* Dynamic Container-based Grid: Min 210px per card */
         <section className="grid grid-cols-[repeat(auto-fill,minmax(210px,1fr))] gap-4 sm:gap-5">
           {products.map((prod) => (
-            <ProductCard key={prod.id} product={prod} onAddToCart={onAddToCart} />
+            <ProductCard
+              key={prod.id}
+              product={prod}
+              onAddToCart={onAddToCart}
+            />
           ))}
         </section>
       )}

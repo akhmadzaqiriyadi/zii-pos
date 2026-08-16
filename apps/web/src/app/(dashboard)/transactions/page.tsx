@@ -133,13 +133,19 @@ export default function TransactionsPage() {
             <TableBody>
               {isLoading ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="py-8 text-center text-slate-400">
+                  <TableCell
+                    colSpan={6}
+                    className="py-8 text-center text-slate-400"
+                  >
                     Memuat riwayat transaksi...
                   </TableCell>
                 </TableRow>
               ) : transactions.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="py-8 text-center text-slate-400">
+                  <TableCell
+                    colSpan={6}
+                    className="py-8 text-center text-slate-400"
+                  >
                     Tidak ada riwayat transaksi yang sesuai filter.
                   </TableCell>
                 </TableRow>
