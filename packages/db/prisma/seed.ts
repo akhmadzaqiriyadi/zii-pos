@@ -80,7 +80,19 @@ async function main() {
     },
   });
 
-  // 1. Create Demo Tenant 1 (Apparel Distro)
+  // 1. Create Dedicated Platform System Workspace for Super Admin
+  const tenantPlatform = await db.tenant.create({
+    data: {
+      name: "ZII POS Platform Global",
+      subdomain: "admin",
+      status: "active",
+      phone: "0812-9988-7766",
+      address: "ZII HQ Jakarta Pusat",
+      receiptFooter: "ZII POS Enterprise Platform Provider",
+    },
+  });
+
+  // 2. Create Demo Merchant 1 (Apparel Distro)
   const tenantDistro = await db.tenant.create({
     data: {
       name: "ZII Distro & Apparel Studio",
@@ -251,8 +263,8 @@ async function main() {
 
   const userAdmin = await db.user.create({
     data: {
-      tenantId: tenantDistro.id,
-      name: "Super Admin ZII",
+      tenantId: tenantPlatform.id,
+      name: "Platform Super Admin",
       email: "admin@zii.id",
       passwordHash,
       role: "superadmin",

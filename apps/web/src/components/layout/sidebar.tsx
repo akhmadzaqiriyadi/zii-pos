@@ -167,7 +167,11 @@ export function AppSidebar({
         <header className="flex items-center justify-between border-b border-slate-200 p-4 h-16 bg-white">
           {!isCollapsed ? (
             <div className="flex items-center space-x-3 overflow-hidden">
-              {tenant?.logoUrl ? (
+              {isSuperAdmin ? (
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-purple-600 font-extrabold text-white shadow-md text-xs tracking-wider">
+                  SAAS
+                </div>
+              ) : tenant?.logoUrl ? (
                 <div className="h-10 w-10 shrink-0 rounded-xl border border-slate-200 bg-white p-0.5 shadow-xs overflow-hidden flex items-center justify-center">
                   <img
                     src={tenant.logoUrl}
@@ -185,14 +189,22 @@ export function AppSidebar({
               )}
               <div className="min-w-0">
                 <h2 className="text-sm font-extrabold text-slate-900 truncate">
-                  {tenant?.name || "ZII POS Store"}
+                  {isSuperAdmin
+                    ? "ZII POS Platform Global"
+                    : tenant?.name || "ZII POS Store"}
                 </h2>
                 <p className="text-[10px] font-semibold text-slate-400 truncate">
-                  {tenant?.subdomain
-                    ? `${tenant.subdomain}.ziipos.id`
-                    : "Point of Sale Merchant"}
+                  {isSuperAdmin
+                    ? "Platform Super Admin Portal"
+                    : tenant?.subdomain
+                      ? `${tenant.subdomain}.ziipos.id`
+                      : "Point of Sale Merchant"}
                 </p>
               </div>
+            </div>
+          ) : isSuperAdmin ? (
+            <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-xl bg-purple-600 font-extrabold text-white shadow-md text-xs tracking-wider">
+              SAAS
             </div>
           ) : tenant?.logoUrl ? (
             <div className="mx-auto h-10 w-10 shrink-0 rounded-xl border border-slate-200 bg-white p-0.5 shadow-xs overflow-hidden flex items-center justify-center">
@@ -273,11 +285,16 @@ export function AppSidebar({
           )}
         </section>
 
-        {/* Grouped Navigation Menu */}
+        {/* Clean Segregated Navigation Menu */}
         <nav className="flex-1 overflow-y-auto p-3 space-y-4">
           {menuGroups.map((group, groupIdx) => {
-            // Check if user has permission for at least one item in Super Admin group
-            if (group.label === "Super Admin Portal" && !isSuperAdmin) {
+            // Super Admin only sees Super Admin Portal (no store operational clutter)
+            if (isSuperAdmin && group.label !== "Super Admin Portal") {
+              return null;
+            }
+
+            // Merchants only see store operational menus (no Super Admin Portal)
+            if (!isSuperAdmin && group.label === "Super Admin Portal") {
               return null;
             }
 
@@ -301,14 +318,6 @@ export function AppSidebar({
                     // eslint-disable-next-line react-hooks/rules-of-hooks
                     const isAllowed = useHasPermission(...item.permissions);
                     const Icon = item.icon;
-
-                    if (
-                      !isAllowed &&
-                      (item.href === "/saas-admin" ||
-                        item.href === "/saas-admin/plans")
-                    ) {
-                      return null;
-                    }
 
                     return (
                       <Link
@@ -365,8 +374,8 @@ export function AppSidebar({
           })}
         </nav>
 
-        {/* Support Prioritas WA 24/7 (Paket Pro / Merchant) */}
-        {!isCollapsed && (
+        {/* Support Prioritas WA 24/7 (Only for Merchants) */}
+        {!isCollapsed && !isSuperAdmin && (
           <div className="p-3">
             <a
               href="https://wa.me/6285292677431?text=Halo%20ZII%20POS%20Support%2C%20saya%20merchant%20ingin%20konsultasi%20fitur..."
