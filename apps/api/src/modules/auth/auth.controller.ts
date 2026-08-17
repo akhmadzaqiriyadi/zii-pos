@@ -5,7 +5,11 @@ import { AuthService } from "./auth.service";
 export class AuthController {
   static async checkSubdomain(req: Request, res: Response) {
     try {
-      const subdomain = req.query.subdomain as string;
+      const subdomain = (
+        Array.isArray(req.query.subdomain)
+          ? req.query.subdomain[0]
+          : req.query.subdomain
+      ) as string;
       const result = await AuthService.checkSubdomainAvailability(subdomain);
       return ApiResponse.success(res, result.message, result);
     } catch (error: unknown) {

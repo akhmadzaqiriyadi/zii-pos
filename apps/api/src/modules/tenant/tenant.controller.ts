@@ -6,7 +6,12 @@ import { TenantService } from "./tenant.service";
 export class TenantController {
   static async getBySubdomain(req: Request, res: Response) {
     try {
-      const { subdomain } = req.params;
+      const subdomain = (
+        Array.isArray(req.params.subdomain)
+          ? req.params.subdomain[0]
+          : req.params.subdomain
+      ) as string;
+
       const tenant = await TenantService.getTenantBySubdomain(subdomain);
       return ApiResponse.success(
         res,
