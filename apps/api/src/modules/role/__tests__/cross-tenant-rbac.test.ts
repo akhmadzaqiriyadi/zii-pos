@@ -1,8 +1,21 @@
 import { describe, expect, it, mock } from "bun:test";
 import { RoleService } from "@/modules/role/role.service";
 
+interface MockRoleItem {
+  id: string;
+  tenantId: string | null;
+  name: string;
+  code: string;
+  description: string | null;
+  isSystem: boolean;
+  permissions: string;
+  createdAt: Date;
+  updatedAt: Date;
+  _count: { users: number };
+}
+
 // Mock Database with two isolated tenants
-const mockRolesStore = [
+const mockRolesStore: MockRoleItem[] = [
   {
     id: "role-tenant-a-01",
     tenantId: "tenant-distro-a",
@@ -49,7 +62,7 @@ mock.module("@zii/db", () => ({
         );
       },
       create: async (args: { data: Record<string, unknown> }) => {
-        const newRole = {
+        const newRole: MockRoleItem = {
           id: `role-${Date.now()}`,
           tenantId: args.data.tenantId as string,
           name: args.data.name as string,
