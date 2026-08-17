@@ -160,32 +160,26 @@ export function AppSidebar({
           {!isCollapsed ? (
             <div className="flex items-center space-x-3 overflow-hidden">
               {isSuperAdmin ? (
-                <div className="h-10 w-10 shrink-0 rounded-xl border border-slate-200 bg-white p-1 shadow-xs overflow-hidden flex items-center justify-center">
-                  <img
-                    src="/logo-zii-pos.png"
-                    alt="ZII POS Global"
-                    className="h-full w-full object-contain rounded-lg"
-                  />
-                </div>
+                <img
+                  src="/logo-zii-pos.png"
+                  alt="ZII POS Global"
+                  className="h-11 w-11 shrink-0 object-contain"
+                />
               ) : tenant?.logoUrl ? (
-                <div className="h-10 w-10 shrink-0 rounded-xl border border-slate-200 bg-white p-0.5 shadow-xs overflow-hidden flex items-center justify-center">
-                  <img
-                    src={tenant.logoUrl}
-                    alt={tenant.name || "Logo Toko"}
-                    className="h-full w-full object-contain rounded-lg"
-                    onError={(e) => {
-                      (e.target as HTMLElement).style.display = "none";
-                    }}
-                  />
-                </div>
+                <img
+                  src={tenant.logoUrl}
+                  alt={tenant.name || "Logo Toko"}
+                  className="h-11 w-11 shrink-0 object-contain"
+                  onError={(e) => {
+                    (e.target as HTMLElement).style.display = "none";
+                  }}
+                />
               ) : (
-                <div className="h-10 w-10 shrink-0 rounded-xl border border-slate-200 bg-white p-1 shadow-xs overflow-hidden flex items-center justify-center">
-                  <img
-                    src="/logo-zii-pos.png"
-                    alt="ZII POS"
-                    className="h-full w-full object-contain rounded-lg"
-                  />
-                </div>
+                <img
+                  src="/logo-zii-pos.png"
+                  alt="ZII POS"
+                  className="h-11 w-11 shrink-0 object-contain"
+                />
               )}
               <div className="min-w-0">
                 <h2 className="text-sm font-extrabold text-slate-900 truncate">
@@ -203,29 +197,23 @@ export function AppSidebar({
               </div>
             </div>
           ) : isSuperAdmin ? (
-            <div className="mx-auto h-10 w-10 shrink-0 rounded-xl border border-slate-200 bg-white p-1 shadow-xs overflow-hidden flex items-center justify-center">
-              <img
-                src="/logo-zii-pos.png"
-                alt="ZII POS"
-                className="h-full w-full object-contain rounded-lg"
-              />
-            </div>
+            <img
+              src="/logo-zii-pos.png"
+              alt="ZII POS"
+              className="mx-auto h-11 w-11 object-contain"
+            />
           ) : tenant?.logoUrl ? (
-            <div className="mx-auto h-10 w-10 shrink-0 rounded-xl border border-slate-200 bg-white p-0.5 shadow-xs overflow-hidden flex items-center justify-center">
-              <img
-                src={tenant.logoUrl}
-                alt={tenant.name || "Logo"}
-                className="h-full w-full object-contain rounded-lg"
-              />
-            </div>
+            <img
+              src={tenant.logoUrl}
+              alt={tenant.name || "Logo"}
+              className="mx-auto h-11 w-11 object-contain"
+            />
           ) : (
-            <div className="mx-auto h-10 w-10 shrink-0 rounded-xl border border-slate-200 bg-white p-1 shadow-xs overflow-hidden flex items-center justify-center">
-              <img
-                src="/logo-zii-pos.png"
-                alt="ZII POS"
-                className="h-full w-full object-contain rounded-lg"
-              />
-            </div>
+            <img
+              src="/logo-zii-pos.png"
+              alt="ZII POS"
+              className="mx-auto h-11 w-11 object-contain"
+            />
           )}
 
           {onToggleCollapse && !isCollapsed && (

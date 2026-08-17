@@ -73,17 +73,17 @@ export function TenantDetailModal({
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               {detail?.logoUrl ? (
-                <div className="h-12 w-12 shrink-0 rounded-2xl border border-slate-200 bg-white p-1 shadow-xs overflow-hidden flex items-center justify-center">
-                  <img
-                    src={detail.logoUrl}
-                    alt={detail.name}
-                    className="h-full w-full object-contain rounded-xl"
-                  />
-                </div>
+                <img
+                  src={detail.logoUrl}
+                  alt={detail.name}
+                  className="h-12 w-12 shrink-0 object-contain"
+                />
               ) : (
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-600 font-black text-white text-lg shadow-md shadow-emerald-600/20">
-                  {tenant.name.substring(0, 2).toUpperCase()}
-                </div>
+                <img
+                  src="/logo-zii-pos.png"
+                  alt={tenant.name}
+                  className="h-12 w-12 shrink-0 object-contain"
+                />
               )}
               <div>
                 <div className="flex items-center gap-2">

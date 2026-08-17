@@ -14,20 +14,20 @@ export function LoginForm() {
 
   return (
     <section className="w-full max-w-md space-y-6">
-      <header className="flex flex-col items-center space-y-2 text-center">
-        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white border border-slate-200 shadow-xs p-1 overflow-hidden">
-          <img
-            src="/logo-zii-pos.png"
-            alt="ZII POS"
-            className="h-full w-full object-contain"
-          />
+      <header className="flex flex-col items-center space-y-3 text-center">
+        <img
+          src="/logo-zii-pos.png"
+          alt="ZII POS"
+          className="h-20 w-auto object-contain"
+        />
+        <div className="space-y-1">
+          <h1 className="text-2xl font-black tracking-tight text-slate-900">
+            Masuk ke ZII POS
+          </h1>
+          <p className="text-sm text-slate-500">
+            Masukkan email dan password akun Kasir/Owner Anda
+          </p>
         </div>
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900">
-          Masuk ke ZII POS
-        </h1>
-        <p className="text-sm text-slate-500">
-          Masukkan email dan password akun Kasir/Owner Anda
-        </p>
       </header>
 
       <Card className="border-slate-200 bg-white p-6 shadow-xl shadow-slate-200/50">

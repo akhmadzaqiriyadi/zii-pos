@@ -200,7 +200,7 @@ export class SaaSAdminService {
       _sum: { total: true },
     });
 
-    const totalRevenue = Number(totalRevenueResult._sum.total || 0);
+    const totalRevenue = Number(totalRevenueResult._sum?.total ?? 0);
 
     return {
       id: tenant.id,

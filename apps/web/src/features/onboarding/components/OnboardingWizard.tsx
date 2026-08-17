@@ -31,21 +31,21 @@ export function OnboardingWizard() {
   return (
     <section className="w-full max-w-4xl mx-auto space-y-8 py-6">
       {/* Header Branding */}
-      <header className="flex flex-col items-center space-y-2 text-center">
-        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white border border-slate-200 shadow-xs p-1 overflow-hidden">
-          <img
-            src="/logo-zii-pos.png"
-            alt="ZII POS"
-            className="h-full w-full object-contain"
-          />
+      <header className="flex flex-col items-center space-y-3 text-center">
+        <img
+          src="/logo-zii-pos.png"
+          alt="ZII POS"
+          className="h-20 w-auto object-contain"
+        />
+        <div className="space-y-1">
+          <h1 className="text-3xl font-black tracking-tight text-slate-900">
+            Daftarkan Merchant Toko Anda
+          </h1>
+          <p className="text-sm text-slate-500 max-w-lg">
+            Transformasi operasional kasir toko Anda dengan sistem POS
+            White-Label modern dalam 3 langkah mudah.
+          </p>
         </div>
-        <h1 className="text-3xl font-extrabold tracking-tight text-slate-900">
-          Daftarkan Merchant Toko Anda
-        </h1>
-        <p className="text-sm text-slate-500 max-w-lg">
-          Transformasi operasional kasir toko Anda dengan sistem POS White-Label
-          modern dalam 3 langkah mudah.
-        </p>
       </header>
 
       {/* Stepper Progress Bar */}
