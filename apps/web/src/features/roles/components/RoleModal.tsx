@@ -7,6 +7,8 @@ import { Button } from "../../../components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "../../../components/ui/dialog";
@@ -130,10 +132,10 @@ export function RoleModal({
                 : "Buat Role Kustom Baru"}
             </span>
           </DialogTitle>
-          <p className="text-xs text-slate-500">
+          <DialogDescription>
             Tentukan nama role dan pilih izin yang diberikan kepada staf dengan
             role ini.
-          </p>
+          </DialogDescription>
         </DialogHeader>
 
         {formError && (
@@ -220,7 +222,7 @@ export function RoleModal({
             />
           </div>
 
-          <div className="pt-4 flex items-center justify-end gap-2 border-t border-slate-100">
+          <DialogFooter>
             <Button
               type="button"
               variant="outline"
@@ -249,7 +251,7 @@ export function RoleModal({
                 </>
               )}
             </Button>
-          </div>
+          </DialogFooter>
         </form>
       </DialogContent>
     </Dialog>

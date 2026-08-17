@@ -7,6 +7,8 @@ import { Button } from "../../../components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "../../../components/ui/dialog";
@@ -93,10 +95,10 @@ export function CashierModal({
             <UserPlus className="h-5 w-5 text-emerald-600" />
             <span>Tambah Akun Staf / Kasir Baru</span>
           </DialogTitle>
-          <p className="text-xs text-slate-500">
+          <DialogDescription>
             Buatkan akun login untuk staf tokomu dan pilih role akses wewenang
             yang sesuai.
-          </p>
+          </DialogDescription>
         </DialogHeader>
 
         {formError && (
@@ -181,7 +183,7 @@ export function CashierModal({
             </FormHelperText>
           </FormGroup>
 
-          <div className="pt-2 flex items-center justify-end gap-2">
+          <DialogFooter>
             <Button
               type="button"
               variant="outline"
@@ -208,7 +210,7 @@ export function CashierModal({
                 </>
               )}
             </Button>
-          </div>
+          </DialogFooter>
         </form>
       </DialogContent>
     </Dialog>
