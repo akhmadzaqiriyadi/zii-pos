@@ -9,6 +9,7 @@ import "./modules/product/product.openapi";
 import "./modules/tenant/tenant.openapi";
 import "./modules/transaction/transaction.openapi";
 import "./modules/plan/plan.openapi";
+import "./modules/role/role.openapi";
 import "./modules/saas-admin/saas-admin.openapi";
 import "./modules/subscription/subscription.openapi";
 

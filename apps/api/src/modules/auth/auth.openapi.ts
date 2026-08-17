@@ -15,6 +15,7 @@ export const AuthUserSchema = z.object({
 export const AuthTenantSchema = z.object({
   id: z.string().openapi({ example: "t123-uuid" }),
   name: z.string().openapi({ example: "ZII Distro & Laundry Studio" }),
+  subdomain: z.string().nullable().openapi({ example: "ziidistro" }),
   phone: z.string().nullable().openapi({ example: "081299887766" }),
   address: z
     .string()
@@ -30,9 +31,17 @@ export const AuthResponseSchema = z.object({
   user: AuthUserSchema,
 });
 
+export const CheckSubdomainResponseSchema = z.object({
+  isAvailable: z.boolean().openapi({ example: true }),
+  subdomain: z.string().optional().openapi({ example: "tokobaru" }),
+  message: z.string().openapi({ example: "Subdomain 'tokobaru' tersedia!" }),
+});
+
 export const RegisterTenantBodySchema = z
   .object({
     tenantName: z.string().openapi({ example: "ZII Distro & Laundry Studio" }),
+    subdomain: z.string().optional().openapi({ example: "ziidistro" }),
+    planId: z.string().optional().openapi({ example: "plan-pro-id" }),
     ownerName: z.string().openapi({ example: "Pemilik Toko" }),
     email: z.string().email().openapi({ example: "owner@zii.id" }),
     password: z.string().min(6).openapi({ example: "password123" }),
@@ -51,6 +60,44 @@ export const LoginBodySchema = z
   })
   .openapi("LoginInput");
 
+// GET /api/v1/auth/check-subdomain
+registry.registerPath({
+  method: "get",
+  path: "/api/v1/auth/check-subdomain",
+  summary: "Cek Ketersediaan Subdomain Toko (Real-Time)",
+  tags: ["Authentication"],
+  request: {
+    query: z.object({
+      subdomain: z.string().openapi({ example: "distrojaya" }),
+    }),
+  },
+  responses: {
+    200: {
+      description: "200 OK — Status ketersediaan subdomain",
+      content: {
+        "application/json": {
+          schema: createSuccessResponseSchema(
+            CheckSubdomainResponseSchema,
+            "Subdomain 'distrojaya' tersedia!",
+          ),
+        },
+      },
+    },
+    400: {
+      description:
+        "400 Bad Request — Subdomain tidak valid atau sudah terdaftar",
+      content: {
+        "application/json": {
+          schema: createErrorResponseSchema(
+            "Subdomain 'distrojaya' sudah digunakan oleh toko lain.",
+          ),
+        },
+      },
+    },
+  },
+});
+
+// POST /api/v1/auth/register-tenant
 registry.registerPath({
   method: "post",
   path: "/api/v1/auth/register-tenant",
@@ -79,7 +126,7 @@ registry.registerPath({
     },
     400: {
       description:
-        "400 Bad Request — Input validasi gagal atau email sudah terdaftar",
+        "400 Bad Request — Input validasi gagal atau email/subdomain sudah terdaftar",
       content: {
         "application/json": {
           schema: createErrorResponseSchema(
@@ -99,6 +146,7 @@ registry.registerPath({
   },
 });
 
+// POST /api/v1/auth/login
 registry.registerPath({
   method: "post",
   path: "/api/v1/auth/login",
