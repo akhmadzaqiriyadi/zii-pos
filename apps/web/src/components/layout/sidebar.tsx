@@ -36,6 +36,11 @@ interface MenuItem {
   badge?: string | null;
 }
 
+interface MenuGroup {
+  label: string;
+  items: MenuItem[];
+}
+
 export function AppSidebar({
   isCollapsed = false,
   onToggleCollapse,
@@ -46,69 +51,84 @@ export function AppSidebar({
   const isSuperAdmin = useHasPermission("saas:admin", "*");
   const userRole = user?.role || "cashier";
 
-  const allMenuItems: MenuItem[] = [
+  const menuGroups: MenuGroup[] = [
     {
-      title: "Kasir POS",
-      href: "/pos",
-      icon: ShoppingCart,
-      permissions: ["pos:access"],
-      badge: "Utama",
+      label: "Operasional Kasir",
+      items: [
+        {
+          title: "Kasir POS",
+          href: "/pos",
+          icon: ShoppingCart,
+          permissions: ["pos:access"],
+          badge: "Utama",
+        },
+        {
+          title: "Kelola Produk & Jasa",
+          href: "/products",
+          icon: Package,
+          permissions: ["products:read", "products:create"],
+          badge: null,
+        },
+        {
+          title: "Riwayat Transaksi",
+          href: "/transactions",
+          icon: Receipt,
+          permissions: ["transactions:read"],
+          badge: null,
+        },
+      ],
     },
     {
-      title: "Kelola Produk & Jasa",
-      href: "/products",
-      icon: Package,
-      permissions: ["products:read", "products:create"],
-      badge: null,
+      label: "Manajemen & Toko",
+      items: [
+        {
+          title: "Kelola Staf & Kasir",
+          href: "/settings/cashiers",
+          icon: Users,
+          permissions: ["cashiers:manage"],
+          badge: null,
+        },
+        {
+          title: "Role & Hak Akses",
+          href: "/settings/roles",
+          icon: Shield,
+          permissions: ["roles:manage"],
+          badge: null,
+        },
+        {
+          title: "Pengaturan Toko",
+          href: "/settings",
+          icon: Settings,
+          permissions: ["settings:manage"],
+          badge: null,
+        },
+        {
+          title: "Lisensi & Billing",
+          href: "/settings/billing",
+          icon: CreditCard,
+          permissions: ["billing:manage"],
+          badge: null,
+        },
+      ],
     },
     {
-      title: "Riwayat Transaksi",
-      href: "/transactions",
-      icon: Receipt,
-      permissions: ["transactions:read"],
-      badge: null,
-    },
-    {
-      title: "Kelola Staf & Kasir",
-      href: "/settings/cashiers",
-      icon: Users,
-      permissions: ["cashiers:manage"],
-      badge: null,
-    },
-    {
-      title: "Role & Hak Akses",
-      href: "/settings/roles",
-      icon: Shield,
-      permissions: ["roles:manage"],
-      badge: null,
-    },
-    {
-      title: "Pengaturan Toko",
-      href: "/settings",
-      icon: Settings,
-      permissions: ["settings:manage"],
-      badge: null,
-    },
-    {
-      title: "Lisensi & Billing",
-      href: "/settings/billing",
-      icon: CreditCard,
-      permissions: ["billing:manage"],
-      badge: null,
-    },
-    {
-      title: "Monitoring Merchant",
-      href: "/saas-admin",
-      icon: Crown,
-      permissions: ["saas:admin"],
-      badge: "SaaS",
-    },
-    {
-      title: "Kelola Paket SaaS",
-      href: "/saas-admin/plans",
-      icon: Layers,
-      permissions: ["saas:admin"],
-      badge: "SaaS",
+      label: "Super Admin Portal",
+      items: [
+        {
+          title: "Monitoring Merchant",
+          href: "/saas-admin",
+          icon: Crown,
+          permissions: ["saas:admin"],
+          badge: "SaaS",
+        },
+        {
+          title: "Kelola Paket SaaS",
+          href: "/saas-admin/plans",
+          icon: Layers,
+          permissions: ["saas:admin"],
+          badge: "SaaS",
+        },
+      ],
     },
   ];
 
@@ -218,68 +238,94 @@ export function AppSidebar({
           )}
         </section>
 
-        {/* Navigation Menu */}
-        <nav className="flex-1 overflow-y-auto p-3 space-y-1.5">
-          {allMenuItems.map((item) => {
-            const isActive = pathname === item.href;
-            // eslint-disable-next-line react-hooks/rules-of-hooks
-            const isAllowed = useHasPermission(...item.permissions);
-            const Icon = item.icon;
-
-            if (
-              !isAllowed &&
-              (item.href === "/saas-admin" || item.href === "/saas-admin/plans")
-            ) {
+        {/* Grouped Navigation Menu */}
+        <nav className="flex-1 overflow-y-auto p-3 space-y-4">
+          {menuGroups.map((group, groupIdx) => {
+            // Check if user has permission for at least one item in Super Admin group
+            if (group.label === "Super Admin Portal" && !isSuperAdmin) {
               return null;
             }
 
             return (
-              <Link
-                key={item.href}
-                href={isAllowed ? item.href : "#"}
-                className={`flex items-center justify-between rounded-xl px-3 py-2.5 text-xs font-bold transition ${
-                  isActive
-                    ? "bg-emerald-600 text-white shadow-md shadow-emerald-600/20"
-                    : isAllowed
-                      ? "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-                      : "text-slate-300 cursor-not-allowed opacity-60"
-                }`}
-                title={
-                  !isAllowed
-                    ? "Akses Dibatasi — Memerlukan izin role khusus"
-                    : item.title
-                }
-              >
-                <div className="flex items-center space-x-3 min-w-0">
-                  <Icon
-                    className={`h-4 w-4 shrink-0 ${isActive ? "text-white" : "text-slate-500"}`}
-                  />
-                  {!isCollapsed && (
-                    <span className="truncate">{item.title}</span>
-                  )}
-                </div>
-
-                {!isCollapsed && (
-                  <div>
-                    {item.badge && (
-                      <span
-                        className={`text-[9px] px-2 py-0.5 rounded-full font-bold uppercase ${
-                          isActive
-                            ? "bg-white/20 text-white"
-                            : "bg-emerald-100 text-emerald-700"
-                        }`}
-                      >
-                        {item.badge}
-                      </span>
-                    )}
-                    {!isAllowed && (
-                      <span className="text-[9px] text-rose-500 bg-rose-50 px-1.5 py-0.5 rounded-full border border-rose-200">
-                        Restricted
-                      </span>
-                    )}
+              <div key={group.label} className="space-y-1">
+                {!isCollapsed ? (
+                  <div className="px-3 pb-1 pt-1.5">
+                    <p className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">
+                      {group.label}
+                    </p>
                   </div>
+                ) : (
+                  groupIdx > 0 && (
+                    <div className="my-2 border-t border-slate-100" />
+                  )
                 )}
-              </Link>
+
+                <div className="space-y-1">
+                  {group.items.map((item) => {
+                    const isActive = pathname === item.href;
+                    // eslint-disable-next-line react-hooks/rules-of-hooks
+                    const isAllowed = useHasPermission(...item.permissions);
+                    const Icon = item.icon;
+
+                    if (
+                      !isAllowed &&
+                      (item.href === "/saas-admin" ||
+                        item.href === "/saas-admin/plans")
+                    ) {
+                      return null;
+                    }
+
+                    return (
+                      <Link
+                        key={item.href}
+                        href={isAllowed ? item.href : "#"}
+                        className={`flex items-center justify-between rounded-xl px-3 py-2 text-xs font-bold transition ${
+                          isActive
+                            ? "bg-emerald-600 text-white shadow-md shadow-emerald-600/20"
+                            : isAllowed
+                              ? "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                              : "text-slate-300 cursor-not-allowed opacity-60"
+                        }`}
+                        title={
+                          !isAllowed
+                            ? "Akses Dibatasi — Memerlukan izin role khusus"
+                            : item.title
+                        }
+                      >
+                        <div className="flex items-center space-x-3 min-w-0">
+                          <Icon
+                            className={`h-4 w-4 shrink-0 ${isActive ? "text-white" : "text-slate-500"}`}
+                          />
+                          {!isCollapsed && (
+                            <span className="truncate">{item.title}</span>
+                          )}
+                        </div>
+
+                        {!isCollapsed && (
+                          <div>
+                            {item.badge && (
+                              <span
+                                className={`text-[9px] px-2 py-0.5 rounded-full font-bold uppercase ${
+                                  isActive
+                                    ? "bg-white/20 text-white"
+                                    : "bg-emerald-100 text-emerald-700"
+                                }`}
+                              >
+                                {item.badge}
+                              </span>
+                            )}
+                            {!isAllowed && (
+                              <span className="text-[9px] text-rose-500 bg-rose-50 px-1.5 py-0.5 rounded-full border border-rose-200">
+                                Restricted
+                              </span>
+                            )}
+                          </div>
+                        )}
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
             );
           })}
         </nav>
