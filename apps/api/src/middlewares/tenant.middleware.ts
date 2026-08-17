@@ -5,6 +5,7 @@ import { ApiResponse } from "../utils/api-response";
 export interface AuthenticatedRequest extends Request {
   tenantId?: string;
   userId?: string;
+  userRole?: "superadmin" | "owner" | "cashier" | string;
 }
 
 export async function tenantMiddleware(

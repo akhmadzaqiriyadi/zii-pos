@@ -1,8 +1,13 @@
 import { Router } from "express";
+import { authMiddleware } from "../../middlewares/auth.middleware";
+import { requireRole } from "../../middlewares/rbac.middleware";
 import { PlanController } from "../plan/plan.controller";
 import { SaaSAdminController } from "./saas-admin.controller";
 
 export const saasAdminRouter = Router();
+
+// 🔒 Protect all SaaS Admin routes exclusively for Super Admin
+saasAdminRouter.use(authMiddleware, requireRole("superadmin"));
 
 // Metrics & Analytics
 saasAdminRouter.get("/metrics", SaaSAdminController.getMetrics);
