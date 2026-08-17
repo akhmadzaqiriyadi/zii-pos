@@ -3,13 +3,16 @@
 import {
   ChevronLeft,
   ChevronRight,
+  CreditCard,
   Crown,
   LogOut,
   Package,
   Receipt,
   Settings,
+  Shield,
   ShoppingCart,
   UserCheck,
+  Users,
   X,
 } from "lucide-react";
 import Link from "next/link";
@@ -40,7 +43,6 @@ export function AppSidebar({
   const { user, tenant, logout } = useAuth();
 
   const isSuperAdmin = useHasPermission("saas:admin", "*");
-  const isOwner = useHasPermission("settings:manage", "roles:manage");
   const userRole = user?.role || "cashier";
 
   const allMenuItems: MenuItem[] = [
@@ -66,15 +68,31 @@ export function AppSidebar({
       badge: null,
     },
     {
+      title: "Kelola Staf & Kasir",
+      href: "/settings/cashiers",
+      icon: Users,
+      permissions: ["cashiers:manage"],
+      badge: null,
+    },
+    {
+      title: "Role & Hak Akses",
+      href: "/settings/roles",
+      icon: Shield,
+      permissions: ["roles:manage"],
+      badge: null,
+    },
+    {
       title: "Pengaturan Toko",
       href: "/settings",
       icon: Settings,
-      permissions: [
-        "settings:manage",
-        "roles:manage",
-        "cashiers:manage",
-        "billing:manage",
-      ],
+      permissions: ["settings:manage"],
+      badge: null,
+    },
+    {
+      title: "Lisensi & Billing",
+      href: "/settings/billing",
+      icon: CreditCard,
+      permissions: ["billing:manage"],
       badge: null,
     },
     {
@@ -85,15 +103,6 @@ export function AppSidebar({
       badge: "SaaS",
     },
   ];
-
-  // Dynamic filter based on current user's effective permissions
-  const menuItems = allMenuItems.filter((item) => {
-    if (item.href === "/saas-admin") {
-      return isSuperAdmin;
-    }
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    return true; // We will render permission-aware styling below
-  });
 
   return (
     <>
@@ -203,7 +212,7 @@ export function AppSidebar({
 
         {/* Navigation Menu */}
         <nav className="flex-1 overflow-y-auto p-3 space-y-1.5">
-          {menuItems.map((item) => {
+          {allMenuItems.map((item) => {
             const isActive = pathname === item.href;
             // eslint-disable-next-line react-hooks/rules-of-hooks
             const isAllowed = useHasPermission(...item.permissions);

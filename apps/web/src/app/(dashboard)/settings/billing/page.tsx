@@ -1,10 +1,7 @@
 "use client";
 
-import { CreditCard, Store } from "lucide-react";
-import Link from "next/link";
-import React from "react";
+import type React from "react";
 import { DashboardLayout } from "../../../../components/layout/dashboard-layout";
-import { Button } from "../../../../components/ui/button";
 import { CurrentLicenseCard } from "../../../../features/subscription/components/CurrentLicenseCard";
 import { PaymentCheckoutModal } from "../../../../features/subscription/components/PaymentCheckoutModal";
 import { UpgradePlanGrid } from "../../../../features/subscription/components/UpgradePlanGrid";
@@ -26,7 +23,7 @@ export default function MerchantBillingPage() {
   } = useMerchantBilling();
 
   return (
-    <DashboardLayout requiredRole="owner">
+    <DashboardLayout requiredPermission="billing:manage">
       <main className="p-4 sm:p-6 lg:p-8 w-full space-y-6">
         <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-100 pb-5">
           <div className="space-y-1">
@@ -38,31 +35,6 @@ export default function MerchantBillingPage() {
               paket SaaS merchant kamu.
             </p>
           </div>
-
-          {/* Sub-Navigation Tabs */}
-          <nav className="flex items-center gap-2 bg-slate-100 p-1.5 rounded-xl border border-slate-200 shrink-0 shadow-2xs">
-            <Link href="/settings">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="gap-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-white/60 font-semibold text-xs transition cursor-pointer"
-              >
-                <Store className="h-3.5 w-3.5" />
-                <span>Branding Toko</span>
-              </Button>
-            </Link>
-
-            <Link href="/settings/billing">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="gap-2 rounded-lg bg-white text-emerald-700 font-bold shadow-xs text-xs cursor-pointer"
-              >
-                <CreditCard className="h-3.5 w-3.5" />
-                <span>Lisensi & Billing</span>
-              </Button>
-            </Link>
-          </nav>
         </header>
 
         {/* 1. Current Active License Card */}
