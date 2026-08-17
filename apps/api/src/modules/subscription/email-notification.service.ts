@@ -43,12 +43,12 @@ export class EmailNotificationService {
 <body style="font-family: Arial, sans-serif; background-color: #0f172a; color: #f8fafc; margin: 0; padding: 24px;">
   <div style="max-width: 600px; margin: 0 auto; background-color: #1e293b; border-radius: 12px; padding: 32px; border: 1px solid #334155;">
     <div style="text-align: center; margin-bottom: 24px;">
-      <h1 style="color: #10b981; margin: 0; font-size: 24px;">⚡ ZII POS SaaS</h1>
+      <h1 style="color: #10b981; margin: 0; font-size: 24px;">ZII POS SaaS</h1>
       <p style="color: #94a3b8; font-size: 14px; margin-top: 4px;">Konfirmasi Pembayaran & Aktivasi Lisensi</p>
     </div>
 
     <div style="background-color: rgba(16, 185, 129, 0.1); border: 1px solid #10b981; border-radius: 8px; padding: 16px; margin-bottom: 24px; text-align: center;">
-      <h2 style="color: #10b981; margin: 0; font-size: 18px;">✅ Pembayaran Berhasil Diterima (LUNAS)</h2>
+      <h2 style="color: #10b981; margin: 0; font-size: 18px;">Pembayaran Berhasil Diterima (LUNAS)</h2>
       <p style="color: #cbd5e1; font-size: 13px; margin-top: 6px;">Lisensi kasir multi-tenant Anda telah aktif 100% secara instan 24/7.</p>
     </div>
 
