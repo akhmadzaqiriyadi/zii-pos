@@ -4,6 +4,7 @@ import { Crown } from "lucide-react";
 import React from "react";
 import { DashboardLayout } from "../../components/layout/dashboard-layout";
 import { SaaSAdminMetricsCards } from "../../features/saas-admin/components/SaaSAdminMetricsCards";
+import { TenantDetailModal } from "../../features/saas-admin/components/TenantDetailModal";
 import { TenantStatusModal } from "../../features/saas-admin/components/TenantStatusModal";
 import { TenantTable } from "../../features/saas-admin/components/TenantTable";
 import { useSaaSAdminDashboard } from "../../features/saas-admin/hooks/useSaaSAdminDashboard";
@@ -23,7 +24,10 @@ export default function SaaSAdminPage() {
     isLoadingTenants,
     selectedTenantForStatus,
     setSelectedTenantForStatus,
+    selectedTenantForDetail,
+    setSelectedTenantForDetail,
     handleOpenStatusModal,
+    handleOpenDetailModal,
     confirmStatusChange,
     isStatusUpdating,
   } = useSaaSAdminDashboard();
@@ -68,6 +72,7 @@ export default function SaaSAdminPage() {
             onStatusFilterChange={setStatusFilter}
             onPageChange={setPage}
             onOpenStatusModal={handleOpenStatusModal}
+            onOpenDetailModal={handleOpenDetailModal}
           />
         </section>
 
@@ -77,6 +82,13 @@ export default function SaaSAdminPage() {
           onClose={() => setSelectedTenantForStatus(null)}
           onConfirm={confirmStatusChange}
           isPending={isStatusUpdating}
+        />
+
+        {/* 4. Merchant Detail Modal */}
+        <TenantDetailModal
+          tenant={selectedTenantForDetail}
+          onClose={() => setSelectedTenantForDetail(null)}
+          onOpenStatusModal={handleOpenStatusModal}
         />
       </main>
     </DashboardLayout>

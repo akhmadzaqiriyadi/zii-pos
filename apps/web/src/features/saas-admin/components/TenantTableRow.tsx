@@ -1,4 +1,11 @@
-import { Globe, Package, Settings2, ShoppingCart, Users } from "lucide-react";
+import {
+  Eye,
+  Globe,
+  Package,
+  Settings2,
+  ShoppingCart,
+  Users,
+} from "lucide-react";
 import React from "react";
 import { Badge } from "../../../components/ui/badge";
 import { Button } from "../../../components/ui/button";
@@ -9,11 +16,13 @@ import { TenantStatusBadge } from "./TenantStatusBadge";
 interface TenantTableRowProps {
   tenant: MerchantTenant;
   onOpenStatusModal: (tenant: MerchantTenant) => void;
+  onOpenDetailModal: (tenant: MerchantTenant) => void;
 }
 
 export function TenantTableRow({
   tenant,
   onOpenStatusModal,
+  onOpenDetailModal,
 }: TenantTableRowProps) {
   return (
     <TableRow className="hover:bg-slate-50/70 transition">
@@ -31,7 +40,7 @@ export function TenantTableRow({
               <Globe className="h-3 w-3 text-slate-400" />
               <span>
                 {tenant.subdomain
-                  ? `${tenant.subdomain}.ziipos.com`
+                  ? `${tenant.subdomain}.ziipos.id`
                   : "Belum set subdomain"}
               </span>
             </div>
@@ -111,15 +120,29 @@ export function TenantTableRow({
 
       {/* Actions */}
       <TableCell className="text-right">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => onOpenStatusModal(tenant)}
-          className="rounded-xl border-slate-200 hover:border-slate-300 text-slate-700 gap-1.5 text-xs font-semibold cursor-pointer shadow-2xs"
-        >
-          <Settings2 className="h-3.5 w-3.5 text-slate-500" />
-          <span>Status Lisensi</span>
-        </Button>
+        <div className="flex items-center justify-end gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => onOpenDetailModal(tenant)}
+            className="rounded-xl border-slate-200 hover:border-slate-300 hover:bg-slate-100 text-slate-700 gap-1.5 text-xs font-semibold cursor-pointer shadow-2xs"
+            title="Lihat Detail Lengkap Merchant"
+          >
+            <Eye className="h-3.5 w-3.5 text-slate-500" />
+            <span>Detail</span>
+          </Button>
+
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => onOpenStatusModal(tenant)}
+            className="rounded-xl border-slate-200 hover:border-slate-300 hover:bg-slate-100 text-slate-700 gap-1.5 text-xs font-semibold cursor-pointer shadow-2xs"
+            title="Ubah Status Lisensi Toko"
+          >
+            <Settings2 className="h-3.5 w-3.5 text-slate-500" />
+            <span>Status</span>
+          </Button>
+        </div>
       </TableCell>
     </TableRow>
   );

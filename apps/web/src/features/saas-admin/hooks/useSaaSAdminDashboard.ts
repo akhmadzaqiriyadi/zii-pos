@@ -16,6 +16,8 @@ export function useSaaSAdminDashboard() {
   const [page, setPage] = useState(1);
   const [selectedTenantForStatus, setSelectedTenantForStatus] =
     useState<MerchantTenant | null>(null);
+  const [selectedTenantForDetail, setSelectedTenantForDetail] =
+    useState<MerchantTenant | null>(null);
 
   // 1. Query Metrics (MRR, Total Merchants, Active Trials, Churn Rate)
   const { data: metrics, isLoading: isLoadingMetrics } = useQuery({
@@ -58,6 +60,10 @@ export function useSaaSAdminDashboard() {
     setSelectedTenantForStatus(tenant);
   };
 
+  const handleOpenDetailModal = (tenant: MerchantTenant) => {
+    setSelectedTenantForDetail(tenant);
+  };
+
   const confirmStatusChange = (
     newStatus: "active" | "trial" | "expired" | "suspended",
   ) => {
@@ -95,7 +101,10 @@ export function useSaaSAdminDashboard() {
     isLoadingTenants,
     selectedTenantForStatus,
     setSelectedTenantForStatus,
+    selectedTenantForDetail,
+    setSelectedTenantForDetail,
     handleOpenStatusModal,
+    handleOpenDetailModal,
     confirmStatusChange,
     isStatusUpdating: statusMutation.isPending,
   };

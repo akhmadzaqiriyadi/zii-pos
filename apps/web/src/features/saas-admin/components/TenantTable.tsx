@@ -32,6 +32,7 @@ interface TenantTableProps {
   onStatusFilterChange: (val: string) => void;
   onPageChange: (page: number) => void;
   onOpenStatusModal: (tenant: MerchantTenant) => void;
+  onOpenDetailModal: (tenant: MerchantTenant) => void;
 }
 
 const statusFilterOptions = [
@@ -52,6 +53,7 @@ export function TenantTable({
   onStatusFilterChange,
   onPageChange,
   onOpenStatusModal,
+  onOpenDetailModal,
 }: TenantTableProps) {
   return (
     <Card className="p-4 sm:p-6 rounded-2xl border border-slate-200 bg-white">
@@ -149,6 +151,7 @@ export function TenantTable({
                     key={tenant.id}
                     tenant={tenant}
                     onOpenStatusModal={onOpenStatusModal}
+                    onOpenDetailModal={onOpenDetailModal}
                   />
                 ))
               )}

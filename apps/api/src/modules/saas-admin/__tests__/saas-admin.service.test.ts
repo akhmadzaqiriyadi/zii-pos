@@ -11,6 +11,17 @@ const mockTenants = [
     phone: "081299887766",
     address: "Jakarta",
     createdAt: new Date(),
+    receiptFooter: "Nota Distro",
+    users: [
+      {
+        id: "u-1",
+        name: "Owner Distro",
+        email: "owner@zii.id",
+        role: "owner",
+        createdAt: new Date(),
+        customRole: null,
+      },
+    ],
     _count: { users: 3, products: 15, transactions: 40 },
     subscriptions: [
       {
@@ -20,11 +31,25 @@ const mockTenants = [
         expiresAt: new Date(Date.now() + 30 * 86400000),
         autoRenew: true,
         plan: {
+          id: "p-1",
           code: "pro",
           name: "Pro Plan",
           price: 99000,
           billingCycle: "monthly",
+          maxCashiers: 5,
+          allowWhiteLabel: true,
+          allowExportExcel: true,
         },
+        invoices: [
+          {
+            id: "inv-1",
+            amount: 99000,
+            status: "paid",
+            paidAt: new Date(),
+            paymentMethod: "midtrans_qris",
+            createdAt: new Date(),
+          },
+        ],
       },
     ],
   },
@@ -36,7 +61,9 @@ const mockTenants = [
     logoUrl: null,
     phone: "081987654321",
     address: "Bandung",
+    receiptFooter: null,
     createdAt: new Date(),
+    users: [],
     _count: { users: 1, products: 5, transactions: 10 },
     subscriptions: [
       {
@@ -46,11 +73,16 @@ const mockTenants = [
         expiresAt: new Date(Date.now() + 10 * 86400000),
         autoRenew: true,
         plan: {
+          id: "p-2",
           code: "starter",
           name: "Starter Trial",
           price: 0,
           billingCycle: "monthly",
+          maxCashiers: 2,
+          allowWhiteLabel: false,
+          allowExportExcel: false,
         },
+        invoices: [],
       },
     ],
   },
@@ -62,7 +94,9 @@ const mockTenants = [
     logoUrl: null,
     phone: "08111222333",
     address: "Surabaya",
+    receiptFooter: null,
     createdAt: new Date(),
+    users: [],
     _count: { users: 1, products: 2, transactions: 1 },
     subscriptions: [],
   },
@@ -101,6 +135,11 @@ mock.module("@zii/db", () => ({
         }
         return [];
       },
+    },
+    transaction: {
+      aggregate: async () => ({
+        _sum: { total: 1500000 },
+      }),
     },
   },
 }));
@@ -144,6 +183,29 @@ describe("SaaSAdminService Unit Tests", () => {
       expect(error).toBeInstanceOf(Error);
       if (error instanceof Error) {
         expect(error.message).toContain("tidak valid");
+      }
+    }
+  });
+
+  it("should return detailed merchant information with users and subscriptions", async () => {
+    const detail = await SaaSAdminService.getTenantDetail("t-1");
+
+    expect(detail.id).toBe("t-1");
+    expect(detail.name).toBe("ZII Distro");
+    expect(detail.subdomain).toBe("ziidistro");
+    expect(detail.totalUsers).toBe(3);
+    expect(detail.totalProducts).toBe(15);
+    expect(detail.totalTransactions).toBe(40);
+  });
+
+  it("should throw error if merchant is not found for detail", async () => {
+    try {
+      await SaaSAdminService.getTenantDetail("non-existent-tenant");
+      expect(true).toBe(false);
+    } catch (error) {
+      expect(error).toBeInstanceOf(Error);
+      if (error instanceof Error) {
+        expect(error.message).toContain("tidak ditemukan");
       }
     }
   });

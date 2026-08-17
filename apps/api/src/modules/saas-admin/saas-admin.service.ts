@@ -151,4 +151,97 @@ export class SaaSAdminService {
       data: { status },
     });
   }
+
+  static async getTenantDetail(tenantId: string) {
+    const tenant = await db.tenant.findUnique({
+      where: { id: tenantId },
+      include: {
+        users: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            role: true,
+            createdAt: true,
+            customRole: {
+              select: {
+                name: true,
+                code: true,
+              },
+            },
+          },
+          orderBy: { createdAt: "asc" },
+        },
+        subscriptions: {
+          orderBy: { createdAt: "desc" },
+          include: {
+            plan: true,
+            invoices: {
+              orderBy: { createdAt: "desc" },
+            },
+          },
+        },
+        _count: {
+          select: {
+            users: true,
+            products: true,
+            transactions: true,
+          },
+        },
+      },
+    });
+
+    if (!tenant) {
+      throw new Error("Merchant tidak ditemukan.");
+    }
+
+    const totalRevenueResult = await db.transaction.aggregate({
+      where: { tenantId },
+      _sum: { total: true },
+    });
+
+    const totalRevenue = Number(totalRevenueResult._sum.total || 0);
+
+    return {
+      id: tenant.id,
+      name: tenant.name,
+      subdomain: tenant.subdomain,
+      status: tenant.status,
+      logoUrl: tenant.logoUrl,
+      phone: tenant.phone,
+      address: tenant.address,
+      receiptFooter: tenant.receiptFooter,
+      createdAt: tenant.createdAt,
+      totalUsers: tenant._count.users,
+      totalProducts: tenant._count.products,
+      totalTransactions: tenant._count.transactions,
+      totalRevenue,
+      users: tenant.users,
+      subscriptions: tenant.subscriptions.map((sub) => ({
+        id: sub.id,
+        status: sub.status,
+        startsAt: sub.startsAt,
+        expiresAt: sub.expiresAt,
+        autoRenew: sub.autoRenew,
+        plan: {
+          id: sub.plan.id,
+          code: sub.plan.code,
+          name: sub.plan.name,
+          price: Number(sub.plan.price),
+          billingCycle: sub.plan.billingCycle,
+          maxCashiers: sub.plan.maxCashiers,
+          allowWhiteLabel: sub.plan.allowWhiteLabel,
+          allowExportExcel: sub.plan.allowExportExcel,
+        },
+        invoices: sub.invoices.map((inv) => ({
+          id: inv.id,
+          amount: Number(inv.amount),
+          status: inv.status,
+          paidAt: inv.paidAt,
+          paymentMethod: inv.paymentMethod,
+          createdAt: inv.createdAt,
+        })),
+      })),
+    };
+  }
 }

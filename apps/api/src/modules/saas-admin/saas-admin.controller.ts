@@ -67,4 +67,22 @@ export class SaaSAdminController {
       return ApiResponse.error(res, message, error, 400);
     }
   }
+
+  static async getTenantDetail(req: Request, res: Response) {
+    try {
+      const id = req.params.id as string;
+      const detail = await SaaSAdminService.getTenantDetail(id);
+      return ApiResponse.success(
+        res,
+        "Berhasil mengambil detail merchant",
+        detail,
+      );
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Gagal mengambil detail merchant";
+      return ApiResponse.error(res, message, error, 404);
+    }
+  }
 }

@@ -35,6 +35,61 @@ export interface MerchantTenant {
   subscription: TenantSubscriptionInfo | null;
 }
 
+export interface MerchantUserDetail {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  createdAt: string;
+  customRole: { name: string; code: string } | null;
+}
+
+export interface MerchantInvoiceDetail {
+  id: string;
+  amount: number;
+  status: string;
+  paidAt: string | null;
+  paymentMethod: string | null;
+  createdAt: string;
+}
+
+export interface MerchantSubscriptionDetail {
+  id: string;
+  status: string;
+  startsAt: string;
+  expiresAt: string;
+  autoRenew: boolean;
+  plan: {
+    id: string;
+    code: string;
+    name: string;
+    price: number;
+    billingCycle: string;
+    maxCashiers: number;
+    allowWhiteLabel: boolean;
+    allowExportExcel: boolean;
+  };
+  invoices: MerchantInvoiceDetail[];
+}
+
+export interface MerchantTenantDetail {
+  id: string;
+  name: string;
+  subdomain: string | null;
+  status: "active" | "trial" | "expired" | "suspended";
+  logoUrl: string | null;
+  phone: string | null;
+  address: string | null;
+  receiptFooter: string | null;
+  createdAt: string;
+  totalUsers: number;
+  totalProducts: number;
+  totalTransactions: number;
+  totalRevenue: number;
+  users: MerchantUserDetail[];
+  subscriptions: MerchantSubscriptionDetail[];
+}
+
 export interface GetTenantsResponse {
   data: MerchantTenant[];
   meta: {
@@ -150,6 +205,22 @@ export class SaaSAdminApiService {
     const body = await res.json();
     if (!res.ok || !body.success) {
       throw new Error(body.message || "Gagal mengubah status merchant.");
+    }
+    return body.data;
+  }
+
+  static async getTenantDetail(
+    tenantId: string,
+  ): Promise<MerchantTenantDetail> {
+    const res = await fetch(
+      `${API_BASE_URL}/api/v1/saas-admin/tenants/${tenantId}`,
+      {
+        headers: getAuthHeaders(),
+      },
+    );
+    const body = await res.json();
+    if (!res.ok || !body.success) {
+      throw new Error(body.message || "Gagal memuat detail merchant.");
     }
     return body.data;
   }

@@ -14,6 +14,7 @@ saasAdminRouter.get("/metrics", SaaSAdminController.getMetrics);
 
 // Merchant Management
 saasAdminRouter.get("/tenants", SaaSAdminController.getTenants);
+saasAdminRouter.get("/tenants/:id", SaaSAdminController.getTenantDetail);
 saasAdminRouter.put(
   "/tenants/:id/status",
   SaaSAdminController.updateTenantStatus,
