@@ -96,6 +96,8 @@ export function useOnboardingForm() {
       // 1. Register Tenant & Owner via AuthContext
       await registerAuth({
         tenantName: storeData.tenantName,
+        subdomain: storeData.subdomain,
+        planId,
         ownerName: ownerData.ownerName,
         email: ownerData.email,
         password: ownerData.password,

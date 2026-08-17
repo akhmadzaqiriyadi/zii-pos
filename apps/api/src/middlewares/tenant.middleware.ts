@@ -1,3 +1,4 @@
+import { db } from "@zii/db";
 import type { NextFunction, Request, Response } from "express";
 import { ApiResponse } from "../utils/api-response";
 
@@ -6,14 +7,14 @@ export interface AuthenticatedRequest extends Request {
   userId?: string;
 }
 
-export function tenantMiddleware(
+export async function tenantMiddleware(
   req: AuthenticatedRequest,
   res: Response,
   next: NextFunction,
 ) {
-  // Extract tenantId from Header (x-tenant-id) or fallback to default tenant
+  // 1. Try to extract tenantId from Header (x-tenant-id)
   const rawTenantId = req.headers["x-tenant-id"];
-  let tenantId = "tenant-default";
+  let tenantId = "";
 
   if (typeof rawTenantId === "string") {
     tenantId = rawTenantId.split(",")[0].trim();
@@ -21,10 +22,32 @@ export function tenantMiddleware(
     tenantId = rawTenantId[0].trim();
   }
 
-  if (!tenantId) {
-    return ApiResponse.error(res, "Tenant ID is required", 401);
+  // 2. If no direct tenantId or is default, try to resolve from x-tenant-subdomain header
+  if (!tenantId || tenantId === "tenant-default") {
+    const rawSubdomain = req.headers["x-tenant-subdomain"];
+    let subdomain = "";
+
+    if (typeof rawSubdomain === "string") {
+      subdomain = rawSubdomain.split(",")[0].trim();
+    } else if (Array.isArray(rawSubdomain) && rawSubdomain.length > 0) {
+      subdomain = rawSubdomain[0].trim();
+    }
+
+    if (subdomain && subdomain !== "localhost") {
+      try {
+        const tenant = await db.tenant.findUnique({
+          where: { subdomain },
+          select: { id: true },
+        });
+        if (tenant) {
+          tenantId = tenant.id;
+        }
+      } catch {
+        // Fallback gracefully
+      }
+    }
   }
 
-  req.tenantId = tenantId;
+  req.tenantId = tenantId || "tenant-default";
   next();
 }

@@ -18,14 +18,31 @@ mock.module("@zii/db", () => ({
         return null;
       },
     },
+    tenant: {
+      findUnique: async () => null,
+    },
+    plan: {
+      findUnique: async () => ({
+        id: "plan-starter",
+        name: "Starter Trial",
+        price: 0,
+      }),
+      findFirst: async () => ({
+        id: "plan-starter",
+        name: "Starter Trial",
+        price: 0,
+      }),
+    },
     $transaction: async (fn: (tx: unknown) => unknown) => {
       return await fn({
         tenant: {
           create: async (args: { data: Record<string, unknown> }) => ({
             id: "tenant-new",
             name: args.data.name,
+            subdomain: args.data.subdomain,
             phone: args.data.phone,
             address: args.data.address,
+            status: "trial",
           }),
         },
         user: {
@@ -35,6 +52,11 @@ mock.module("@zii/db", () => ({
             name: args.data.name,
             email: args.data.email,
             role: "owner",
+          }),
+        },
+        subscription: {
+          create: async () => ({
+            id: "sub-new",
           }),
         },
       });
@@ -61,6 +83,7 @@ describe("AuthService Unit Tests", () => {
   it("should register tenant successfully", async () => {
     const mockTenantData = {
       tenantName: "ZII Test Store",
+      subdomain: "ziitest",
       ownerName: "Zaqi Test",
       email: `test-${Date.now()}@zii.id`,
       password: "password123",

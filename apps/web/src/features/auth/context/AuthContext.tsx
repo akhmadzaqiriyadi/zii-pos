@@ -25,6 +25,8 @@ export interface AuthTenant {
 
 export interface RegisterInput {
   tenantName: string;
+  subdomain?: string;
+  planId?: string;
   ownerName: string;
   email: string;
   password: string;
