@@ -10,7 +10,12 @@ export interface PaginationMeta {
 }
 
 export class ApiResponse {
-  static success<T>(res: Response, message: string, data: T, statusCode = 200) {
+  static success<T = unknown>(
+    res: Response,
+    message: string,
+    data: T = null as T,
+    statusCode = 200,
+  ) {
     return res.status(statusCode).json({
       success: true,
       message,

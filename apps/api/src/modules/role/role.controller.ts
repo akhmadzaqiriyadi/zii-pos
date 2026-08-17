@@ -26,7 +26,9 @@ export class RoleController {
   static async getRoleById(req: AuthenticatedRequest, res: Response) {
     try {
       const tenantId = req.tenantId || "tenant-default";
-      const { id } = req.params;
+      const id = (
+        Array.isArray(req.params.id) ? req.params.id[0] : req.params.id
+      ) as string;
       const role = await RoleService.getRoleById(tenantId, id);
       return ApiResponse.success(res, "Detail role berhasil diambil", role);
     } catch (error: unknown) {
@@ -73,7 +75,9 @@ export class RoleController {
   static async updateRole(req: AuthenticatedRequest, res: Response) {
     try {
       const tenantId = req.tenantId || "tenant-default";
-      const { id } = req.params;
+      const id = (
+        Array.isArray(req.params.id) ? req.params.id[0] : req.params.id
+      ) as string;
       const { name, description, permissions } = req.body;
 
       const updated = await RoleService.updateRole(tenantId, id, {
@@ -97,10 +101,12 @@ export class RoleController {
   static async deleteRole(req: AuthenticatedRequest, res: Response) {
     try {
       const tenantId = req.tenantId || "tenant-default";
-      const { id } = req.params;
+      const id = (
+        Array.isArray(req.params.id) ? req.params.id[0] : req.params.id
+      ) as string;
 
       const result = await RoleService.deleteRole(tenantId, id);
-      return ApiResponse.success(res, result.message);
+      return ApiResponse.success(res, result.message, null);
     } catch (error: unknown) {
       const message =
         error instanceof Error ? error.message : "Gagal menghapus role.";

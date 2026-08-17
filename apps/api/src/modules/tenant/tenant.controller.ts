@@ -116,10 +116,12 @@ export class TenantController {
   static async deleteCashier(req: AuthenticatedRequest, res: Response) {
     try {
       const tenantId = req.tenantId || "tenant-default";
-      const { id } = req.params;
+      const id = (
+        Array.isArray(req.params.id) ? req.params.id[0] : req.params.id
+      ) as string;
 
       const result = await TenantService.deleteCashier(tenantId, id);
-      return ApiResponse.success(res, result.message);
+      return ApiResponse.success(res, result.message, null);
     } catch (error: unknown) {
       return ApiResponse.error(
         res,
