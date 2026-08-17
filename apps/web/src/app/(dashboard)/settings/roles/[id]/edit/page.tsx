@@ -14,7 +14,7 @@ export default function EditRolePage() {
 
   return (
     <DashboardLayout requiredPermission="roles:manage">
-      <main className="p-4 sm:p-6 lg:p-8 w-full max-w-5xl mx-auto space-y-6">
+      <main className="p-4 sm:p-6 lg:p-8 w-full space-y-6">
         {isLoading ? (
           <div className="flex items-center justify-center py-24 text-slate-500 gap-2 text-sm">
             <Loader2 className="h-6 w-6 animate-spin text-emerald-600" />
