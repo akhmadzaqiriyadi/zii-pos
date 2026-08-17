@@ -1,6 +1,6 @@
 "use client";
 
-import { Edit2, Trash2, Users } from "lucide-react";
+import { Edit2, ShieldCheck, Trash2, Users } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import { Badge } from "../../../components/ui/badge";
@@ -104,8 +104,9 @@ export function RoleCard({
         {/* Permission Chips */}
         <div className="flex flex-wrap gap-1.5 max-h-24 overflow-y-auto pr-1">
           {role.permissions.includes("*") ? (
-            <span className="text-[11px] font-semibold text-purple-700 bg-purple-50 border border-purple-200 px-2 py-0.5 rounded-md">
-              ⚡ Universal Wildcard Access (*)
+            <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-purple-700 bg-purple-50 border border-purple-200 px-2 py-0.5 rounded-md">
+              <ShieldCheck className="h-3 w-3 text-purple-600" />
+              <span>Universal Wildcard Access (*)</span>
             </span>
           ) : (
             role.permissions.map((p) => (

@@ -7,6 +7,7 @@ import {
   QrCode,
   Receipt,
   ShieldCheck,
+  Zap,
 } from "lucide-react";
 import React, { useState } from "react";
 import { toast } from "sonner";
@@ -57,7 +58,7 @@ export function PaymentCheckoutModal({
         checkoutData.amount,
       );
       toast.success(
-        "⚡ Webhook Midtrans Sukses! Lisensi toko berhasil di-upgrade ke ACTIVE!",
+        "Webhook Midtrans Sukses! Lisensi toko berhasil di-upgrade ke ACTIVE!",
       );
       onSimulateSuccess();
       onClose();
@@ -152,10 +153,11 @@ export function PaymentCheckoutModal({
               disabled={isSimulating}
               className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-md shadow-emerald-600/20 py-5 gap-2 cursor-pointer"
             >
+              <Zap className="h-4 w-4" />
               <span>
                 {isSimulating
                   ? "Mengirim Webhook Pembayaran..."
-                  : "⚡ Simulasi Pembayaran QRIS Sukses (Tembak Webhook)"}
+                  : "Simulasi Pembayaran QRIS Sukses (Tembak Webhook)"}
               </span>
             </Button>
 

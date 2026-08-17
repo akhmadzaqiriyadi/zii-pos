@@ -7,6 +7,7 @@ import {
   Crown,
   Layers,
   LogOut,
+  MessageSquare,
   Package,
   Receipt,
   Settings,
@@ -340,7 +341,7 @@ export function AppSidebar({
               className="flex items-center gap-2.5 p-2.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 hover:bg-emerald-100 transition shadow-2xs group"
             >
               <div className="h-7 w-7 rounded-lg bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-xs">
-                💬
+                <MessageSquare className="h-3.5 w-3.5" />
               </div>
               <div className="min-w-0">
                 <span className="font-extrabold text-[11px] block leading-tight text-emerald-900 group-hover:text-emerald-950">

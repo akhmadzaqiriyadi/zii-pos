@@ -1,6 +1,15 @@
 "use client";
 
-import { Check, Edit2, Package, Sparkles, Trash2, Users } from "lucide-react";
+import {
+  Check,
+  Edit2,
+  FileSpreadsheet,
+  Package,
+  Sparkles,
+  Tag,
+  Trash2,
+  Users,
+} from "lucide-react";
 import React from "react";
 import { Badge } from "../../../components/ui/badge";
 import { Button } from "../../../components/ui/button";
@@ -98,17 +107,19 @@ export function PlanCard({ plan, onEdit, onDelete }: PlanCardProps) {
           {plan.allowWhiteLabel && (
             <Badge
               variant="amber"
-              className="text-[10.5px] font-semibold py-1 px-2"
+              className="text-[10.5px] font-semibold py-1 px-2 gap-1"
             >
-              🏷️ White-Label
+              <Tag className="h-3 w-3" />
+              <span>White-Label</span>
             </Badge>
           )}
           {plan.allowExportExcel && (
             <Badge
               variant="blue"
-              className="text-[10.5px] font-semibold py-1 px-2"
+              className="text-[10.5px] font-semibold py-1 px-2 gap-1"
             >
-              📊 Ekspor Excel
+              <FileSpreadsheet className="h-3 w-3" />
+              <span>Ekspor Excel</span>
             </Badge>
           )}
         </div>

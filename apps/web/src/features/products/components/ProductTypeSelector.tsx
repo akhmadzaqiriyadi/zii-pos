@@ -1,5 +1,7 @@
 "use client";
 
+import { Package, Scissors } from "lucide-react";
+import React from "react";
 import { Button } from "../../../components/ui/button";
 
 interface ProductTypeSelectorProps {
@@ -21,25 +23,27 @@ export function ProductTypeSelector({
           type="button"
           variant="outline"
           onClick={() => onSelectType(false)}
-          className={`py-2 px-3 rounded-xl border text-xs font-bold transition cursor-pointer ${
+          className={`py-2 px-3 rounded-xl border text-xs font-bold transition cursor-pointer gap-2 ${
             !isService
               ? "border-blue-500 bg-blue-50 text-blue-700 shadow-xs hover:bg-blue-100/60"
               : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
           }`}
         >
-          📦 Barang Retail
+          <Package className="h-4 w-4" />
+          <span>Barang Retail</span>
         </Button>
         <Button
           type="button"
           variant="outline"
           onClick={() => onSelectType(true)}
-          className={`py-2 px-3 rounded-xl border text-xs font-bold transition cursor-pointer ${
+          className={`py-2 px-3 rounded-xl border text-xs font-bold transition cursor-pointer gap-2 ${
             isService
               ? "border-amber-500 bg-amber-50 text-amber-700 shadow-xs hover:bg-amber-100/60"
               : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
           }`}
         >
-          ✂️ Jasa / Service
+          <Scissors className="h-4 w-4" />
+          <span>Jasa / Service</span>
         </Button>
       </div>
     </fieldset>

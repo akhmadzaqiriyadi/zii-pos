@@ -1,5 +1,6 @@
 "use client";
 
+import { AlertTriangle } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import React, { Suspense } from "react";
@@ -16,8 +17,8 @@ function LicenseExpiredAlertBanner() {
   return (
     <div className="p-4 rounded-xl border border-red-500/30 bg-red-500/10 backdrop-blur-md flex items-start justify-between gap-3 text-red-700 animate-in fade-in slide-in-from-top-2 duration-300">
       <div className="flex items-start gap-3">
-        <div className="p-2 bg-red-500 text-white rounded-lg text-lg font-bold leading-none">
-          ⚠️
+        <div className="p-2 bg-red-500 text-white rounded-lg flex items-center justify-center">
+          <AlertTriangle className="h-5 w-5" />
         </div>
         <div>
           <h3 className="text-base font-bold text-red-900">
