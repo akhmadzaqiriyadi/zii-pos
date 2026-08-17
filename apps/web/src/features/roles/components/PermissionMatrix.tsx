@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { Checkbox } from "../../../components/ui/checkbox";
 import type { PermissionItem } from "../types/role.types";
 
 interface PermissionMatrixProps {
@@ -81,13 +82,13 @@ export function PermissionMatrix({
                         : "bg-white/80 border-slate-200 hover:border-slate-300"
                     }`}
                   >
-                    <input
-                      type="checkbox"
-                      checked={isChecked}
-                      onChange={() => onTogglePermission(item.code)}
-                      className="mt-0.5 h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
-                    />
-                    <div className="space-y-0.5">
+                    <div className="mt-0.5">
+                      <Checkbox
+                        checked={isChecked}
+                        onChange={() => onTogglePermission(item.code)}
+                      />
+                    </div>
+                    <div className="space-y-0.5 min-w-0">
                       <p className="text-xs font-bold text-slate-900 leading-tight">
                         {item.name}
                       </p>
