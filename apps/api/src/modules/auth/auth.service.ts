@@ -1,6 +1,7 @@
 import { db } from "@zii/db";
 import jwt from "jsonwebtoken";
 import { env } from "../../config/env";
+import { RoleService } from "../role/role.service";
 
 export interface RegisterTenantInput {
   tenantName: string;
@@ -155,11 +156,18 @@ export class AuthService {
       return { tenant, user };
     });
 
+    const permissions = await RoleService.getUserEffectivePermissions(
+      result.user.id,
+      result.user.role,
+      result.tenant.id,
+    );
+
     const token = jwt.sign(
       {
         userId: result.user.id,
         tenantId: result.tenant.id,
         role: result.user.role,
+        permissions,
       },
       env.JWT_SECRET,
       { expiresIn: "7d" },
@@ -173,6 +181,7 @@ export class AuthService {
         name: result.user.name,
         email: result.user.email,
         role: result.user.role,
+        permissions,
       },
     };
   }
@@ -189,11 +198,18 @@ export class AuthService {
         user.passwordHash,
       );
       if (isValidPassword) {
+        const permissions = await RoleService.getUserEffectivePermissions(
+          user.id,
+          user.role,
+          user.tenantId,
+        );
+
         const token = jwt.sign(
           {
             userId: user.id,
             tenantId: user.tenantId,
             role: user.role,
+            permissions,
           },
           env.JWT_SECRET,
           { expiresIn: "7d" },
@@ -206,6 +222,7 @@ export class AuthService {
             name: user.name,
             email: user.email,
             role: user.role,
+            permissions,
           },
           tenant: user.tenant,
         };

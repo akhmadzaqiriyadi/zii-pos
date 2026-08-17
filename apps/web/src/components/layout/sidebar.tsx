@@ -15,11 +15,21 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth } from "../../features/auth/hooks/useAuth";
+import { useHasPermission } from "../../features/auth/hooks/useHasPermission";
 import { Badge } from "../ui/badge";
+import { Button } from "../ui/button";
 
 interface SidebarProps {
   isCollapsed?: boolean;
   onToggleCollapse?: () => void;
+}
+
+interface MenuItem {
+  title: string;
+  href: string;
+  icon: typeof ShoppingCart;
+  permissions: string[];
+  badge?: string | null;
 }
 
 export function AppSidebar({
@@ -35,51 +45,57 @@ export function AppSidebar({
     user?.email?.includes("superadmin") ||
     user?.email === "admin@zii.id" ||
     user?.email === "zaqi@zii.id";
-  const isOwner = userRole === "owner" || !user?.role || isSuperAdmin;
 
-  const allMenuItems = [
+  const allMenuItems: MenuItem[] = [
     {
       title: "Kasir POS",
       href: "/pos",
       icon: ShoppingCart,
-      roles: ["owner", "cashier", "superadmin"],
+      permissions: ["pos:access"],
       badge: "Utama",
     },
     {
       title: "Kelola Produk & Jasa",
       href: "/products",
       icon: Package,
-      roles: ["owner", "superadmin"],
+      permissions: ["products:read", "products:create"],
       badge: null,
     },
     {
       title: "Riwayat Transaksi",
       href: "/transactions",
       icon: Receipt,
-      roles: ["owner", "superadmin"],
+      permissions: ["transactions:read"],
       badge: null,
     },
     {
       title: "Pengaturan Toko",
       href: "/settings",
       icon: Settings,
-      roles: ["owner", "superadmin"],
+      permissions: [
+        "settings:manage",
+        "roles:manage",
+        "cashiers:manage",
+        "billing:manage",
+      ],
       badge: null,
     },
     {
       title: "Super Admin Portal",
       href: "/saas-admin",
       icon: Crown,
-      roles: ["superadmin"],
+      permissions: ["saas:admin"],
       badge: "SaaS",
     },
   ];
 
+  // Dynamic filter based on current user's effective permissions
   const menuItems = allMenuItems.filter((item) => {
     if (item.href === "/saas-admin") {
       return isSuperAdmin;
     }
-    return true;
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    return true; // We will render permission-aware styling below
   });
 
   return (
@@ -124,14 +140,15 @@ export function AppSidebar({
           )}
 
           {onToggleCollapse && !isCollapsed && (
-            <button
-              type="button"
+            <Button
+              variant="ghost"
+              size="icon"
               onClick={onToggleCollapse}
-              className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition cursor-pointer sm:hidden"
+              className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition cursor-pointer sm:hidden h-8 w-8"
               title="Tutup Sidebar"
             >
               <X className="h-5 w-5" />
-            </button>
+            </Button>
           )}
         </header>
 
@@ -153,19 +170,35 @@ export function AppSidebar({
                 </div>
               </div>
               <Badge
-                variant={isOwner ? "emerald" : "blue"}
+                variant={
+                  isSuperAdmin
+                    ? "purple"
+                    : userRole === "owner"
+                      ? "emerald"
+                      : "blue"
+                }
                 className="text-[10px] py-0.5 px-2 font-bold uppercase"
               >
-                {isOwner ? "PEMILIK" : "KASIR"}
+                {isSuperAdmin
+                  ? "SUPERADMIN"
+                  : userRole === "owner"
+                    ? "PEMILIK"
+                    : "STAF"}
               </Badge>
             </div>
           ) : (
             <div className="flex justify-center py-1">
               <Badge
-                variant={isOwner ? "emerald" : "blue"}
+                variant={
+                  isSuperAdmin
+                    ? "purple"
+                    : userRole === "owner"
+                      ? "emerald"
+                      : "blue"
+                }
                 className="text-[9px] px-1.5 py-0.5"
               >
-                {isOwner ? "OWN" : "KAS"}
+                {isSuperAdmin ? "SUP" : userRole === "owner" ? "OWN" : "STF"}
               </Badge>
             </div>
           )}
@@ -175,9 +208,13 @@ export function AppSidebar({
         <nav className="flex-1 overflow-y-auto p-3 space-y-1.5">
           {menuItems.map((item) => {
             const isActive = pathname === item.href;
-            const isAllowed =
-              isOwner || item.roles.includes(user?.role || "cashier");
+            // eslint-disable-next-line react-hooks/rules-of-hooks
+            const isAllowed = useHasPermission(...item.permissions);
             const Icon = item.icon;
+
+            if (!isAllowed && item.href === "/saas-admin") {
+              return null;
+            }
 
             return (
               <Link
@@ -190,7 +227,11 @@ export function AppSidebar({
                       ? "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
                       : "text-slate-300 cursor-not-allowed opacity-60"
                 }`}
-                title={!isAllowed ? "Akses khusus Pemilik Toko" : item.title}
+                title={
+                  !isAllowed
+                    ? "Akses Dibatasi — Memerlukan izin role khusus"
+                    : item.title
+                }
               >
                 <div className="flex items-center space-x-3 min-w-0">
                   <Icon
@@ -253,18 +294,19 @@ export function AppSidebar({
         {/* Sidebar Footer / Toggle & Logout */}
         <footer className="border-t border-slate-200 p-3 space-y-2 bg-white">
           {isCollapsed && onToggleCollapse && (
-            <button
-              type="button"
+            <Button
+              variant="ghost"
+              size="icon"
               onClick={onToggleCollapse}
-              className="w-full flex items-center justify-center p-2 text-slate-500 hover:bg-slate-100 rounded-xl transition cursor-pointer"
+              className="w-full flex items-center justify-center p-2 text-slate-500 hover:bg-slate-100 rounded-xl transition cursor-pointer h-9"
               title="Buka Sidebar"
             >
               <ChevronRight className="h-5 w-5" />
-            </button>
+            </Button>
           )}
 
-          <button
-            type="button"
+          <Button
+            variant="outline"
             onClick={logout}
             className={`w-full flex items-center justify-center rounded-xl border border-slate-200 bg-slate-50 py-2.5 text-xs font-bold text-slate-600 hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200 transition cursor-pointer ${
               isCollapsed ? "px-0" : "px-3 justify-start space-x-2.5"
@@ -272,7 +314,7 @@ export function AppSidebar({
           >
             <LogOut className="h-4 w-4 shrink-0 text-slate-400 group-hover:text-rose-600" />
             {!isCollapsed && <span>Keluar Akun</span>}
-          </button>
+          </Button>
         </footer>
       </aside>
     </>

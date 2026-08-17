@@ -10,6 +10,7 @@ export interface AuthUser {
   name: string;
   email: string;
   role: "owner" | "cashier" | "superadmin" | string;
+  permissions?: string[];
 }
 
 export interface AuthTenant {

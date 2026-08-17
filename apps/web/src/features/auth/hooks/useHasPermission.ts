@@ -36,22 +36,27 @@ export function useHasPermission(...requiredPermissions: string[]): boolean {
     return true;
   }
 
-  // 2. Owner has full tenant owner permissions
+  // 2. Direct dynamic permissions array from backend response / token
+  if (
+    user.permissions &&
+    Array.isArray(user.permissions) &&
+    user.permissions.length > 0
+  ) {
+    if (user.permissions.includes("*")) return true;
+    return requiredPermissions.some((perm) => user.permissions?.includes(perm));
+  }
+
+  // 3. Built-in owner fallback
   if (user.role === "owner") {
     const ownerPerms = DEFAULT_ROLE_PERMISSIONS.owner;
     return requiredPermissions.some((perm) => ownerPerms.includes(perm));
   }
 
-  // 3. Built-in cashier default permissions
+  // 4. Built-in cashier fallback
   if (user.role === "cashier") {
     const cashierPerms = DEFAULT_ROLE_PERMISSIONS.cashier;
     return requiredPermissions.some((perm) => cashierPerms.includes(perm));
   }
 
-  // 4. Custom dynamic role permissions (if stored on user or passed)
-  const userPerms =
-    (user as unknown as { permissions?: string[] }).permissions || [];
-  if (userPerms.includes("*")) return true;
-
-  return requiredPermissions.some((perm) => userPerms.includes(perm));
+  return false;
 }

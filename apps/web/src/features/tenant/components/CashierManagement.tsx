@@ -1,21 +1,7 @@
 "use client";
 
-import {
-  AlertCircle,
-  CheckCircle2,
-  KeyRound,
-  Loader2,
-  Lock,
-  Mail,
-  Plus,
-  Shield,
-  Trash2,
-  User,
-  UserPlus,
-  Users,
-} from "lucide-react";
-import type React from "react";
-import { useState } from "react";
+import { AlertCircle, Loader2, Trash2, UserPlus, Users } from "lucide-react";
+import React, { useState } from "react";
 import { Badge } from "../../../components/ui/badge";
 import { Button } from "../../../components/ui/button";
 import {
@@ -24,19 +10,6 @@ import {
   CardHeader,
   CardTitle,
 } from "../../../components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "../../../components/ui/dialog";
-import {
-  FormError,
-  FormGroup,
-  FormHelperText,
-  FormLabel,
-} from "../../../components/ui/form";
-import { Input } from "../../../components/ui/input";
 import {
   Table,
   TableBody,
@@ -47,6 +20,7 @@ import {
 } from "../../../components/ui/table";
 import { useRoles } from "../../roles/hooks/useRoles";
 import { useCashiers } from "../hooks/useCashiers";
+import { CashierModal } from "./CashierModal";
 
 export function CashierManagement() {
   const {
@@ -58,14 +32,9 @@ export function CashierManagement() {
     isDeleting,
   } = useCashiers();
 
-  const { roles, isLoadingRoles } = useRoles();
+  const { roles } = useRoles();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [selectedRoleId, setSelectedRoleId] = useState<string>("cashier");
-  const [formError, setFormError] = useState("");
 
   const currentCount = cashiersData?.currentCount || 0;
   const maxCashiers = cashiersData?.maxCashiers || 1;
@@ -73,42 +42,17 @@ export function CashierManagement() {
   const isQuotaExceeded = currentCount >= maxCashiers;
 
   const handleOpenModal = () => {
-    setName("");
-    setEmail("");
-    setPassword("");
-    setSelectedRoleId("cashier");
-    setFormError("");
     setIsModalOpen(true);
   };
 
-  const handleCreateCashier = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setFormError("");
-
-    if (!name.trim() || !email.trim() || !password.trim()) {
-      setFormError("Nama, email, dan password kasir wajib diisi.");
-      return;
-    }
-
-    if (password.length < 6) {
-      setFormError("Password kasir minimal 6 karakter.");
-      return;
-    }
-
-    try {
-      await createCashier({
-        name: name.trim(),
-        email: email.trim(),
-        password: password.trim(),
-        roleId: selectedRoleId !== "cashier" ? selectedRoleId : undefined,
-        role: selectedRoleId === "cashier" ? "cashier" : undefined,
-      });
-      setIsModalOpen(false);
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        setFormError(err.message);
-      }
-    }
+  const handleCreateCashierSubmit = async (data: {
+    name: string;
+    email: string;
+    password: string;
+    roleId?: string;
+    role?: string;
+  }) => {
+    await createCashier(data);
   };
 
   const handleDelete = async (id: string, userName: string) => {
@@ -294,132 +238,13 @@ export function CashierManagement() {
       </Card>
 
       {/* Modal Tambah Kasir Baru */}
-      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="max-w-md p-6">
-          <DialogHeader className="mb-4">
-            <DialogTitle className="text-xl font-bold text-slate-900 flex items-center gap-2">
-              <UserPlus className="h-5 w-5 text-emerald-600" />
-              <span>Tambah Akun Staf / Kasir Baru</span>
-            </DialogTitle>
-            <p className="text-xs text-slate-500">
-              Buatkan akun login untuk staf tokomu dan pilih role akses wewenang
-              yang sesuai.
-            </p>
-          </DialogHeader>
-
-          {formError && (
-            <div className="mb-4 p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-xs font-semibold text-rose-600 flex items-center gap-2">
-              <AlertCircle className="h-4 w-4 shrink-0" />
-              <span>{formError}</span>
-            </div>
-          )}
-
-          <form onSubmit={handleCreateCashier} className="space-y-4">
-            <FormGroup>
-              <FormLabel htmlFor="cashier-name" required>
-                Nama Lengkap Staf
-              </FormLabel>
-              <Input
-                id="cashier-name"
-                placeholder="Contoh: Siti Rahma"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-              />
-            </FormGroup>
-
-            <FormGroup>
-              <FormLabel htmlFor="cashier-email" required>
-                Email Login Staf
-              </FormLabel>
-              <Input
-                id="cashier-email"
-                type="email"
-                placeholder="siti.kasir@tokokamu.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-              <FormHelperText>
-                Email ini digunakan staf untuk login ke sistem POS toko.
-              </FormHelperText>
-            </FormGroup>
-
-            <FormGroup>
-              <FormLabel htmlFor="cashier-password" required>
-                Password Login
-              </FormLabel>
-              <Input
-                id="cashier-password"
-                type="password"
-                placeholder="Minimal 6 karakter"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </FormGroup>
-
-            <FormGroup>
-              <FormLabel htmlFor="role-select" required>
-                Role & Hak Akses (Wewenang)
-              </FormLabel>
-              <select
-                id="role-select"
-                value={selectedRoleId}
-                onChange={(e) => setSelectedRoleId(e.target.value)}
-                className="w-full h-10 px-3 rounded-xl border border-slate-200 bg-white text-xs font-semibold text-slate-800 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
-              >
-                <option value="cashier">
-                  Kasir Standar (POS & Transaksi Saja)
-                </option>
-                {roles
-                  .filter(
-                    (r) =>
-                      !r.isSystem && r.code !== "owner" && r.code !== "cashier",
-                  )
-                  .map((r) => (
-                    <option key={r.id} value={r.id}>
-                      {r.name} ({r.permissions.length} Izin Kustom)
-                    </option>
-                  ))}
-              </select>
-              <FormHelperText>
-                Kamu bisa membuat role baru di menu{" "}
-                <strong>Role & Hak Akses</strong>.
-              </FormHelperText>
-            </FormGroup>
-
-            <div className="pt-2 flex items-center justify-end gap-2">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setIsModalOpen(false)}
-                disabled={isCreating}
-                className="rounded-xl"
-              >
-                Batal
-              </Button>
-              <Button
-                type="submit"
-                disabled={isCreating}
-                className="gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl"
-              >
-                {isCreating ? (
-                  <>
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    <span>Menyimpan...</span>
-                  </>
-                ) : (
-                  <>
-                    <CheckCircle2 className="h-4 w-4" />
-                    <span>Buat Akun Staf</span>
-                  </>
-                )}
-              </Button>
-            </div>
-          </form>
-        </DialogContent>
-      </Dialog>
+      <CashierModal
+        isOpen={isModalOpen}
+        onOpenChange={setIsModalOpen}
+        roles={roles}
+        onSubmit={handleCreateCashierSubmit}
+        isSubmitting={isCreating}
+      />
     </div>
   );
 }
