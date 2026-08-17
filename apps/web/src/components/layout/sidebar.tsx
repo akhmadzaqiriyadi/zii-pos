@@ -55,14 +55,6 @@ export function AppSidebar({
   const isSuperAdmin = useHasPermission("saas:admin", "*");
   const userRole = user?.role || "cashier";
 
-  const tenantInitials =
-    tenant?.name
-      ?.split(" ")
-      .map((w) => w[0])
-      .join("")
-      .substring(0, 3)
-      .toUpperCase() || "ZII";
-
   const menuGroups: MenuGroup[] = [
     {
       label: "Operasional Kasir",
@@ -163,13 +155,17 @@ export function AppSidebar({
             : "fixed sm:relative inset-y-0 left-0 z-50 sm:z-20 w-64 shadow-2xl sm:shadow-none"
         }`}
       >
-        {/* Dynamic White-Label Brand Header */}
+        {/* Dynamic Brand Header */}
         <header className="flex items-center justify-between border-b border-slate-200 p-4 h-16 bg-white">
           {!isCollapsed ? (
             <div className="flex items-center space-x-3 overflow-hidden">
               {isSuperAdmin ? (
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-purple-600 font-extrabold text-white shadow-md text-xs tracking-wider">
-                  SAAS
+                <div className="h-10 w-10 shrink-0 rounded-xl border border-slate-200 bg-white p-1 shadow-xs overflow-hidden flex items-center justify-center">
+                  <img
+                    src="/logo-zii-pos.png"
+                    alt="ZII POS Global"
+                    className="h-full w-full object-contain rounded-lg"
+                  />
                 </div>
               ) : tenant?.logoUrl ? (
                 <div className="h-10 w-10 shrink-0 rounded-xl border border-slate-200 bg-white p-0.5 shadow-xs overflow-hidden flex items-center justify-center">
@@ -183,8 +179,12 @@ export function AppSidebar({
                   />
                 </div>
               ) : (
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-600 font-extrabold text-white shadow-md text-xs tracking-wider">
-                  {tenantInitials}
+                <div className="h-10 w-10 shrink-0 rounded-xl border border-slate-200 bg-white p-1 shadow-xs overflow-hidden flex items-center justify-center">
+                  <img
+                    src="/logo-zii-pos.png"
+                    alt="ZII POS"
+                    className="h-full w-full object-contain rounded-lg"
+                  />
                 </div>
               )}
               <div className="min-w-0">
@@ -203,8 +203,12 @@ export function AppSidebar({
               </div>
             </div>
           ) : isSuperAdmin ? (
-            <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-xl bg-purple-600 font-extrabold text-white shadow-md text-xs tracking-wider">
-              SAAS
+            <div className="mx-auto h-10 w-10 shrink-0 rounded-xl border border-slate-200 bg-white p-1 shadow-xs overflow-hidden flex items-center justify-center">
+              <img
+                src="/logo-zii-pos.png"
+                alt="ZII POS"
+                className="h-full w-full object-contain rounded-lg"
+              />
             </div>
           ) : tenant?.logoUrl ? (
             <div className="mx-auto h-10 w-10 shrink-0 rounded-xl border border-slate-200 bg-white p-0.5 shadow-xs overflow-hidden flex items-center justify-center">
@@ -215,8 +219,12 @@ export function AppSidebar({
               />
             </div>
           ) : (
-            <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-600 font-extrabold text-white shadow-md text-xs tracking-wider">
-              {tenantInitials}
+            <div className="mx-auto h-10 w-10 shrink-0 rounded-xl border border-slate-200 bg-white p-1 shadow-xs overflow-hidden flex items-center justify-center">
+              <img
+                src="/logo-zii-pos.png"
+                alt="ZII POS"
+                className="h-full w-full object-contain rounded-lg"
+              />
             </div>
           )}
 

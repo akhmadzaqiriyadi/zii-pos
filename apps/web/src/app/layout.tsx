@@ -5,6 +5,11 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "ZII POS — White-Label Point of Sale",
   description: "Sistem Kasir White-Label General Retail & Service oleh ZII",
+  icons: {
+    icon: "/logo-zii-pos.png",
+    shortcut: "/logo-zii-pos.png",
+    apple: "/logo-zii-pos.png",
+  },
 };
 
 export default function RootLayout({

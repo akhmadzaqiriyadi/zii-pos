@@ -15,8 +15,12 @@ export function LoginForm() {
   return (
     <section className="w-full max-w-md space-y-6">
       <header className="flex flex-col items-center space-y-2 text-center">
-        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-200 shadow-xs">
-          <Store className="h-6 w-6" />
+        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white border border-slate-200 shadow-xs p-1 overflow-hidden">
+          <img
+            src="/logo-zii-pos.png"
+            alt="ZII POS"
+            className="h-full w-full object-contain"
+          />
         </div>
         <h1 className="text-2xl font-bold tracking-tight text-slate-900">
           Masuk ke ZII POS
