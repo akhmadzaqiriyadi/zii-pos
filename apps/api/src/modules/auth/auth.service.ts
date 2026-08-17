@@ -19,6 +19,58 @@ export interface LoginInput {
 }
 
 export class AuthService {
+  static async checkSubdomainAvailability(subdomain: string) {
+    if (!subdomain) {
+      return { isAvailable: false, message: "Subdomain tidak boleh kosong." };
+    }
+
+    const clean = subdomain
+      .toLowerCase()
+      .replace(/[^a-z0-9-]/g, "")
+      .slice(0, 30);
+    const reserved = [
+      "api",
+      "www",
+      "admin",
+      "saas",
+      "app",
+      "pos",
+      "static",
+      "mail",
+      "dashboard",
+      "billing",
+      "system",
+    ];
+
+    if (clean.length < 3) {
+      return { isAvailable: false, message: "Subdomain minimal 3 karakter." };
+    }
+
+    if (reserved.includes(clean)) {
+      return {
+        isAvailable: false,
+        message: `Subdomain '${clean}' adalah kata khusus sistem dan tidak dapat digunakan.`,
+      };
+    }
+
+    const existing = await db.tenant.findUnique({
+      where: { subdomain: clean },
+    });
+
+    if (existing) {
+      return {
+        isAvailable: false,
+        message: `Subdomain '${clean}' sudah digunakan oleh toko lain.`,
+      };
+    }
+
+    return {
+      isAvailable: true,
+      subdomain: clean,
+      message: `Subdomain '${clean}' tersedia!`,
+    };
+  }
+
   static async registerTenant(input: RegisterTenantInput) {
     const existingUser = await db.user.findUnique({
       where: { email: input.email.toLowerCase().trim() },

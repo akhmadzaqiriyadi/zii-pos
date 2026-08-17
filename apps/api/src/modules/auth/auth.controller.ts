@@ -3,10 +3,32 @@ import { ApiResponse } from "../../utils/api-response";
 import { AuthService } from "./auth.service";
 
 export class AuthController {
+  static async checkSubdomain(req: Request, res: Response) {
+    try {
+      const subdomain = req.query.subdomain as string;
+      const result = await AuthService.checkSubdomainAvailability(subdomain);
+      return ApiResponse.success(res, result.message, result);
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Gagal memeriksa ketersediaan subdomain.";
+      return ApiResponse.error(res, message, error, 400);
+    }
+  }
+
   static async registerTenant(req: Request, res: Response) {
     try {
-      const { tenantName, ownerName, email, password, phone, address } =
-        req.body;
+      const {
+        tenantName,
+        subdomain,
+        planId,
+        ownerName,
+        email,
+        password,
+        phone,
+        address,
+      } = req.body;
 
       if (!tenantName || !ownerName || !email || !password) {
         return ApiResponse.error(
@@ -19,6 +41,8 @@ export class AuthController {
 
       const result = await AuthService.registerTenant({
         tenantName,
+        subdomain,
+        planId,
         ownerName,
         email,
         password,

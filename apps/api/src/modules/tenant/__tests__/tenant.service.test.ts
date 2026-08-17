@@ -4,15 +4,21 @@ import { TenantService } from "@/modules/tenant/tenant.service";
 mock.module("@zii/db", () => ({
   db: {
     tenant: {
-      findUnique: async (args: { where: { id: string } }) => ({
-        id: args.where.id,
-        name: "ZII Distro Studio",
-        logoUrl: "https://zii.id/logo.png",
-        phone: "08123456789",
-        address: "Jl. Sudirman No. 1",
-        receiptFooter: "Terima kasih!",
-        createdAt: new Date(),
-      }),
+      findUnique: async (args: {
+        where: { id?: string; subdomain?: string };
+      }) => {
+        if (args.where.subdomain === "notfound") return null;
+        return {
+          id: args.where.id || "tenant-test-01",
+          name: "ZII Distro Studio",
+          subdomain: args.where.subdomain || "ziidistro",
+          logoUrl: "https://zii.id/logo.png",
+          phone: "08123456789",
+          address: "Jl. Sudirman No. 1",
+          receiptFooter: "Terima kasih!",
+          createdAt: new Date(),
+        };
+      },
       update: async (args: {
         where: { id: string };
         data: Record<string, unknown>;
@@ -89,6 +95,18 @@ describe("TenantService Unit Tests", () => {
     expect(profile).toBeDefined();
     expect(profile).toHaveProperty("id");
     expect(profile).toHaveProperty("name");
+  });
+
+  it("should return tenant by subdomain", async () => {
+    const tenant = await TenantService.getTenantBySubdomain("ziidistro");
+    expect(tenant).toBeDefined();
+    expect(tenant.subdomain).toBe("ziidistro");
+  });
+
+  it("should throw error if tenant subdomain not found", async () => {
+    expect(TenantService.getTenantBySubdomain("notfound")).rejects.toThrow(
+      "tidak ditemukan",
+    );
   });
 
   it("should update tenant profile settings", async () => {

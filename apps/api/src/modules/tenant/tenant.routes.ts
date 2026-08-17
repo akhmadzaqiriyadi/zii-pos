@@ -4,6 +4,10 @@ import { TenantController } from "./tenant.controller";
 
 const router = Router();
 
+// 🌐 Public Tenant Subdomain Lookup (No Auth Required)
+router.get("/by-subdomain/:subdomain", TenantController.getBySubdomain);
+
+// 🔒 Protected Merchant Routes (Requires Tenant Context)
 router.use(tenantMiddleware);
 
 router.get("/profile", TenantController.getProfile);

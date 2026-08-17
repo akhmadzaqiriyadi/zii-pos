@@ -1,9 +1,25 @@
-import type { Response } from "express";
+import type { Request, Response } from "express";
 import type { AuthenticatedRequest } from "../../middlewares/tenant.middleware";
 import { ApiResponse } from "../../utils/api-response";
 import { TenantService } from "./tenant.service";
 
 export class TenantController {
+  static async getBySubdomain(req: Request, res: Response) {
+    try {
+      const { subdomain } = req.params;
+      const tenant = await TenantService.getTenantBySubdomain(subdomain);
+      return ApiResponse.success(
+        res,
+        "Berhasil mengambil data toko dari subdomain",
+        tenant,
+      );
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error ? error.message : "Toko tidak ditemukan.";
+      return ApiResponse.error(res, message, error, 404);
+    }
+  }
+
   static async getProfile(req: AuthenticatedRequest, res: Response) {
     try {
       const tenantId = req.tenantId || "tenant-default";

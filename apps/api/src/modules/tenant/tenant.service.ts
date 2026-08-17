@@ -33,6 +33,32 @@ export class TenantService {
     };
   }
 
+  static async getTenantBySubdomain(subdomain: string) {
+    const cleanSubdomain = subdomain.toLowerCase().trim();
+    const tenant = await db.tenant.findUnique({
+      where: { subdomain: cleanSubdomain },
+      select: {
+        id: true,
+        name: true,
+        subdomain: true,
+        logoUrl: true,
+        status: true,
+        phone: true,
+        address: true,
+        receiptFooter: true,
+        createdAt: true,
+      },
+    });
+
+    if (!tenant) {
+      throw new Error(
+        `Toko dengan subdomain '${cleanSubdomain}' tidak ditemukan.`,
+      );
+    }
+
+    return tenant;
+  }
+
   static async updateTenantProfile(tenantId: string, input: UpdateTenantInput) {
     return await db.tenant.update({
       where: { id: tenantId },

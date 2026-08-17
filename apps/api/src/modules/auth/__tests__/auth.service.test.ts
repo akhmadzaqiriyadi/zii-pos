@@ -80,6 +80,21 @@ describe("AuthService Unit Tests", () => {
     }
   });
 
+  it("should validate and check subdomain availability", async () => {
+    // Valid subdomain
+    const res1 = await AuthService.checkSubdomainAvailability("ziistore");
+    expect(res1.isAvailable).toBe(true);
+
+    // Empty or too short
+    const res2 = await AuthService.checkSubdomainAvailability("ab");
+    expect(res2.isAvailable).toBe(false);
+
+    // Reserved system subdomain
+    const res3 = await AuthService.checkSubdomainAvailability("admin");
+    expect(res3.isAvailable).toBe(false);
+    expect(res3.message).toContain("kata khusus sistem");
+  });
+
   it("should register tenant successfully", async () => {
     const mockTenantData = {
       tenantName: "ZII Test Store",
