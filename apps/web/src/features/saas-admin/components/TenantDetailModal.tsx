@@ -76,13 +76,13 @@ export function TenantDetailModal({
                 <img
                   src={detail.logoUrl}
                   alt={detail.name}
-                  className="h-12 w-12 shrink-0 object-contain"
+                  className="h-16 w-16 shrink-0 object-contain"
                 />
               ) : (
                 <img
                   src="/logo-zii-pos.png"
                   alt={tenant.name}
-                  className="h-12 w-12 shrink-0 object-contain"
+                  className="h-16 w-16 shrink-0 object-contain"
                 />
               )}
               <div>

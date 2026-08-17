@@ -156,20 +156,20 @@ export function AppSidebar({
         }`}
       >
         {/* Dynamic Brand Header */}
-        <header className="flex items-center justify-between border-b border-slate-200 p-4 h-16 bg-white">
+        <header className="flex items-center justify-between border-b border-slate-200 px-4 py-3 h-20 bg-white">
           {!isCollapsed ? (
-            <div className="flex items-center space-x-3 overflow-hidden">
+            <div className="flex items-center space-x-3.5 overflow-hidden">
               {isSuperAdmin ? (
                 <img
                   src="/logo-zii-pos.png"
                   alt="ZII POS Global"
-                  className="h-11 w-11 shrink-0 object-contain"
+                  className="h-14 w-14 shrink-0 object-contain"
                 />
               ) : tenant?.logoUrl ? (
                 <img
                   src={tenant.logoUrl}
                   alt={tenant.name || "Logo Toko"}
-                  className="h-11 w-11 shrink-0 object-contain"
+                  className="h-14 w-14 shrink-0 object-contain"
                   onError={(e) => {
                     (e.target as HTMLElement).style.display = "none";
                   }}
@@ -178,16 +178,16 @@ export function AppSidebar({
                 <img
                   src="/logo-zii-pos.png"
                   alt="ZII POS"
-                  className="h-11 w-11 shrink-0 object-contain"
+                  className="h-14 w-14 shrink-0 object-contain"
                 />
               )}
               <div className="min-w-0">
-                <h2 className="text-sm font-extrabold text-slate-900 truncate">
+                <h2 className="text-sm font-black text-slate-900 truncate tracking-tight">
                   {isSuperAdmin
                     ? "ZII POS Platform Global"
                     : tenant?.name || "ZII POS Store"}
                 </h2>
-                <p className="text-[10px] font-semibold text-slate-400 truncate">
+                <p className="text-[11px] font-semibold text-slate-400 truncate">
                   {isSuperAdmin
                     ? "Platform Super Admin Portal"
                     : tenant?.subdomain
@@ -200,19 +200,19 @@ export function AppSidebar({
             <img
               src="/logo-zii-pos.png"
               alt="ZII POS"
-              className="mx-auto h-11 w-11 object-contain"
+              className="mx-auto h-12 w-12 object-contain"
             />
           ) : tenant?.logoUrl ? (
             <img
               src={tenant.logoUrl}
               alt={tenant.name || "Logo"}
-              className="mx-auto h-11 w-11 object-contain"
+              className="mx-auto h-12 w-12 object-contain"
             />
           ) : (
             <img
               src="/logo-zii-pos.png"
               alt="ZII POS"
-              className="mx-auto h-11 w-11 object-contain"
+              className="mx-auto h-12 w-12 object-contain"
             />
           )}
 

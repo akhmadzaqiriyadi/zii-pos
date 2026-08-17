@@ -35,7 +35,7 @@ export function OnboardingWizard() {
         <img
           src="/logo-zii-pos.png"
           alt="ZII POS"
-          className="h-20 w-auto object-contain"
+          className="h-28 w-auto object-contain"
         />
         <div className="space-y-1">
           <h1 className="text-3xl font-black tracking-tight text-slate-900">
