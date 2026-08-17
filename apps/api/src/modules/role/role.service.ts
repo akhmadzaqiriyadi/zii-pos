@@ -258,7 +258,12 @@ export class RoleService {
         include: { customRole: true },
       });
 
-      if (user?.customRole) {
+      if (
+        user &&
+        user.tenantId === tenantId &&
+        user.customRole &&
+        (!user.customRole.tenantId || user.customRole.tenantId === tenantId)
+      ) {
         return RoleService.parsePermissions(user.customRole.permissions);
       }
     }

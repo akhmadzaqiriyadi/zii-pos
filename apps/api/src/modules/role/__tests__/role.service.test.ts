@@ -90,9 +90,11 @@ mock.module("@zii/db", () => ({
         if (args.where.id === "usr-with-custom-role") {
           return {
             id: "usr-with-custom-role",
+            tenantId: "tenant-test-01",
             role: "supervisor",
             customRole: {
               id: "role-custom-01",
+              tenantId: "tenant-test-01",
               permissions: JSON.stringify(["pos:access", "pos:discount"]),
             },
           };
