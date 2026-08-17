@@ -5,6 +5,7 @@ import {
   ChevronRight,
   CreditCard,
   Crown,
+  Layers,
   LogOut,
   Package,
   Receipt,
@@ -96,9 +97,16 @@ export function AppSidebar({
       badge: null,
     },
     {
-      title: "Super Admin Portal",
+      title: "Monitoring Merchant",
       href: "/saas-admin",
       icon: Crown,
+      permissions: ["saas:admin"],
+      badge: "SaaS",
+    },
+    {
+      title: "Kelola Paket SaaS",
+      href: "/saas-admin/plans",
+      icon: Layers,
       permissions: ["saas:admin"],
       badge: "SaaS",
     },
@@ -218,7 +226,10 @@ export function AppSidebar({
             const isAllowed = useHasPermission(...item.permissions);
             const Icon = item.icon;
 
-            if (!isAllowed && item.href === "/saas-admin") {
+            if (
+              !isAllowed &&
+              (item.href === "/saas-admin" || item.href === "/saas-admin/plans")
+            ) {
               return null;
             }
 

@@ -1,10 +1,8 @@
 "use client";
 
-import { Crown, Layers, LayoutDashboard } from "lucide-react";
-import Link from "next/link";
+import { Crown } from "lucide-react";
 import React from "react";
 import { DashboardLayout } from "../../components/layout/dashboard-layout";
-import { Button } from "../../components/ui/button";
 import { SaaSAdminMetricsCards } from "../../features/saas-admin/components/SaaSAdminMetricsCards";
 import { TenantStatusModal } from "../../features/saas-admin/components/TenantStatusModal";
 import { TenantTable } from "../../features/saas-admin/components/TenantTable";
@@ -31,7 +29,7 @@ export default function SaaSAdminPage() {
   } = useSaaSAdminDashboard();
 
   return (
-    <DashboardLayout requiredRole="owner">
+    <DashboardLayout requiredPermission="saas:admin">
       <main className="p-4 sm:p-6 lg:p-8 w-full space-y-6">
         <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-100 pb-5">
           <div className="space-y-1">
@@ -40,39 +38,14 @@ export default function SaaSAdminPage() {
                 <Crown className="h-4 w-4" />
               </span>
               <h1 className="text-2xl font-extrabold text-slate-900">
-                Super Admin SaaS Portal
+                Monitoring Merchant & MRR
               </h1>
             </div>
             <p className="text-xs sm:text-sm text-slate-500">
-              Pemantauan performa bisnis SaaS komersial, pendapatan MRR, dan
-              kontrol status lisensi seluruh merchant toko.
+              Super Admin Portal — Pemantauan performa bisnis SaaS komersial,
+              pendapatan MRR, dan kontrol status lisensi seluruh merchant toko.
             </p>
           </div>
-
-          {/* Navigation Sub-Tabs */}
-          <nav className="flex items-center gap-2 bg-slate-100 p-1.5 rounded-xl border border-slate-200 shrink-0 shadow-2xs">
-            <Link href="/saas-admin">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="gap-2 rounded-lg bg-white text-emerald-700 font-bold shadow-xs text-xs cursor-pointer"
-              >
-                <LayoutDashboard className="h-3.5 w-3.5" />
-                <span>Monitoring Merchant</span>
-              </Button>
-            </Link>
-
-            <Link href="/saas-admin/plans">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="gap-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-white/60 font-semibold text-xs transition cursor-pointer"
-              >
-                <Layers className="h-3.5 w-3.5" />
-                <span>Kelola Paket SaaS</span>
-              </Button>
-            </Link>
-          </nav>
         </header>
 
         {/* 1. SaaS KPI Metrics Cards */}
