@@ -14,6 +14,12 @@ export interface CashierUser {
   name: string;
   email: string;
   role: string;
+  roleId?: string | null;
+  customRole?: {
+    id: string;
+    name: string;
+    code: string;
+  } | null;
   createdAt: string;
 }
 
@@ -29,6 +35,8 @@ export interface CreateCashierPayload {
   name: string;
   email: string;
   password: string;
+  roleId?: string;
+  role?: string;
 }
 
 export class TenantApiService {

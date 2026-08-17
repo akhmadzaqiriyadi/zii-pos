@@ -1,11 +1,12 @@
 "use client";
 
-import { CreditCard, Store, Users } from "lucide-react";
+import { CreditCard, Shield, Store, Users } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import React, { Suspense } from "react";
 import { DashboardLayout } from "../../../components/layout/dashboard-layout";
 import { Button } from "../../../components/ui/button";
+import { RoleManagement } from "../../../features/roles/components/RoleManagement";
 import { CashierManagement } from "../../../features/tenant/components/CashierManagement";
 import { TenantSettingsForm } from "../../../features/tenant/components/TenantSettingsForm";
 
@@ -59,12 +60,16 @@ function SettingsContent() {
           <h1 className="text-2xl font-extrabold text-slate-900">
             {currentTab === "cashiers"
               ? "Kelola Staf & Kasir Toko"
-              : "Pengaturan White-Label Merchant"}
+              : currentTab === "roles"
+                ? "Role & Hak Akses (Dynamic RBAC)"
+                : "Pengaturan White-Label Merchant"}
           </h1>
           <p className="text-xs sm:text-sm text-slate-500">
             {currentTab === "cashiers"
-              ? "Kelola hak akses kasir multi-user dan kapasitas staf toko sesuai paket langganan."
-              : "Atur logo toko, nama merchant, kontak, dan footer struk cetak / WhatsApp secara real-time."}
+              ? "Kelola akun kasir multi-user dan kapasitas staf toko sesuai paket langganan."
+              : currentTab === "roles"
+                ? "Atur wewenang dan izin akses staf mulai dari diskon, void nota, edit produk, hingga laporan."
+                : "Atur logo toko, nama merchant, kontak, dan footer struk cetak / WhatsApp secara real-time."}
           </p>
         </div>
 
@@ -81,7 +86,22 @@ function SettingsContent() {
               }`}
             >
               <Store className="h-3.5 w-3.5" />
-              <span>Branding Toko</span>
+              <span>Branding</span>
+            </Button>
+          </Link>
+
+          <Link href="/settings?tab=roles">
+            <Button
+              variant="ghost"
+              size="sm"
+              className={`gap-2 rounded-lg text-xs font-bold transition cursor-pointer ${
+                currentTab === "roles"
+                  ? "bg-white text-emerald-700 shadow-xs"
+                  : "text-slate-600 hover:text-slate-900 hover:bg-white/60"
+              }`}
+            >
+              <Shield className="h-3.5 w-3.5" />
+              <span>Role & Akses</span>
             </Button>
           </Link>
 
@@ -96,7 +116,7 @@ function SettingsContent() {
               }`}
             >
               <Users className="h-3.5 w-3.5" />
-              <span>Kelola Kasir</span>
+              <span>Kelola Staf</span>
             </Button>
           </Link>
 
@@ -107,13 +127,15 @@ function SettingsContent() {
               className="gap-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-white/60 font-semibold text-xs transition cursor-pointer"
             >
               <CreditCard className="h-3.5 w-3.5" />
-              <span>Lisensi & Billing</span>
+              <span>Billing</span>
             </Button>
           </Link>
         </nav>
       </header>
 
-      {currentTab === "cashiers" ? (
+      {currentTab === "roles" ? (
+        <RoleManagement />
+      ) : currentTab === "cashiers" ? (
         <CashierManagement />
       ) : (
         <TenantSettingsForm />

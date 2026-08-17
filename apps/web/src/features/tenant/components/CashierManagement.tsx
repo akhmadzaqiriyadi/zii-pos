@@ -45,6 +45,7 @@ import {
   TableHeader,
   TableRow,
 } from "../../../components/ui/table";
+import { useRoles } from "../../roles/hooks/useRoles";
 import { useCashiers } from "../hooks/useCashiers";
 
 export function CashierManagement() {
@@ -57,10 +58,13 @@ export function CashierManagement() {
     isDeleting,
   } = useCashiers();
 
+  const { roles, isLoadingRoles } = useRoles();
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [selectedRoleId, setSelectedRoleId] = useState<string>("cashier");
   const [formError, setFormError] = useState("");
 
   const currentCount = cashiersData?.currentCount || 0;
@@ -72,6 +76,7 @@ export function CashierManagement() {
     setName("");
     setEmail("");
     setPassword("");
+    setSelectedRoleId("cashier");
     setFormError("");
     setIsModalOpen(true);
   };
@@ -91,7 +96,13 @@ export function CashierManagement() {
     }
 
     try {
-      await createCashier({ name, email, password });
+      await createCashier({
+        name: name.trim(),
+        email: email.trim(),
+        password: password.trim(),
+        roleId: selectedRoleId !== "cashier" ? selectedRoleId : undefined,
+        role: selectedRoleId === "cashier" ? "cashier" : undefined,
+      });
       setIsModalOpen(false);
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -129,8 +140,9 @@ export function CashierManagement() {
               {currentCount} dari {maxCashiers} Akun Kasir Aktif
             </h3>
             <p className="text-xs text-slate-500">
-              Setiap kasir memiliki akun login tersendiri untuk mencatat
-              transaksi dan cetak nota dengan nama kasir yang bertugas.
+              Setiap kasir memiliki akun login dan hak akses kustom tersendiri
+              untuk mencatat transaksi dan cetak nota dengan nama kasir yang
+              bertugas.
             </p>
           </div>
 
@@ -140,7 +152,7 @@ export function CashierManagement() {
             className="gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-5 px-5 rounded-xl cursor-pointer shrink-0"
           >
             <UserPlus className="h-4 w-4" />
-            <span>Tambah Kasir Baru</span>
+            <span>Tambah Staf / Kasir</span>
           </Button>
         </div>
 
@@ -197,7 +209,7 @@ export function CashierManagement() {
                   <TableRow className="bg-slate-50/80">
                     <TableHead>Nama Pengguna</TableHead>
                     <TableHead>Email Login</TableHead>
-                    <TableHead>Role Akses</TableHead>
+                    <TableHead>Role & Wewenang</TableHead>
                     <TableHead>Terdaftar Sejak</TableHead>
                     <TableHead className="text-right">Aksi</TableHead>
                   </TableRow>
@@ -205,6 +217,9 @@ export function CashierManagement() {
                 <TableBody>
                   {cashiersData?.users?.map((u) => {
                     const isOwner = u.role === "owner";
+                    const isSuperadmin = u.role === "superadmin";
+                    const customRoleName = u.customRole?.name;
+
                     return (
                       <TableRow key={u.id}>
                         <TableCell className="font-bold text-slate-900 flex items-center gap-2">
@@ -217,12 +232,35 @@ export function CashierManagement() {
                           {u.email}
                         </TableCell>
                         <TableCell>
-                          <Badge
-                            variant={isOwner ? "emerald" : "blue"}
-                            className="text-[10px] font-extrabold uppercase"
-                          >
-                            {isOwner ? "Owner (Admin)" : "Kasir Operasional"}
-                          </Badge>
+                          {isSuperadmin ? (
+                            <Badge
+                              variant="purple"
+                              className="text-[10px] font-extrabold uppercase bg-purple-100 text-purple-800"
+                            >
+                              Super Admin
+                            </Badge>
+                          ) : isOwner ? (
+                            <Badge
+                              variant="emerald"
+                              className="text-[10px] font-extrabold uppercase"
+                            >
+                              Owner (Pemilik Toko)
+                            </Badge>
+                          ) : customRoleName ? (
+                            <Badge
+                              variant="blue"
+                              className="text-[10px] font-extrabold uppercase bg-blue-100 text-blue-800 border-blue-200"
+                            >
+                              {customRoleName}
+                            </Badge>
+                          ) : (
+                            <Badge
+                              variant="slate"
+                              className="text-[10px] font-extrabold uppercase bg-slate-100 text-slate-700"
+                            >
+                              Kasir Standar
+                            </Badge>
+                          )}
                         </TableCell>
                         <TableCell className="text-xs text-slate-500">
                           {new Intl.DateTimeFormat("id-ID", {
@@ -232,7 +270,7 @@ export function CashierManagement() {
                           }).format(new Date(u.createdAt))}
                         </TableCell>
                         <TableCell className="text-right">
-                          {!isOwner && (
+                          {!isOwner && !isSuperadmin && (
                             <Button
                               variant="ghost"
                               size="icon"
@@ -261,11 +299,11 @@ export function CashierManagement() {
           <DialogHeader className="mb-4">
             <DialogTitle className="text-xl font-bold text-slate-900 flex items-center gap-2">
               <UserPlus className="h-5 w-5 text-emerald-600" />
-              <span>Tambah Akun Kasir Baru</span>
+              <span>Tambah Akun Staf / Kasir Baru</span>
             </DialogTitle>
             <p className="text-xs text-slate-500">
-              Buatkan akun login untuk staf kasir tokomu agar bisa bertransaksi
-              di POS.
+              Buatkan akun login untuk staf tokomu dan pilih role akses wewenang
+              yang sesuai.
             </p>
           </DialogHeader>
 
@@ -279,7 +317,7 @@ export function CashierManagement() {
           <form onSubmit={handleCreateCashier} className="space-y-4">
             <FormGroup>
               <FormLabel htmlFor="cashier-name" required>
-                Nama Lengkap Kasir
+                Nama Lengkap Staf
               </FormLabel>
               <Input
                 id="cashier-name"
@@ -292,7 +330,7 @@ export function CashierManagement() {
 
             <FormGroup>
               <FormLabel htmlFor="cashier-email" required>
-                Email Login Kasir
+                Email Login Staf
               </FormLabel>
               <Input
                 id="cashier-email"
@@ -303,13 +341,13 @@ export function CashierManagement() {
                 required
               />
               <FormHelperText>
-                Email ini digunakan kasir untuk login ke POS.
+                Email ini digunakan staf untuk login ke sistem POS toko.
               </FormHelperText>
             </FormGroup>
 
             <FormGroup>
               <FormLabel htmlFor="cashier-password" required>
-                Password Login Kasir
+                Password Login
               </FormLabel>
               <Input
                 id="cashier-password"
@@ -319,6 +357,36 @@ export function CashierManagement() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
+            </FormGroup>
+
+            <FormGroup>
+              <FormLabel htmlFor="role-select" required>
+                Role & Hak Akses (Wewenang)
+              </FormLabel>
+              <select
+                id="role-select"
+                value={selectedRoleId}
+                onChange={(e) => setSelectedRoleId(e.target.value)}
+                className="w-full h-10 px-3 rounded-xl border border-slate-200 bg-white text-xs font-semibold text-slate-800 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+              >
+                <option value="cashier">
+                  Kasir Standar (POS & Transaksi Saja)
+                </option>
+                {roles
+                  .filter(
+                    (r) =>
+                      !r.isSystem && r.code !== "owner" && r.code !== "cashier",
+                  )
+                  .map((r) => (
+                    <option key={r.id} value={r.id}>
+                      {r.name} ({r.permissions.length} Izin Kustom)
+                    </option>
+                  ))}
+              </select>
+              <FormHelperText>
+                Kamu bisa membuat role baru di menu{" "}
+                <strong>Role & Hak Akses</strong>.
+              </FormHelperText>
             </FormGroup>
 
             <div className="pt-2 flex items-center justify-end gap-2">
@@ -344,7 +412,7 @@ export function CashierManagement() {
                 ) : (
                   <>
                     <CheckCircle2 className="h-4 w-4" />
-                    <span>Buat Akun Kasir</span>
+                    <span>Buat Akun Staf</span>
                   </>
                 )}
               </Button>

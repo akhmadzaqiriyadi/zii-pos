@@ -2,7 +2,7 @@ import type * as React from "react";
 import { cn } from "../../lib/cn";
 
 export interface BadgeProps extends React.HTMLAttributes<HTMLDivElement> {
-  variant?: "emerald" | "amber" | "blue" | "slate" | "danger";
+  variant?: "emerald" | "amber" | "blue" | "slate" | "danger" | "purple";
 }
 
 export function Badge({
@@ -16,6 +16,7 @@ export function Badge({
     blue: "bg-blue-50 text-blue-700 border-blue-200",
     slate: "bg-slate-100 text-slate-700 border-slate-200",
     danger: "bg-red-50 text-red-700 border-red-200",
+    purple: "bg-purple-50 text-purple-700 border-purple-200",
   };
 
   return (
