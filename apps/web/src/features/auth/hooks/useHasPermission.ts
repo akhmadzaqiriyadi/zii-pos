@@ -27,16 +27,7 @@ export function useHasPermission(...requiredPermissions: string[]): boolean {
 
   if (!user) return false;
 
-  // 1. Super Admin universal access bypass
-  if (
-    user.role === "superadmin" ||
-    user.email === "admin@zii.id" ||
-    user.email === "zaqi@zii.id"
-  ) {
-    return true;
-  }
-
-  // 2. Direct dynamic permissions array from backend response / token
+  // 1. Direct dynamic permissions array from backend response / JWT
   if (
     user.permissions &&
     Array.isArray(user.permissions) &&
@@ -44,6 +35,11 @@ export function useHasPermission(...requiredPermissions: string[]): boolean {
   ) {
     if (user.permissions.includes("*")) return true;
     return requiredPermissions.some((perm) => user.permissions?.includes(perm));
+  }
+
+  // 2. Super Admin role bypass
+  if (user.role === "superadmin") {
+    return true;
   }
 
   // 3. Built-in owner fallback

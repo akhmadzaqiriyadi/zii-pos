@@ -11,6 +11,7 @@ import {
 import Link from "next/link";
 import { useState } from "react";
 import { useAuth } from "../../features/auth/hooks/useAuth";
+import { useHasPermission } from "../../features/auth/hooks/useHasPermission";
 import { PrinterSettingsModal } from "../../features/pos/components/PrinterSettingsModal";
 import { useThermalPrinter } from "../../features/pos/hooks/useThermalPrinter";
 import { Badge } from "../ui/badge";
@@ -21,12 +22,14 @@ import { AppSidebar } from "./sidebar";
 interface DashboardLayoutProps {
   children: React.ReactNode;
   requiredRole?: "owner" | "cashier";
+  requiredPermission?: string | string[];
   defaultCollapsed?: boolean;
 }
 
 export function DashboardLayout({
   children,
   requiredRole,
+  requiredPermission,
   defaultCollapsed = false,
 }: DashboardLayoutProps) {
   const [isSidebarCollapsed, setIsSidebarCollapsed] =
@@ -34,17 +37,21 @@ export function DashboardLayout({
   const { user, tenant, logout } = useAuth();
   const printer = useThermalPrinter();
 
-  const isSuperAdmin =
-    user?.role === "superadmin" ||
-    user?.email?.includes("superadmin") ||
-    user?.email === "admin@zii.id" ||
-    user?.email === "zaqi@zii.id";
+  const isSuperAdmin = useHasPermission("saas:admin", "*");
+  const isOwner = useHasPermission("settings:manage", "roles:manage");
+  const hasRequiredPermission = requiredPermission
+    ? useHasPermission(
+        ...(Array.isArray(requiredPermission)
+          ? requiredPermission
+          : [requiredPermission]),
+      )
+    : true;
 
-  const isOwner = user?.role === "owner" || !user?.role || isSuperAdmin;
   const isAuthorized =
-    !requiredRole ||
-    isSuperAdmin ||
-    (requiredRole === "owner" ? isOwner : true);
+    !requiredRole && !requiredPermission
+      ? true
+      : isSuperAdmin ||
+        ((requiredRole === "owner" ? isOwner : true) && hasRequiredPermission);
 
   return (
     <div className="flex h-screen w-screen overflow-hidden bg-slate-100 font-sans">

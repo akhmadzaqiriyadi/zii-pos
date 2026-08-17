@@ -18,7 +18,7 @@ describe("useHasPermission Hook Unit Tests", () => {
   });
 
   it("should return true for superadmin on any permission (universal bypass)", () => {
-    mockUser = { role: "superadmin", email: "admin@zii.id" };
+    mockUser = { role: "superadmin", permissions: ["*"] };
     expect(useHasPermission("pos:access")).toBe(true);
     expect(useHasPermission("saas:admin")).toBe(true);
     expect(useHasPermission("products:delete")).toBe(true);

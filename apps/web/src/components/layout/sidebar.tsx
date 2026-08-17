@@ -39,12 +39,9 @@ export function AppSidebar({
   const pathname = usePathname();
   const { user, tenant, logout } = useAuth();
 
-  const userRole = (user?.role as string) || "cashier";
-  const isSuperAdmin =
-    userRole === "superadmin" ||
-    user?.email?.includes("superadmin") ||
-    user?.email === "admin@zii.id" ||
-    user?.email === "zaqi@zii.id";
+  const isSuperAdmin = useHasPermission("saas:admin", "*");
+  const isOwner = useHasPermission("settings:manage", "roles:manage");
+  const userRole = user?.role || "cashier";
 
   const allMenuItems: MenuItem[] = [
     {
