@@ -34,12 +34,19 @@ export function PlanFormModal({
   onSubmitUpdate,
   isPending,
 }: PlanFormModalProps) {
-  const { register, handleSubmit, onFormSubmit, errors, isEditing } =
-    usePlanFormModal({
-      planToEdit,
-      onSubmitCreate,
-      onSubmitUpdate,
-    });
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    onFormSubmit,
+    errors,
+    isEditing,
+  } = usePlanFormModal({
+    planToEdit,
+    onSubmitCreate,
+    onSubmitUpdate,
+  });
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
@@ -62,6 +69,8 @@ export function PlanFormModal({
         <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-4">
           <PlanFormFields
             register={register}
+            watch={watch}
+            setValue={setValue}
             errors={errors}
             isEditing={isEditing}
           />

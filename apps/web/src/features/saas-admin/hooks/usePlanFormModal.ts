@@ -30,6 +30,8 @@ export function usePlanFormModal({
     register,
     handleSubmit,
     reset,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm<PlanFormData>({
     resolver: zodResolver(planFormSchema),
@@ -82,6 +84,8 @@ export function usePlanFormModal({
   return {
     register,
     handleSubmit,
+    watch,
+    setValue,
     onFormSubmit,
     errors,
     isEditing,

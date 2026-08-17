@@ -1,26 +1,35 @@
 import React from "react";
-import type { FieldErrors, UseFormRegister } from "react-hook-form";
-import {
-  FormError,
-  FormGroup,
-  FormLabel,
-  Label,
-} from "../../../components/ui/form";
+import type {
+  FieldErrors,
+  UseFormRegister,
+  UseFormSetValue,
+  UseFormWatch,
+} from "react-hook-form";
+import { Checkbox } from "../../../components/ui/checkbox";
+import { FormError, FormGroup, FormLabel } from "../../../components/ui/form";
 import { Input } from "../../../components/ui/input";
 import { Textarea } from "../../../components/ui/textarea";
 import type { PlanFormData } from "../schemas/planForm.schema";
 
 interface PlanFormFieldsProps {
   register: UseFormRegister<PlanFormData>;
+  watch: UseFormWatch<PlanFormData>;
+  setValue: UseFormSetValue<PlanFormData>;
   errors: FieldErrors<PlanFormData>;
   isEditing: boolean;
 }
 
 export function PlanFormFields({
   register,
+  watch,
+  setValue,
   errors,
   isEditing,
 }: PlanFormFieldsProps) {
+  const allowWhiteLabel = watch("allowWhiteLabel");
+  const allowExportExcel = watch("allowExportExcel");
+  const isActive = watch("isActive");
+
   return (
     <div className="space-y-4 py-2">
       {/* Kode & Nama Paket */}
@@ -100,34 +109,49 @@ export function PlanFormFields({
         </FormGroup>
       </div>
 
-      {/* Toggles / Checkboxes */}
+      {/* Toggles / Checkboxes dengan Komponen Checkbox Hijau */}
       <div className="flex flex-wrap items-center gap-4 p-3.5 rounded-xl bg-slate-50 border border-slate-200">
-        <Label className="flex items-center gap-2 cursor-pointer">
-          <input
-            type="checkbox"
-            {...register("allowWhiteLabel")}
-            className="h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer"
+        <label
+          htmlFor="plan-whitelabel"
+          className="flex items-center gap-2.5 cursor-pointer select-none"
+        >
+          <Checkbox
+            id="plan-whitelabel"
+            checked={Boolean(allowWhiteLabel)}
+            onCheckedChange={(val) => setValue("allowWhiteLabel", val)}
           />
-          <span>Dukung White-Label Domain</span>
-        </Label>
+          <span className="text-xs font-semibold text-slate-700">
+            Dukung White-Label Domain
+          </span>
+        </label>
 
-        <Label className="flex items-center gap-2 cursor-pointer">
-          <input
-            type="checkbox"
-            {...register("allowExportExcel")}
-            className="h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer"
+        <label
+          htmlFor="plan-export-excel"
+          className="flex items-center gap-2.5 cursor-pointer select-none"
+        >
+          <Checkbox
+            id="plan-export-excel"
+            checked={Boolean(allowExportExcel)}
+            onCheckedChange={(val) => setValue("allowExportExcel", val)}
           />
-          <span>Dukung Ekspor Laporan Excel</span>
-        </Label>
+          <span className="text-xs font-semibold text-slate-700">
+            Dukung Ekspor Laporan Excel
+          </span>
+        </label>
 
-        <Label className="flex items-center gap-2 cursor-pointer">
-          <input
-            type="checkbox"
-            {...register("isActive")}
-            className="h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer"
+        <label
+          htmlFor="plan-is-active"
+          className="flex items-center gap-2.5 cursor-pointer select-none"
+        >
+          <Checkbox
+            id="plan-is-active"
+            checked={Boolean(isActive)}
+            onCheckedChange={(val) => setValue("isActive", val)}
           />
-          <span>Paket Aktif (Tampil di Onboarding)</span>
-        </Label>
+          <span className="text-xs font-semibold text-slate-700">
+            Paket Aktif (Tampil di Onboarding)
+          </span>
+        </label>
       </div>
 
       {/* Daftar Fitur */}
