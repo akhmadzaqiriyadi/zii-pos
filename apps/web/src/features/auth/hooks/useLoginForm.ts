@@ -24,11 +24,44 @@ export function useLoginForm() {
   const loginMutation = useMutation({
     mutationFn: async (data: LoginFormData) => {
       setFormError("");
-      await login(data.email, data.password);
+      const res = await login(data.email, data.password);
+      return res;
     },
-    onSuccess: () => {
+    onSuccess: (result) => {
       toast.success("Berhasil masuk ke ZII POS!");
-      window.location.href = "/pos";
+
+      const role = result?.user?.role;
+      const subdomain = result?.tenant?.subdomain;
+
+      if (typeof window !== "undefined") {
+        const protocol = window.location.protocol;
+        const hostname = window.location.hostname;
+        const port = window.location.port ? `:${window.location.port}` : "";
+
+        if (role === "superadmin") {
+          window.location.href = "/saas-admin";
+          return;
+        }
+
+        // If user logged in from root domain (localhost:3000) and has a tenant subdomain (e.g. ziidistro)
+        if (
+          subdomain &&
+          (hostname === "localhost" || hostname === "127.0.0.1")
+        ) {
+          window.location.href = `${protocol}//${subdomain}.localhost${port}/pos`;
+          return;
+        }
+
+        if (
+          subdomain &&
+          (hostname === "ziipos.com" || hostname === "www.ziipos.com")
+        ) {
+          window.location.href = `${protocol}//${subdomain}.ziipos.com/pos`;
+          return;
+        }
+
+        window.location.href = "/pos";
+      }
     },
     onError: (err: unknown) => {
       const msg = parseApiErrorMessage(err, "Email atau password salah.");

@@ -8,6 +8,9 @@ export function middleware(request: NextRequest) {
   const subdomain = extractSubdomain(host);
   const token = request.cookies.get("zii_auth_token")?.value;
   const tenantStatus = request.cookies.get("zii_tenant_status")?.value;
+  const tenantSubdomainCookie = request.cookies.get(
+    "zii_tenant_subdomain",
+  )?.value;
   const hasRegistered = request.cookies.get("zii_has_registered")?.value;
   const { pathname } = request.nextUrl;
 
@@ -30,7 +33,31 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  // 3. Route landing "/" based on tenant subdomain and auth state
+  // 3. Auto-redirect authenticated merchant users on root domain to their dedicated tenant subdomain
+  if (
+    token &&
+    !subdomain &&
+    tenantSubdomainCookie &&
+    tenantSubdomainCookie !== "localhost" &&
+    (pathname.startsWith("/pos") ||
+      pathname.startsWith("/products") ||
+      pathname.startsWith("/transactions") ||
+      pathname.startsWith("/settings"))
+  ) {
+    const isLocal = host?.includes("localhost");
+    const port = host?.includes(":") ? `:${host.split(":")[1]}` : "";
+    const redirectHostname = isLocal
+      ? `${tenantSubdomainCookie}.localhost${port}`
+      : `${tenantSubdomainCookie}.ziipos.com`;
+    const protocol = request.nextUrl.protocol;
+    return NextResponse.redirect(
+      new URL(
+        `${protocol}//${redirectHostname}${pathname}${request.nextUrl.search}`,
+      ),
+    );
+  }
+
+  // 4. Route landing "/" based on tenant subdomain and auth state
   if (pathname === "/") {
     if (token) {
       const isExpired =
@@ -52,7 +79,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/onboarding", request.url));
   }
 
-  // 4. Evaluate authentication & trial expiration guard
+  // 5. Evaluate authentication & trial expiration guard
   const guard = evaluateTrialGuard(pathname, token, tenantStatus);
 
   if (!guard.allowed && guard.redirectTo) {
@@ -64,7 +91,7 @@ export function middleware(request: NextRequest) {
     return response;
   }
 
-  // 5. Pass-through with injected headers
+  // 6. Pass-through with injected headers
   const response = NextResponse.next({
     request: {
       headers: requestHeaders,

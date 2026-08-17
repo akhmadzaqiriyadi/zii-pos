@@ -41,7 +41,10 @@ interface AuthContextType {
   token: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (email: string, password: string) => Promise<void>;
+  login: (
+    email: string,
+    password: string,
+  ) => Promise<{ user: AuthUser; tenant: AuthTenant }>;
   register: (input: RegisterInput) => Promise<void>;
   logout: () => void;
 }
@@ -129,6 +132,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setToken(jwtToken);
       setUser(loggedUser);
       setTenant(loggedTenant);
+
+      return { user: loggedUser, tenant: loggedTenant };
     } finally {
       setIsLoading(false);
     }
