@@ -8,6 +8,13 @@ import type {
 import { Checkbox } from "../../../components/ui/checkbox";
 import { FormError, FormGroup, FormLabel } from "../../../components/ui/form";
 import { Input } from "../../../components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../../../components/ui/select";
 import { Textarea } from "../../../components/ui/textarea";
 import type { PlanFormData } from "../schemas/planForm.schema";
 
@@ -29,6 +36,7 @@ export function PlanFormFields({
   const allowWhiteLabel = watch("allowWhiteLabel");
   const allowExportExcel = watch("allowExportExcel");
   const isActive = watch("isActive");
+  const billingCycle = watch("billingCycle") || "monthly";
 
   return (
     <div className="space-y-4 py-2">
@@ -84,14 +92,20 @@ export function PlanFormFields({
           <FormLabel htmlFor="plan-billing-cycle" required>
             Siklus Penagihan
           </FormLabel>
-          <select
-            id="plan-billing-cycle"
-            {...register("billingCycle")}
-            className="flex h-10 w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2 text-sm text-slate-800 transition focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+          <Select
+            value={billingCycle}
+            onValueChange={(val: "monthly" | "yearly") =>
+              setValue("billingCycle", val)
+            }
           >
-            <option value="monthly">Bulanan (Monthly)</option>
-            <option value="yearly">Tahunan (Yearly)</option>
-          </select>
+            <SelectTrigger id="plan-billing-cycle" className="bg-slate-50">
+              <SelectValue placeholder="Pilih Siklus" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="monthly">Bulanan (Monthly)</SelectItem>
+              <SelectItem value="yearly">Tahunan (Yearly)</SelectItem>
+            </SelectContent>
+          </Select>
         </FormGroup>
 
         <FormGroup>
