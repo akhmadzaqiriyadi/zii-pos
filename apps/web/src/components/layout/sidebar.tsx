@@ -19,8 +19,10 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import React from "react";
 import { useAuth } from "../../features/auth/hooks/useAuth";
 import { useHasPermission } from "../../features/auth/hooks/useHasPermission";
+import { useTenant } from "../../features/tenant/hooks/useTenant";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 
@@ -47,10 +49,19 @@ export function AppSidebar({
   onToggleCollapse,
 }: SidebarProps) {
   const pathname = usePathname();
-  const { user, tenant, logout } = useAuth();
+  const { user, logout } = useAuth();
+  const { tenant } = useTenant();
 
   const isSuperAdmin = useHasPermission("saas:admin", "*");
   const userRole = user?.role || "cashier";
+
+  const tenantInitials =
+    tenant?.name
+      ?.split(" ")
+      .map((w) => w[0])
+      .join("")
+      .substring(0, 3)
+      .toUpperCase() || "ZII";
 
   const menuGroups: MenuGroup[] = [
     {
@@ -152,25 +163,48 @@ export function AppSidebar({
             : "fixed sm:relative inset-y-0 left-0 z-50 sm:z-20 w-64 shadow-2xl sm:shadow-none"
         }`}
       >
-        {/* Sidebar Header / Brand */}
+        {/* Dynamic White-Label Brand Header */}
         <header className="flex items-center justify-between border-b border-slate-200 p-4 h-16 bg-white">
           {!isCollapsed ? (
             <div className="flex items-center space-x-3 overflow-hidden">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-600 font-extrabold text-white shadow-md">
-                ZII
-              </div>
+              {tenant?.logoUrl ? (
+                <div className="h-10 w-10 shrink-0 rounded-xl border border-slate-200 bg-white p-0.5 shadow-xs overflow-hidden flex items-center justify-center">
+                  <img
+                    src={tenant.logoUrl}
+                    alt={tenant.name || "Logo Toko"}
+                    className="h-full w-full object-contain rounded-lg"
+                    onError={(e) => {
+                      (e.target as HTMLElement).style.display = "none";
+                    }}
+                  />
+                </div>
+              ) : (
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-600 font-extrabold text-white shadow-md text-xs tracking-wider">
+                  {tenantInitials}
+                </div>
+              )}
               <div className="min-w-0">
                 <h2 className="text-sm font-extrabold text-slate-900 truncate">
                   {tenant?.name || "ZII POS Store"}
                 </h2>
                 <p className="text-[10px] font-semibold text-slate-400 truncate">
-                  Enterprise Modular POS
+                  {tenant?.subdomain
+                    ? `${tenant.subdomain}.ziipos.id`
+                    : "Point of Sale Merchant"}
                 </p>
               </div>
             </div>
+          ) : tenant?.logoUrl ? (
+            <div className="mx-auto h-10 w-10 shrink-0 rounded-xl border border-slate-200 bg-white p-0.5 shadow-xs overflow-hidden flex items-center justify-center">
+              <img
+                src={tenant.logoUrl}
+                alt={tenant.name || "Logo"}
+                className="h-full w-full object-contain rounded-lg"
+              />
+            </div>
           ) : (
-            <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-600 font-extrabold text-white shadow-md">
-              ZII
+            <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-600 font-extrabold text-white shadow-md text-xs tracking-wider">
+              {tenantInitials}
             </div>
           )}
 

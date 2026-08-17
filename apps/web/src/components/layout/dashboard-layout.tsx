@@ -7,6 +7,7 @@ import { useAuth } from "../../features/auth/hooks/useAuth";
 import { useHasPermission } from "../../features/auth/hooks/useHasPermission";
 import { PrinterSettingsModal } from "../../features/pos/components/PrinterSettingsModal";
 import { useThermalPrinter } from "../../features/pos/hooks/useThermalPrinter";
+import { useTenant } from "../../features/tenant/hooks/useTenant";
 import { RestrictedAccessView } from "../auth/RestrictedAccessView";
 import { Badge } from "../ui/badge";
 import { AppSidebar } from "./sidebar";
@@ -26,7 +27,8 @@ export function DashboardLayout({
 }: DashboardLayoutProps) {
   const [isSidebarCollapsed, setIsSidebarCollapsed] =
     useState(defaultCollapsed);
-  const { user, tenant, logout } = useAuth();
+  const { user, logout } = useAuth();
+  const { tenant } = useTenant();
   const printer = useThermalPrinter();
 
   const isSuperAdmin = useHasPermission("saas:admin", "*");
@@ -71,7 +73,9 @@ export function DashboardLayout({
                 {tenant?.name || "ZII POS Store"}
               </h1>
               <p className="text-[10px] sm:text-[11px] text-slate-400 mt-1 truncate">
-                Point of Sale White-Label CMS
+                {tenant?.subdomain
+                  ? `${tenant.subdomain}.ziipos.id`
+                  : "Point of Sale White-Label CMS"}
               </p>
             </div>
           </div>
