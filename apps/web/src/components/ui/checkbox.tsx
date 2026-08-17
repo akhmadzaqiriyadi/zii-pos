@@ -22,8 +22,7 @@ export function Checkbox({
   className,
 }: CheckboxProps) {
   return (
-    <label
-      htmlFor={id}
+    <span
       className={cn(
         "relative inline-flex items-center justify-center h-5 w-5 shrink-0 rounded-md border-2 transition-all duration-150 cursor-pointer select-none",
         checked
@@ -40,17 +39,23 @@ export function Checkbox({
         name={name}
         type="checkbox"
         checked={checked}
-        onChange={(e) => onCheckedChange?.(e.target.checked)}
+        onChange={(e) => {
+          e.stopPropagation();
+          onCheckedChange?.(e.target.checked);
+        }}
+        onClick={(e) => {
+          e.stopPropagation();
+        }}
         disabled={disabled}
         className="sr-only"
       />
       <Check
         className={cn(
-          "h-3.5 w-3.5 text-white transition-all duration-150 ease-out",
+          "h-3.5 w-3.5 text-white transition-all duration-150 ease-out pointer-events-none",
           checked ? "opacity-100 scale-100" : "opacity-0 scale-50",
         )}
         strokeWidth={3.5}
       />
-    </label>
+    </span>
   );
 }

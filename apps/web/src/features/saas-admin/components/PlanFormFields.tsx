@@ -95,7 +95,10 @@ export function PlanFormFields({
           <Select
             value={billingCycle}
             onValueChange={(val: "monthly" | "yearly") =>
-              setValue("billingCycle", val)
+              setValue("billingCycle", val, {
+                shouldValidate: true,
+                shouldDirty: true,
+              })
             }
           >
             <SelectTrigger id="plan-billing-cycle" className="bg-slate-50">
@@ -126,13 +129,23 @@ export function PlanFormFields({
       {/* Toggles / Checkboxes dengan Komponen Checkbox Hijau */}
       <div className="flex flex-wrap items-center gap-4 p-3.5 rounded-xl bg-slate-50 border border-slate-200">
         <div
-          onClick={() => setValue("allowWhiteLabel", !allowWhiteLabel)}
-          className="flex items-center gap-2.5 cursor-pointer select-none"
+          onClick={() =>
+            setValue("allowWhiteLabel", !allowWhiteLabel, {
+              shouldValidate: true,
+              shouldDirty: true,
+            })
+          }
+          className="flex items-center gap-2.5 cursor-pointer select-none p-1 rounded-lg hover:bg-slate-200/50 transition"
         >
           <Checkbox
             id="plan-whitelabel"
             checked={Boolean(allowWhiteLabel)}
-            onCheckedChange={(val) => setValue("allowWhiteLabel", val)}
+            onCheckedChange={(val) =>
+              setValue("allowWhiteLabel", val, {
+                shouldValidate: true,
+                shouldDirty: true,
+              })
+            }
           />
           <span className="text-xs font-semibold text-slate-700">
             Dukung White-Label Domain
@@ -140,13 +153,23 @@ export function PlanFormFields({
         </div>
 
         <div
-          onClick={() => setValue("allowExportExcel", !allowExportExcel)}
-          className="flex items-center gap-2.5 cursor-pointer select-none"
+          onClick={() =>
+            setValue("allowExportExcel", !allowExportExcel, {
+              shouldValidate: true,
+              shouldDirty: true,
+            })
+          }
+          className="flex items-center gap-2.5 cursor-pointer select-none p-1 rounded-lg hover:bg-slate-200/50 transition"
         >
           <Checkbox
             id="plan-export-excel"
             checked={Boolean(allowExportExcel)}
-            onCheckedChange={(val) => setValue("allowExportExcel", val)}
+            onCheckedChange={(val) =>
+              setValue("allowExportExcel", val, {
+                shouldValidate: true,
+                shouldDirty: true,
+              })
+            }
           />
           <span className="text-xs font-semibold text-slate-700">
             Dukung Ekspor Laporan Excel
@@ -154,13 +177,23 @@ export function PlanFormFields({
         </div>
 
         <div
-          onClick={() => setValue("isActive", !isActive)}
-          className="flex items-center gap-2.5 cursor-pointer select-none"
+          onClick={() =>
+            setValue("isActive", !isActive, {
+              shouldValidate: true,
+              shouldDirty: true,
+            })
+          }
+          className="flex items-center gap-2.5 cursor-pointer select-none p-1 rounded-lg hover:bg-slate-200/50 transition"
         >
           <Checkbox
             id="plan-is-active"
             checked={Boolean(isActive)}
-            onCheckedChange={(val) => setValue("isActive", val)}
+            onCheckedChange={(val) =>
+              setValue("isActive", val, {
+                shouldValidate: true,
+                shouldDirty: true,
+              })
+            }
           />
           <span className="text-xs font-semibold text-slate-700">
             Paket Aktif (Tampil di Onboarding)
