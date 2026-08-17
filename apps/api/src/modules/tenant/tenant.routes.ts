@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { authMiddleware } from "../../middlewares/auth.middleware";
-import { requireRole } from "../../middlewares/rbac.middleware";
+import { requirePermission } from "../../middlewares/permission.middleware";
 import { tenantMiddleware } from "../../middlewares/tenant.middleware";
 import { TenantController } from "./tenant.controller";
 
@@ -11,38 +11,34 @@ router.get("/by-subdomain/:subdomain", TenantController.getBySubdomain);
 
 // 🔒 Protected Merchant Routes (Requires Tenant Context & Auth)
 router.use(tenantMiddleware);
+router.use(authMiddleware);
 
-// Profile
+// Profile & Branding
 router.get(
   "/profile",
-  authMiddleware,
-  requireRole("owner", "cashier"),
+  requirePermission("settings:manage", "pos:access"),
   TenantController.getProfile,
 );
 router.put(
   "/profile",
-  authMiddleware,
-  requireRole("owner"),
+  requirePermission("settings:manage"),
   TenantController.updateProfile,
 );
 
-// 👥 Cashier & Multi-User Management Endpoints (Owner & Superadmin only)
+// 👥 Cashier & Multi-User Management Endpoints
 router.get(
   "/cashiers",
-  authMiddleware,
-  requireRole("owner"),
+  requirePermission("cashiers:manage"),
   TenantController.getCashiers,
 );
 router.post(
   "/cashiers",
-  authMiddleware,
-  requireRole("owner"),
+  requirePermission("cashiers:manage"),
   TenantController.createCashier,
 );
 router.delete(
   "/cashiers/:id",
-  authMiddleware,
-  requireRole("owner"),
+  requirePermission("cashiers:manage"),
   TenantController.deleteCashier,
 );
 

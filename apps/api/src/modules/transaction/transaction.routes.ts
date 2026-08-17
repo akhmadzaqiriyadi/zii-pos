@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { authMiddleware } from "../../middlewares/auth.middleware";
-import { requireRole } from "../../middlewares/rbac.middleware";
+import { requirePermission } from "../../middlewares/permission.middleware";
 import { tenantMiddleware } from "../../middlewares/tenant.middleware";
 import { TransactionController } from "./transaction.controller";
 
@@ -9,15 +9,15 @@ const router = Router();
 router.use(tenantMiddleware);
 router.use(authMiddleware);
 
-// 🛒 Transactions (Cashier, Owner, Superadmin)
+// 🛒 Transactions (pos:access for create, transactions:read for history)
 router.get(
   "/",
-  requireRole("cashier", "owner"),
+  requirePermission("transactions:read", "pos:access"),
   TransactionController.getTransactions,
 );
 router.post(
   "/",
-  requireRole("cashier", "owner"),
+  requirePermission("pos:access"),
   TransactionController.createTransaction,
 );
 

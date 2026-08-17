@@ -22,20 +22,41 @@ model Tenant {
   products      Product[]
   transactions  Transaction[]
   subscriptions Subscription[]
+  roles         Role[]
 
   @@map("tenants")
+}
+
+model Role {
+  id          String   @id @default(uuid())
+  tenantId    String?  @map("tenant_id")
+  name        String
+  code        String
+  description String?
+  isSystem    Boolean  @default(false) @map("is_system")
+  permissions String   @default("[]") // JSON array of permission strings
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
+
+  tenant      Tenant?  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  users       User[]
+
+  @@unique([tenantId, code])
+  @@map("roles")
 }
 
 model User {
   id           String        @id @default(uuid())
   tenantId     String        @map("tenant_id")
+  roleId       String?       @map("role_id")
   name         String
   email        String        @unique
   passwordHash String        @map("password_hash")
-  role         String        @default("cashier") // 'owner' | 'cashier'
+  role         String        @default("cashier") // 'owner' | 'cashier' | 'superadmin' | custom role code
   createdAt    DateTime      @default(now()) @map("created_at")
 
   tenant       Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  customRole   Role?         @relation(fields: [roleId], references: [id], onDelete: SetNull)
   transactions Transaction[]
 
   @@map("users")

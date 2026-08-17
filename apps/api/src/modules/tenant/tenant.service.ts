@@ -12,6 +12,8 @@ export interface CreateCashierInput {
   name: string;
   email: string;
   password: string;
+  roleId?: string;
+  role?: string;
 }
 
 export class TenantService {
@@ -74,6 +76,14 @@ export class TenantService {
         name: true,
         email: true,
         role: true,
+        roleId: true,
+        customRole: {
+          select: {
+            id: true,
+            name: true,
+            code: true,
+          },
+        },
         createdAt: true,
       },
       orderBy: { createdAt: "asc" },
@@ -126,21 +136,41 @@ export class TenantService {
       );
     }
 
-    // 3. Hash password and create cashier user
+    // 3. Resolve role if roleId provided
+    let assignedRole = input.role || "cashier";
+    let validRoleId: string | null = null;
+
+    if (
+      input.roleId &&
+      input.roleId !== "cashier" &&
+      input.roleId !== "owner"
+    ) {
+      const customRole = await db.role.findFirst({
+        where: { id: input.roleId, tenantId },
+      });
+      if (customRole) {
+        assignedRole = customRole.code;
+        validRoleId = customRole.id;
+      }
+    }
+
+    // 4. Hash password and create cashier user
     const passwordHash = await Bun.password.hash(input.password);
     const newCashier = await db.user.create({
       data: {
         tenantId,
+        roleId: validRoleId,
         name: input.name.trim(),
         email: input.email.toLowerCase().trim(),
         passwordHash,
-        role: "cashier",
+        role: assignedRole,
       },
       select: {
         id: true,
         name: true,
         email: true,
         role: true,
+        roleId: true,
         createdAt: true,
       },
     });
