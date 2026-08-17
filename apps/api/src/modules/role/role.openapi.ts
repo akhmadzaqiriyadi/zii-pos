@@ -25,11 +25,9 @@ export const RoleSchema = z
       .nullable()
       .openapi({ example: "Dapat memberikan diskon dan melihat transaksi" }),
     isSystem: z.boolean().openapi({ example: false }),
-    permissions: z
-      .array(z.string())
-      .openapi({
-        example: ["pos:access", "pos:discount", "transactions:read"],
-      }),
+    permissions: z.array(z.string()).openapi({
+      example: ["pos:access", "pos:discount", "transactions:read"],
+    }),
     createdAt: z.string().openapi({ example: "2026-08-17T10:00:00.000Z" }),
   })
   .openapi("Role");
@@ -42,11 +40,9 @@ export const CreateRoleBodySchema = z
       .string()
       .optional()
       .openapi({ example: "Hanya mengelola stok barang" }),
-    permissions: z
-      .array(z.string())
-      .openapi({
-        example: ["products:read", "products:create", "products:update"],
-      }),
+    permissions: z.array(z.string()).openapi({
+      example: ["products:read", "products:create", "products:update"],
+    }),
   })
   .openapi("CreateRoleInput");
 

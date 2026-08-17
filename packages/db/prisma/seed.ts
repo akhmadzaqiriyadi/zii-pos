@@ -3,7 +3,9 @@ import { PrismaClient } from "@prisma/client";
 const db = new PrismaClient();
 
 async function main() {
-  console.log("🌱 Starting ZII POS Database Seeding...");
+  console.log(
+    "🌱 Starting ZII POS Database Seeding (with Multi-Tenant Subdomain & Dynamic RBAC)...",
+  );
 
   // Clean existing data in reverse order of foreign keys
   await db.subscriptionInvoice.deleteMany();
@@ -13,6 +15,7 @@ async function main() {
   await db.transaction.deleteMany();
   await db.product.deleteMany();
   await db.user.deleteMany();
+  await db.role.deleteMany();
   await db.tenant.deleteMany();
 
   const passwordHash = await Bun.password.hash("password123");
@@ -24,13 +27,14 @@ async function main() {
       name: "Starter Trial Merchant",
       price: 0,
       billingCycle: "monthly",
-      maxCashiers: 1,
+      maxCashiers: 2,
       allowWhiteLabel: false,
       allowExportExcel: false,
       featuresJson: JSON.stringify([
-        "1 Akun Kasir",
+        "Hingga 2 Akun Kasir",
         "Laporan Transaksi Harian",
         "Cetak Struk Thermal",
+        "Subdomain Toko Pribadi",
       ]),
       isActive: true,
     },
@@ -48,6 +52,7 @@ async function main() {
       featuresJson: JSON.stringify([
         "Multi-kasir hingga 5 user",
         "Custom Logo & Header Struk",
+        "Dynamic RBAC & Custom Role Toko",
         "Ekspor Laporan Excel / CSV",
         "Support Prioritas WA 24/7",
       ]),
@@ -68,6 +73,7 @@ async function main() {
         "Kasir Unlimited (Hingga 20 kasir)",
         "100% White-Label & Custom Domain",
         "Multi-cabang & API Integration",
+        "Custom Roles & Granular Permissions",
         "Dedicated Account Manager",
       ]),
       isActive: true,
@@ -112,6 +118,45 @@ async function main() {
     },
   });
 
+  // 1.1 Create Dynamic Roles for Tenant 1 (Distro)
+  const roleSupervisorDistro = await db.role.create({
+    data: {
+      tenantId: tenantDistro.id,
+      name: "Supervisor Toko",
+      code: "supervisor",
+      description:
+        "Dapat memberikan diskon khusus, void transaksi, dan melihat laporan penjualan",
+      isSystem: false,
+      permissions: JSON.stringify([
+        "pos:access",
+        "pos:discount",
+        "pos:void_tx",
+        "products:read",
+        "products:create",
+        "products:update",
+        "transactions:read",
+        "transactions:export",
+      ]),
+    },
+  });
+
+  const roleGudangDistro = await db.role.create({
+    data: {
+      tenantId: tenantDistro.id,
+      name: "Admin Logistik & Stok",
+      code: "warehouse_admin",
+      description:
+        "Hanya mengelola katalog produk, harga modal, dan update stok barang",
+      isSystem: false,
+      permissions: JSON.stringify([
+        "products:read",
+        "products:create",
+        "products:update",
+        "products:delete",
+      ]),
+    },
+  });
+
   // 2. Create Demo Tenant 2 (Barbershop & Grooming)
   const tenantBarber = await db.tenant.create({
     data: {
@@ -140,21 +185,44 @@ async function main() {
     },
   });
 
-  // 3. Create Demo Users (Owner & Cashier)
+  // 2.1 Create Dynamic Role for Tenant 2 (Barbershop)
+  const roleKapsterSenior = await db.role.create({
+    data: {
+      tenantId: tenantBarber.id,
+      name: "Kapster Senior",
+      code: "senior_kapster",
+      description: "Kasir layanan potong rambut dan akses rekap harian",
+      isSystem: false,
+      permissions: JSON.stringify(["pos:access", "transactions:read"]),
+    },
+  });
+
+  // 3. Create Demo Users (Owner, Supervisor, Cashier, Superadmin)
   const userOwner = await db.user.create({
     data: {
       tenantId: tenantDistro.id,
-      name: "Pemilik Toko",
+      name: "Pemilik Toko Distro",
       email: "owner@zii.id",
       passwordHash,
       role: "owner",
     },
   });
 
+  const userSupervisor = await db.user.create({
+    data: {
+      tenantId: tenantDistro.id,
+      name: "Budi (Supervisor Distro)",
+      email: "supervisor@zii.id",
+      passwordHash,
+      role: roleSupervisorDistro.code,
+      roleId: roleSupervisorDistro.id,
+    },
+  });
+
   const userKasir = await db.user.create({
     data: {
       tenantId: tenantDistro.id,
-      name: "Kasir Utama",
+      name: "Siti (Kasir Utama)",
       email: "kasir@zii.id",
       passwordHash,
       role: "cashier",
@@ -188,6 +256,18 @@ async function main() {
       email: "admin@zii.id",
       passwordHash,
       role: "superadmin",
+    },
+  });
+
+  // Barber Tenant Staff
+  await db.user.create({
+    data: {
+      tenantId: tenantBarber.id,
+      name: "Rian (Kapster Senior)",
+      email: "rian@barber.zii.id",
+      passwordHash,
+      role: roleKapsterSenior.code,
+      roleId: roleKapsterSenior.id,
     },
   });
 
@@ -340,7 +420,7 @@ async function main() {
   await db.transaction.create({
     data: {
       tenantId: tenantDistro.id,
-      userId: userKasir.id,
+      userId: userSupervisor.id,
       customerName: "Dewi Lestari",
       customerPhone: "085611223344",
       paymentMethod: "transfer",
@@ -360,8 +440,13 @@ async function main() {
     },
   });
 
+  console.log("✅ Database ZII POS successfully seeded with:");
+  console.log("   - Subdomains: 'ziidistro', 'ziibarber'");
   console.log(
-    "✅ Database ZII POS successfully seeded with demo tenants, users, products, & transactions!",
+    "   - Dynamic Roles: 'Supervisor Toko', 'Admin Logistik & Stok', 'Kapster Senior'",
+  );
+  console.log(
+    "   - Users: owner@zii.id, supervisor@zii.id, kasir@zii.id, admin@zii.id (all pass: password123)",
   );
 }
 
