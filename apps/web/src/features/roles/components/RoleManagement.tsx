@@ -1,67 +1,17 @@
 "use client";
 
 import { Loader2, Plus, Shield } from "lucide-react";
-import React, { useState } from "react";
+import Link from "next/link";
+import React from "react";
 import { Badge } from "../../../components/ui/badge";
 import { Button } from "../../../components/ui/button";
 import { Card } from "../../../components/ui/card";
 import { useRoles } from "../hooks/useRoles";
 import type { Role } from "../types/role.types";
 import { RoleCard } from "./RoleCard";
-import { RoleModal } from "./RoleModal";
 
 export function RoleManagement() {
-  const {
-    roles,
-    isLoadingRoles,
-    catalog,
-    isLoadingCatalog,
-    createRole,
-    isCreating,
-    updateRole,
-    isUpdating,
-    deleteRole,
-    isDeleting,
-  } = useRoles();
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingRole, setEditingRole] = useState<Role | null>(null);
-
-  const handleOpenCreateModal = () => {
-    setEditingRole(null);
-    setIsModalOpen(true);
-  };
-
-  const handleOpenEditModal = (role: Role) => {
-    if (role.isSystem) return;
-    setEditingRole(role);
-    setIsModalOpen(true);
-  };
-
-  const handleSubmitRole = async (data: {
-    name: string;
-    code: string;
-    description: string;
-    permissions: string[];
-  }) => {
-    if (editingRole) {
-      await updateRole({
-        id: editingRole.id,
-        data: {
-          name: data.name,
-          description: data.description,
-          permissions: data.permissions,
-        },
-      });
-    } else {
-      await createRole({
-        name: data.name,
-        code: data.code,
-        description: data.description || undefined,
-        permissions: data.permissions,
-      });
-    }
-  };
+  const { roles, isLoadingRoles, deleteRole, isDeleting } = useRoles();
 
   const handleDeleteRole = async (role: Role) => {
     if (role.isSystem) return;
@@ -102,13 +52,12 @@ export function RoleManagement() {
             </p>
           </div>
 
-          <Button
-            onClick={handleOpenCreateModal}
-            className="gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-5 px-5 rounded-xl cursor-pointer shrink-0"
-          >
-            <Plus className="h-4 w-4" />
-            <span>Buat Role Baru</span>
-          </Button>
+          <Link href="/settings/roles/create">
+            <Button className="gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-5 px-5 rounded-xl cursor-pointer shrink-0 shadow-md shadow-emerald-600/20">
+              <Plus className="h-4 w-4" />
+              <span>Buat Role Baru</span>
+            </Button>
+          </Link>
         </div>
       </Card>
 
@@ -132,7 +81,6 @@ export function RoleManagement() {
               <RoleCard
                 key={role.id}
                 role={role}
-                onEdit={handleOpenEditModal}
                 onDelete={handleDeleteRole}
                 isDeleting={isDeleting}
               />
@@ -140,17 +88,6 @@ export function RoleManagement() {
           </div>
         )}
       </div>
-
-      {/* Modal Buat / Edit Role */}
-      <RoleModal
-        isOpen={isModalOpen}
-        onOpenChange={setIsModalOpen}
-        editingRole={editingRole}
-        catalog={catalog}
-        isLoadingCatalog={isLoadingCatalog}
-        onSubmit={handleSubmitRole}
-        isSubmitting={isCreating || isUpdating}
-      />
     </div>
   );
 }

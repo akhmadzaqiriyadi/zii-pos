@@ -76,3 +76,14 @@ export function useRoles() {
     isDeleting: deleteMutation.isPending,
   };
 }
+
+export function useRole(id?: string) {
+  return useQuery<Role>({
+    queryKey: ["role", id],
+    queryFn: () => {
+      if (!id) throw new Error("ID role tidak valid");
+      return RoleApiService.getRoleById(id);
+    },
+    enabled: !!id,
+  });
+}

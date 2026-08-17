@@ -1,6 +1,7 @@
 "use client";
 
 import { Edit2, Trash2, Users } from "lucide-react";
+import Link from "next/link";
 import React from "react";
 import { Badge } from "../../../components/ui/badge";
 import { Button } from "../../../components/ui/button";
@@ -14,14 +15,12 @@ import type { Role } from "../types/role.types";
 
 interface RoleCardProps {
   role: Role;
-  onEdit: (role: Role) => void;
   onDelete: (role: Role) => void;
   isDeleting?: boolean;
 }
 
 export function RoleCard({
   role,
-  onEdit,
   onDelete,
   isDeleting = false,
 }: RoleCardProps) {
@@ -63,21 +62,22 @@ export function RoleCard({
 
           {!role.isSystem && (
             <div className="flex items-center gap-1">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => onEdit(role)}
-                className="h-8 w-8 text-slate-500 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg"
-                title="Edit Role & Izin"
-              >
-                <Edit2 className="h-3.5 w-3.5" />
-              </Button>
+              <Link href={`/settings/roles/${role.id}/edit`}>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 text-slate-500 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg cursor-pointer"
+                  title="Edit Role & Izin"
+                >
+                  <Edit2 className="h-3.5 w-3.5" />
+                </Button>
+              </Link>
               <Button
                 variant="ghost"
                 size="icon"
                 disabled={isDeleting}
                 onClick={() => onDelete(role)}
-                className="h-8 w-8 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-lg"
+                className="h-8 w-8 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-lg cursor-pointer"
                 title="Hapus Role"
               >
                 <Trash2 className="h-3.5 w-3.5" />
