@@ -111,8 +111,8 @@ export function PlanFormFields({
 
       {/* Toggles / Checkboxes dengan Komponen Checkbox Hijau */}
       <div className="flex flex-wrap items-center gap-4 p-3.5 rounded-xl bg-slate-50 border border-slate-200">
-        <label
-          htmlFor="plan-whitelabel"
+        <div
+          onClick={() => setValue("allowWhiteLabel", !allowWhiteLabel)}
           className="flex items-center gap-2.5 cursor-pointer select-none"
         >
           <Checkbox
@@ -123,10 +123,10 @@ export function PlanFormFields({
           <span className="text-xs font-semibold text-slate-700">
             Dukung White-Label Domain
           </span>
-        </label>
+        </div>
 
-        <label
-          htmlFor="plan-export-excel"
+        <div
+          onClick={() => setValue("allowExportExcel", !allowExportExcel)}
           className="flex items-center gap-2.5 cursor-pointer select-none"
         >
           <Checkbox
@@ -137,10 +137,10 @@ export function PlanFormFields({
           <span className="text-xs font-semibold text-slate-700">
             Dukung Ekspor Laporan Excel
           </span>
-        </label>
+        </div>
 
-        <label
-          htmlFor="plan-is-active"
+        <div
+          onClick={() => setValue("isActive", !isActive)}
           className="flex items-center gap-2.5 cursor-pointer select-none"
         >
           <Checkbox
@@ -151,7 +151,7 @@ export function PlanFormFields({
           <span className="text-xs font-semibold text-slate-700">
             Paket Aktif (Tampil di Onboarding)
           </span>
-        </label>
+        </div>
       </div>
 
       {/* Daftar Fitur */}
