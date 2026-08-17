@@ -19,10 +19,18 @@ export function middleware(request: NextRequest) {
 
   // 1. Redirect legacy /register route to /onboarding
   if (pathname === "/register") {
+    if (subdomain) {
+      return NextResponse.redirect(new URL("/login", request.url));
+    }
     return NextResponse.redirect(new URL("/onboarding", request.url));
   }
 
-  // 2. Route landing "/" based on user state
+  // 2. Redirect /onboarding on existing tenant subdomains to /login
+  if (pathname === "/onboarding" && subdomain && !token) {
+    return NextResponse.redirect(new URL("/login", request.url));
+  }
+
+  // 3. Route landing "/" based on tenant subdomain and auth state
   if (pathname === "/") {
     if (token) {
       const isExpired =
@@ -34,13 +42,17 @@ export function middleware(request: NextRequest) {
         ),
       );
     }
+    // If accessing a specific merchant subdomain (e.g. ziidistro.localhost:3000), redirect to /login
+    if (subdomain) {
+      return NextResponse.redirect(new URL("/login", request.url));
+    }
     if (hasRegistered) {
       return NextResponse.redirect(new URL("/login", request.url));
     }
     return NextResponse.redirect(new URL("/onboarding", request.url));
   }
 
-  // 3. Evaluate authentication & trial expiration guard
+  // 4. Evaluate authentication & trial expiration guard
   const guard = evaluateTrialGuard(pathname, token, tenantStatus);
 
   if (!guard.allowed && guard.redirectTo) {
@@ -52,7 +64,7 @@ export function middleware(request: NextRequest) {
     return response;
   }
 
-  // 4. Pass-through with injected headers
+  // 5. Pass-through with injected headers
   const response = NextResponse.next({
     request: {
       headers: requestHeaders,
