@@ -1,22 +1,14 @@
 "use client";
 
-import {
-  LogOut,
-  PanelLeft,
-  Printer,
-  ShieldAlert,
-  ShoppingCart,
-  Store,
-} from "lucide-react";
-import Link from "next/link";
+import { LogOut, PanelLeft, Printer, Store } from "lucide-react";
+import type React from "react";
 import { useState } from "react";
 import { useAuth } from "../../features/auth/hooks/useAuth";
 import { useHasPermission } from "../../features/auth/hooks/useHasPermission";
 import { PrinterSettingsModal } from "../../features/pos/components/PrinterSettingsModal";
 import { useThermalPrinter } from "../../features/pos/hooks/useThermalPrinter";
+import { RestrictedAccessView } from "../auth/RestrictedAccessView";
 import { Badge } from "../ui/badge";
-import { Button } from "../ui/button";
-import { Card } from "../ui/card";
 import { AppSidebar } from "./sidebar";
 
 interface DashboardLayoutProps {
@@ -133,35 +125,10 @@ export function DashboardLayout({
         {/* Content Body or Role Restricted View */}
         <div className="flex-1 overflow-y-auto min-w-0">
           {!isAuthorized ? (
-            <div className="flex h-full flex-col items-center justify-center p-8">
-              <Card className="max-w-md p-8 text-center space-y-4 border-rose-200 bg-rose-50/20 shadow-md">
-                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-rose-100 text-rose-600">
-                  <ShieldAlert className="h-8 w-8" />
-                </div>
-                <div>
-                  <h2 className="text-lg font-extrabold text-slate-900">
-                    Akses Dibatasi Khusus Pemilik Toko
-                  </h2>
-                  <p className="text-xs text-slate-500 mt-1">
-                    Halaman ini hanya dapat diakses oleh pengguna dengan role{" "}
-                    <span className="font-bold text-slate-700">
-                      Owner / Pemilik Toko
-                    </span>
-                    . Role kamu saat ini adalah{" "}
-                    <span className="font-bold text-rose-600 capitalize">
-                      {user?.role || "kasir"}
-                    </span>
-                    .
-                  </p>
-                </div>
-                <Link href="/pos">
-                  <Button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold gap-2">
-                    <ShoppingCart className="h-4 w-4" />
-                    <span>Kembali ke Kasir POS</span>
-                  </Button>
-                </Link>
-              </Card>
-            </div>
+            <RestrictedAccessView
+              requiredRole={requiredRole}
+              requiredPermission={requiredPermission}
+            />
           ) : (
             children
           )}
