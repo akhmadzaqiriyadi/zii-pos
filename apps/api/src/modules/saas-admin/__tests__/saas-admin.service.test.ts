@@ -138,7 +138,7 @@ mock.module("@zii/db", () => ({
     },
     transaction: {
       aggregate: async () => ({
-        _sum: { total: 1500000 },
+        _sum: { totalAmount: 1500000 },
       }),
     },
   },

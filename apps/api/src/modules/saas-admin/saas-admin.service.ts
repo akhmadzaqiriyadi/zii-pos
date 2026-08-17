@@ -197,10 +197,10 @@ export class SaaSAdminService {
 
     const totalRevenueResult = await db.transaction.aggregate({
       where: { tenantId },
-      _sum: { total: true },
+      _sum: { totalAmount: true },
     });
 
-    const totalRevenue = Number(totalRevenueResult._sum?.total ?? 0);
+    const totalRevenue = Number(totalRevenueResult._sum?.totalAmount ?? 0);
 
     return {
       id: tenant.id,
