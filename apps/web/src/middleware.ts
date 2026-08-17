@@ -33,31 +33,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  // 3. Auto-redirect authenticated merchant users on root domain to their dedicated tenant subdomain
-  if (
-    token &&
-    !subdomain &&
-    tenantSubdomainCookie &&
-    tenantSubdomainCookie !== "localhost" &&
-    (pathname.startsWith("/pos") ||
-      pathname.startsWith("/products") ||
-      pathname.startsWith("/transactions") ||
-      pathname.startsWith("/settings"))
-  ) {
-    const isLocal = host?.includes("localhost");
-    const port = host?.includes(":") ? `:${host.split(":")[1]}` : "";
-    const redirectHostname = isLocal
-      ? `${tenantSubdomainCookie}.localhost${port}`
-      : `${tenantSubdomainCookie}.ziipos.com`;
-    const protocol = request.nextUrl.protocol;
-    return NextResponse.redirect(
-      new URL(
-        `${protocol}//${redirectHostname}${pathname}${request.nextUrl.search}`,
-      ),
-    );
-  }
-
-  // 4. Route landing "/" based on tenant subdomain and auth state
+  // 3. Route landing "/" based on tenant subdomain and auth state
   if (pathname === "/") {
     if (token) {
       const isExpired =
@@ -79,16 +55,43 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/onboarding", request.url));
   }
 
-  // 5. Evaluate authentication & trial expiration guard
-  const guard = evaluateTrialGuard(pathname, token, tenantStatus);
+  // 4. Auto-redirect authenticated merchant users on root domain to their dedicated tenant subdomain (except /login)
+  if (
+    token &&
+    !subdomain &&
+    tenantSubdomainCookie &&
+    tenantSubdomainCookie !== "localhost" &&
+    pathname !== "/login" &&
+    (pathname.startsWith("/pos") ||
+      pathname.startsWith("/products") ||
+      pathname.startsWith("/transactions") ||
+      pathname.startsWith("/settings"))
+  ) {
+    const isLocal = host?.includes("localhost");
+    const port = host?.includes(":") ? `:${host.split(":")[1]}` : "";
+    const redirectHostname = isLocal
+      ? `${tenantSubdomainCookie}.localhost${port}`
+      : `${tenantSubdomainCookie}.ziipos.com`;
+    const protocol = request.nextUrl.protocol;
+    return NextResponse.redirect(
+      new URL(
+        `${protocol}//${redirectHostname}${pathname}${request.nextUrl.search}`,
+      ),
+    );
+  }
 
-  if (!guard.allowed && guard.redirectTo) {
-    const redirectUrl = new URL(guard.redirectTo, request.url);
-    const response = NextResponse.redirect(redirectUrl);
-    if (subdomain) {
-      response.headers.set("x-tenant-subdomain", subdomain);
+  // 5. Evaluate authentication & trial expiration guard (allow /login so users can switch accounts)
+  if (pathname !== "/login") {
+    const guard = evaluateTrialGuard(pathname, token, tenantStatus);
+
+    if (!guard.allowed && guard.redirectTo) {
+      const redirectUrl = new URL(guard.redirectTo, request.url);
+      const response = NextResponse.redirect(redirectUrl);
+      if (subdomain) {
+        response.headers.set("x-tenant-subdomain", subdomain);
+      }
+      return response;
     }
-    return response;
   }
 
   // 6. Pass-through with injected headers

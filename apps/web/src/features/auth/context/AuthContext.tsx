@@ -207,7 +207,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setTenant(null);
 
     // Redirect to Login Page
-    window.location.href = "/login";
+    if (typeof window !== "undefined") {
+      const isLocal = window.location.hostname.includes("localhost");
+      const port = window.location.port ? `:${window.location.port}` : "";
+      if (isLocal && window.location.hostname !== "localhost") {
+        window.location.href = `http://localhost${port}/login`;
+      } else {
+        window.location.href = "/login";
+      }
+    }
   };
 
   return (
