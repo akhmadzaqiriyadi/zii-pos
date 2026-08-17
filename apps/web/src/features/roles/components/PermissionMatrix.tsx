@@ -41,7 +41,7 @@ export function PermissionMatrix({
   );
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       {Object.entries(groupedCatalog).map(([category, items]) => {
         const allSelected = items.every((i) =>
           selectedPermissions.includes(i.code),
@@ -50,10 +50,10 @@ export function PermissionMatrix({
         return (
           <fieldset
             key={category}
-            className="rounded-xl border border-slate-200 bg-slate-50/50 p-4 space-y-3 m-0"
+            className="rounded-2xl border border-slate-200 bg-slate-50/60 p-4 sm:p-5 space-y-3.5 m-0"
           >
             <legend className="sr-only">{category}</legend>
-            <div className="flex items-center justify-between pb-2 border-b border-slate-200/60">
+            <div className="flex items-center justify-between pb-2.5 border-b border-slate-200/80">
               <span className="text-xs font-extrabold uppercase tracking-wider text-emerald-800">
                 {category}
               </span>
@@ -64,28 +64,29 @@ export function PermissionMatrix({
                     ? onDeselectAllInCategory(items)
                     : onSelectAllInCategory(items)
                 }
-                className="text-[11px] font-bold text-emerald-700 hover:text-emerald-800 cursor-pointer"
+                className="text-xs font-bold text-emerald-700 hover:text-emerald-800 cursor-pointer"
               >
                 {allSelected ? "Batalkan Semua" : "Pilih Semua"}
               </button>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {items.map((item) => {
                 const isChecked = selectedPermissions.includes(item.code);
                 return (
-                  <label
+                  <div
                     key={item.code}
-                    className={`flex items-start gap-2.5 p-2.5 rounded-lg border cursor-pointer transition-all select-none ${
+                    onClick={() => onTogglePermission(item.code)}
+                    className={`flex items-start gap-3 p-3.5 rounded-xl border-2 cursor-pointer transition-all duration-150 select-none ${
                       isChecked
-                        ? "bg-white border-emerald-500 shadow-xs ring-1 ring-emerald-500/20"
-                        : "bg-white/80 border-slate-200 hover:border-slate-300"
+                        ? "bg-emerald-50/50 border-emerald-500 shadow-xs ring-1 ring-emerald-500/20"
+                        : "bg-white border-slate-200 hover:border-slate-300 hover:bg-slate-50/50"
                     }`}
                   >
-                    <div className="mt-0.5">
+                    <div className="mt-0.5 shrink-0">
                       <Checkbox
                         checked={isChecked}
-                        onChange={() => onTogglePermission(item.code)}
+                        onCheckedChange={() => onTogglePermission(item.code)}
                       />
                     </div>
                     <div className="space-y-0.5 min-w-0">
@@ -96,7 +97,7 @@ export function PermissionMatrix({
                         {item.description}
                       </p>
                     </div>
-                  </label>
+                  </div>
                 );
               })}
             </div>
