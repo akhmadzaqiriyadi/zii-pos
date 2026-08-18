@@ -46,7 +46,7 @@ const mockTenants = [
             amount: 99000,
             status: "paid",
             paidAt: new Date(),
-            paymentMethod: "midtrans_qris",
+            paymentGatewayTxId: "midtrans-tx-1",
             createdAt: new Date(),
           },
         ],
