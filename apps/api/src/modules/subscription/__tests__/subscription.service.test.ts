@@ -184,6 +184,22 @@ describe("SubscriptionService Unit Tests", () => {
     expect(checkout.qrisString).toContain("00020101021226");
   });
 
+  it("should reject checking out free trial plan for registered merchant", async () => {
+    mockTenant.subscriptions[0].plan.price = 0;
+    mockTenant.subscriptions[0].plan.code = "starter";
+
+    expect(
+      SubscriptionService.checkoutSubscription("t-01", {
+        planId: "plan-starter",
+        billingCycle: "monthly",
+      }),
+    ).rejects.toThrow("Paket Uji Coba (Trial) hanya berlaku untuk toko baru");
+
+    // Restore mock
+    mockTenant.subscriptions[0].plan.price = 99000;
+    mockTenant.subscriptions[0].plan.code = "pro";
+  });
+
   it("should handle automated payment settlement webhook and activate license", async () => {
     const orderId = "inv-999";
     const statusCode = "200";

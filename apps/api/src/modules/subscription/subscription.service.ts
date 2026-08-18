@@ -214,6 +214,21 @@ export class SubscriptionService {
       throw new Error("Paket SaaS tidak valid.");
     }
 
+    // 1. Guardrail: Cegah merchant aktif / toko terdaftar checkout paket Trial lagi
+    if (Number(plan.price) === 0 || plan.code.toLowerCase().includes("starter")) {
+      throw new Error(
+        "Paket Uji Coba (Trial) hanya berlaku untuk toko baru saat pendaftaran awal. Silakan pilih paket Pro atau Enterprise untuk melanjutkan.",
+      );
+    }
+
+    // 2. Guardrail: Cegah downgrade jika jumlah kasir aktif saat ini melebihi kuota paket target
+    const activeCashiers = await db.user.count({ where: { tenantId } });
+    if (activeCashiers > plan.maxCashiers) {
+      throw new Error(
+        `Tidak dapat beralih ke paket ${plan.name} karena toko Anda saat ini memiliki ${activeCashiers} kasir aktif (kuota paket baru: ${plan.maxCashiers} kasir). Harap nonaktifkan kasir terlebih dahulu.`,
+      );
+    }
+
     const billingCycle = input.billingCycle || plan.billingCycle || "monthly";
     const monthlyPrice = Number(plan.price);
     const amount = billingCycle === "yearly" ? monthlyPrice * 10 : monthlyPrice; // Diskon 2 bulan untuk tahunan
