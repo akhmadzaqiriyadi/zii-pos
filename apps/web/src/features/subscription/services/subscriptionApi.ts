@@ -23,6 +23,33 @@ export interface CurrentSubscriptionData {
   isExpired: boolean;
   autoRenew: boolean;
   plan: CurrentSubscriptionPlan | null;
+  usage?: {
+    activeCashiers: number;
+    maxCashiers: number;
+    cashierUsagePercent: number;
+    isCashierLimitReached: boolean;
+    totalProducts: number;
+    totalTransactions: number;
+  };
+  urgency?: {
+    urgencyLevel: "safe" | "expiring_soon" | "critical" | "locked";
+    daysRemaining: number;
+    autoLockAt: string;
+    isGracePeriod: boolean;
+  };
+}
+
+export interface MerchantSubscriptionInvoice {
+  id: string;
+  amount: number;
+  paymentMethod: string;
+  status: "paid" | "unpaid" | "failed" | string;
+  paidAt: string | null;
+  createdAt: string;
+  planName: string;
+  planCode: string;
+  billingCycle: string;
+  pdfUrl: string;
 }
 
 export interface CheckoutResult {
@@ -51,6 +78,9 @@ function getAuthHeaders() {
 }
 
 export class SubscriptionApiService {
+  /**
+   * Mengambil info status lisensi, masa aktif, penggunaan kasir, dan level urgensi
+   */
   static async getCurrentSubscription(): Promise<CurrentSubscriptionData> {
     const res = await fetch(`${API_BASE_URL}/api/v1/subscriptions/current`, {
       headers: getAuthHeaders(),
@@ -62,6 +92,43 @@ export class SubscriptionApiService {
     return body.data;
   }
 
+  /**
+   * Mengambil daftar riwayat faktur / invoice pembayaran milik toko
+   */
+  static async getInvoices(): Promise<MerchantSubscriptionInvoice[]> {
+    const res = await fetch(`${API_BASE_URL}/api/v1/subscriptions/invoices`, {
+      headers: getAuthHeaders(),
+    });
+    const body = await res.json();
+    if (!res.ok || !body.success) {
+      throw new Error(body.message || "Gagal memuat riwayat invoice.");
+    }
+    return body.data;
+  }
+
+  /**
+   * Mengubah status perpanjangan lisensi otomatis (Auto-Renew)
+   */
+  static async toggleAutoRenew(
+    autoRenew: boolean,
+  ): Promise<{ autoRenew: boolean; message: string }> {
+    const res = await fetch(`${API_BASE_URL}/api/v1/subscriptions/auto-renew`, {
+      method: "PATCH",
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ autoRenew }),
+    });
+    const body = await res.json();
+    if (!res.ok || !body.success) {
+      throw new Error(
+        body.message || "Gagal mengubah pengaturan perpanjangan otomatis.",
+      );
+    }
+    return body.data;
+  }
+
+  /**
+   * Memulai proses checkout paket langganan (QRIS / Midtrans)
+   */
   static async checkoutSubscription(
     planId: string,
     billingCycle: "monthly" | "yearly" = "monthly",
@@ -78,6 +145,9 @@ export class SubscriptionApiService {
     return body.data;
   }
 
+  /**
+   * Simulasi pelunasan webhook pembayaran (Sandbox / Dev Mode)
+   */
   static async simulatePaymentWebhook(
     invoiceId: string,
     amount: number,
