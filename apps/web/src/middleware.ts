@@ -28,9 +28,14 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/onboarding", request.url));
   }
 
-  // 2. Redirect /onboarding on existing tenant subdomains to /login
-  if (pathname === "/onboarding" && subdomain && !token) {
-    return NextResponse.redirect(new URL("/login", request.url));
+  // 2. Handle /onboarding route
+  if (pathname === "/onboarding") {
+    if (subdomain) {
+      return NextResponse.redirect(new URL("/login", request.url));
+    }
+    return NextResponse.next({
+      request: { headers: requestHeaders },
+    });
   }
 
   // 3. Route landing "/" based on tenant subdomain and auth state
