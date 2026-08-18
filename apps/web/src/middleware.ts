@@ -35,24 +35,26 @@ export function middleware(request: NextRequest) {
 
   // 3. Route landing "/" based on tenant subdomain and auth state
   if (pathname === "/") {
-    if (token) {
-      const isExpired =
-        tenantStatus === "expired" || tenantStatus === "suspended";
-      return NextResponse.redirect(
-        new URL(
-          isExpired ? "/settings?alert=license_expired" : "/pos",
-          request.url,
-        ),
-      );
-    }
-    // If accessing a specific merchant subdomain (e.g. ziidistro.localhost:3000), redirect to /login
+    // If accessing a specific merchant subdomain (e.g. ziidistro.localhost:3000), redirect to POS or login
     if (subdomain) {
+      if (token) {
+        const isExpired =
+          tenantStatus === "expired" || tenantStatus === "suspended";
+        return NextResponse.redirect(
+          new URL(
+            isExpired ? "/settings?alert=license_expired" : "/pos",
+            request.url,
+          ),
+        );
+      }
       return NextResponse.redirect(new URL("/login", request.url));
     }
-    if (hasRegistered) {
-      return NextResponse.redirect(new URL("/login", request.url));
-    }
-    return NextResponse.redirect(new URL("/onboarding", request.url));
+
+    // On root domain (e.g. localhost:3000 or ziipos.com), show the Public Landing Page
+    const response = NextResponse.next({
+      request: { headers: requestHeaders },
+    });
+    return response;
   }
 
   // 4. Auto-redirect authenticated merchant users on root domain to their dedicated tenant subdomain (except /login)
