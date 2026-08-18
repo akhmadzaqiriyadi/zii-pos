@@ -47,7 +47,7 @@ export default function POSDashboardPage() {
   } = usePosDashboard();
 
   return (
-    <DashboardLayout>
+    <DashboardLayout requiredPermission="pos:access">
       <div className="flex h-full w-full overflow-hidden relative">
         {/* Catalog Area (Left Side) — Dynamically expands when cart is collapsed */}
         <div className="flex flex-1 flex-col min-w-0 h-full overflow-hidden transition-all duration-300">
