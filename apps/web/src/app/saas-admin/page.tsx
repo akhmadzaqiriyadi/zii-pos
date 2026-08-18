@@ -37,7 +37,7 @@ export default function SaaSAdminPage() {
 
   return (
     <DashboardLayout requiredPermission="saas:admin">
-      <main className="p-4 sm:p-6 lg:p-8 w-full space-y-6 max-w-7xl mx-auto">
+      <main className="p-4 sm:p-6 lg:p-8 w-full space-y-6">
         {/* Page Header */}
         <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-100 pb-5">
           <div className="space-y-1">
