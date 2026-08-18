@@ -1,7 +1,7 @@
 "use client";
 
-import { LogOut } from "lucide-react";
-import React from "react";
+import { Loader2, LogOut } from "lucide-react";
+import React, { useState } from "react";
 import { Button } from "../ui/button";
 import {
   Dialog,
@@ -23,6 +23,13 @@ export function LogoutConfirmModal({
   onOpenChange,
   onConfirmLogout,
 }: LogoutConfirmModalProps) {
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  const handleLogout = () => {
+    setIsLoggingOut(true);
+    onConfirmLogout();
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md p-6 rounded-2xl bg-white border border-slate-200 shadow-xl">
@@ -43,6 +50,7 @@ export function LogoutConfirmModal({
           <Button
             type="button"
             variant="outline"
+            disabled={isLoggingOut}
             onClick={() => onOpenChange(false)}
             className="w-full sm:w-1/2 rounded-xl text-xs font-bold text-slate-700 border-slate-200 hover:bg-slate-100 cursor-pointer"
           >
@@ -50,13 +58,18 @@ export function LogoutConfirmModal({
           </Button>
           <Button
             type="button"
-            onClick={() => {
-              onOpenChange(false);
-              onConfirmLogout();
-            }}
-            className="w-full sm:w-1/2 rounded-xl text-xs font-bold bg-rose-600 hover:bg-rose-700 text-white shadow-xs cursor-pointer"
+            disabled={isLoggingOut}
+            onClick={handleLogout}
+            className="w-full sm:w-1/2 rounded-xl text-xs font-bold bg-rose-600 hover:bg-rose-700 text-white shadow-xs cursor-pointer gap-1.5"
           >
-            Ya, Keluar Akun
+            {isLoggingOut ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                <span>Mengeluarkan...</span>
+              </>
+            ) : (
+              <span>Ya, Keluar Akun</span>
+            )}
           </Button>
         </DialogFooter>
       </DialogContent>

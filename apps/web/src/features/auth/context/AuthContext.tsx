@@ -229,30 +229,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const logout = () => {
-    // Delete Cookies
+    // 1. Delete Cookies
     deleteCookie("zii_auth_token");
     deleteCookie("zii_tenant_id");
     deleteCookie("zii_tenant_status");
     deleteCookie("zii_tenant_subdomain");
 
-    // Clear LocalStorage
+    // 2. Clear LocalStorage
     localStorage.removeItem("zii_user");
     localStorage.removeItem("zii_tenant");
 
-    // Clear React State
-    setToken(null);
-    setUser(null);
-    setTenant(null);
-
-    // Redirect to Login Page
+    // 3. Smooth Instant Redirect to Login Page without UI flash
     if (typeof window !== "undefined") {
       const isLocal = window.location.hostname.includes("localhost");
       const port = window.location.port ? `:${window.location.port}` : "";
-      if (isLocal && window.location.hostname !== "localhost") {
-        window.location.href = `http://localhost${port}/login`;
-      } else {
-        window.location.href = "/login";
-      }
+      const targetUrl =
+        isLocal && window.location.hostname !== "localhost"
+          ? `http://localhost${port}/login`
+          : "/login";
+
+      window.location.replace(targetUrl);
     }
   };
 
