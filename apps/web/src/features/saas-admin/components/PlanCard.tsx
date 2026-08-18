@@ -84,10 +84,14 @@ export function PlanCard({ plan, onEdit, onDelete }: PlanCardProps) {
             <span className="text-3xl font-black text-slate-900">
               {plan.price === 0 ? "Gratis" : formatRupiah(plan.price)}
             </span>
-            {plan.price > 0 && (
+            {plan.price > 0 ? (
               <span className="text-xs text-slate-400 font-semibold">
                 {" "}
                 / {plan.billingCycle === "yearly" ? "tahun" : "bulan"}
+              </span>
+            ) : (
+              <span className="text-xs font-bold text-amber-600 block mt-1">
+                14 Hari (Auto-lock jika tidak diperpanjang)
               </span>
             )}
           </div>
@@ -104,6 +108,14 @@ export function PlanCard({ plan, onEdit, onDelete }: PlanCardProps) {
             <Users className="h-3 w-3" />
             <span>Maks {plan.maxCashiers} Kasir</span>
           </Badge>
+          {plan.price === 0 && (
+            <Badge
+              variant="amber"
+              className="text-[10.5px] font-bold py-1 px-2.5"
+            >
+              Trial 14 Hari
+            </Badge>
+          )}
           {plan.allowWhiteLabel && (
             <Badge
               variant="amber"
