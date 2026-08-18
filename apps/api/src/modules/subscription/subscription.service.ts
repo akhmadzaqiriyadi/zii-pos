@@ -215,7 +215,10 @@ export class SubscriptionService {
     }
 
     // 1. Guardrail: Cegah merchant aktif / toko terdaftar checkout paket Trial lagi
-    if (Number(plan.price) === 0 || plan.code.toLowerCase().includes("starter")) {
+    if (
+      Number(plan.price) === 0 ||
+      plan.code.toLowerCase().includes("starter")
+    ) {
       throw new Error(
         "Paket Uji Coba (Trial) hanya berlaku untuk toko baru saat pendaftaran awal. Silakan pilih paket Pro atau Enterprise untuk melanjutkan.",
       );

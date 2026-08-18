@@ -152,29 +152,47 @@ export default function ProductsPage() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Nama Produk</TableHead>
-                  <TableHead>Tipe</TableHead>
-                  <TableHead>Harga</TableHead>
-                  <TableHead>Stok</TableHead>
+                  <TableHead className="font-extrabold text-slate-700 text-xs">
+                    Nama Produk / Jasa
+                  </TableHead>
+                  <TableHead className="font-extrabold text-slate-700 text-xs">
+                    Tipe
+                  </TableHead>
+                  <TableHead className="font-extrabold text-slate-700 text-xs">
+                    Harga
+                  </TableHead>
+                  <TableHead className="font-extrabold text-slate-700 text-xs">
+                    Stok
+                  </TableHead>
+                  <TableHead className="font-extrabold text-slate-700 text-xs text-right">
+                    Aksi
+                  </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {isLoading ? (
                   <TableRow>
                     <TableCell
-                      colSpan={4}
-                      className="py-8 text-center text-slate-400"
+                      colSpan={5}
+                      className="py-12 text-center text-slate-400"
                     >
-                      Memuat data produk...
+                      <div className="flex flex-col items-center justify-center gap-2">
+                        <Loader2 className="h-6 w-6 animate-spin text-emerald-600" />
+                        <span className="text-xs font-medium">
+                          Memuat data produk...
+                        </span>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ) : products.length === 0 ? (
                   <TableRow>
                     <TableCell
-                      colSpan={4}
-                      className="py-8 text-center text-slate-400"
+                      colSpan={5}
+                      className="py-12 text-center text-slate-400"
                     >
-                      Tidak ada produk yang sesuai.
+                      <p className="text-sm font-medium text-slate-600">
+                        Tidak ada produk yang sesuai filter.
+                      </p>
                     </TableCell>
                   </TableRow>
                 ) : (
@@ -224,6 +242,30 @@ export default function ProductsPage() {
                               {item.stock}
                             </span>
                           )}
+                        </TableCell>
+                        <TableCell className="text-right py-3.5">
+                          <div className="flex items-center justify-end gap-1.5">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleOpenEditModal(item)}
+                              className="h-8 px-2.5 rounded-xl border-slate-200 hover:border-slate-300 hover:bg-slate-100 text-slate-700 gap-1.5 text-xs font-bold cursor-pointer shadow-2xs transition"
+                              title="Edit Produk"
+                            >
+                              <Edit2 className="h-3.5 w-3.5 text-slate-500" />
+                              <span>Edit</span>
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleDeleteProduct(item)}
+                              className="h-8 px-2.5 rounded-xl border-slate-200 hover:border-rose-200 hover:bg-rose-50 text-rose-600 gap-1.5 text-xs font-bold cursor-pointer shadow-2xs transition"
+                              title="Hapus Produk"
+                            >
+                              <Trash2 className="h-3.5 w-3.5" />
+                              <span>Hapus</span>
+                            </Button>
+                          </div>
                         </TableCell>
                       </TableRow>
                     );
