@@ -6,27 +6,46 @@ import { Button } from "../../../components/ui/button";
 import { Card, CardContent, CardFooter } from "../../../components/ui/card";
 import { FormError, FormGroup, FormLabel } from "../../../components/ui/form";
 import { Input } from "../../../components/ui/input";
+import { useSubdomainTenant } from "../../tenant/hooks/useSubdomainTenant";
 import { useLoginForm } from "../hooks/useLoginForm";
 
 export function LoginForm() {
   const { onSubmit, formError, isSubmitting, errors, register } =
     useLoginForm();
+  const { tenant, subdomain } = useSubdomainTenant();
+
+  const logoSrc = tenant?.logoUrl || "/logo-zii-pos.png";
+  const title = tenant?.name || "Masuk ke ZII POS";
+  const subtitle = tenant
+    ? `Masuk ke akun Kasir / Owner ${tenant.name}`
+    : "Masukkan email dan password akun Kasir/Owner Anda";
 
   return (
     <section className="w-full max-w-md space-y-6">
       <header className="flex flex-col items-center space-y-3 text-center">
         <img
-          src="/logo-zii-pos.png"
-          alt="ZII POS"
+          src={logoSrc}
+          alt={title}
           className="h-28 w-auto object-contain"
+          onError={(e) => {
+            (e.target as HTMLImageElement).src = "/logo-zii-pos.png";
+          }}
         />
         <div className="space-y-1">
-          <h1 className="text-2xl font-black tracking-tight text-slate-900">
-            Masuk ke ZII POS
-          </h1>
-          <p className="text-sm text-slate-500">
-            Masukkan email dan password akun Kasir/Owner Anda
-          </p>
+          <div className="flex items-center justify-center gap-2">
+            <h1 className="text-2xl font-black tracking-tight text-slate-900">
+              {title}
+            </h1>
+          </div>
+          {subdomain && (
+            <div className="flex justify-center">
+              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-0.5 text-[11px] font-bold text-emerald-700 border border-emerald-200">
+                <Store className="h-3 w-3" />
+                {subdomain}.ziipos.id
+              </span>
+            </div>
+          )}
+          <p className="text-sm text-slate-500">{subtitle}</p>
         </div>
       </header>
 

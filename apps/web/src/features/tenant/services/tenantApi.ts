@@ -40,6 +40,10 @@ export interface CreateCashierPayload {
 }
 
 export class TenantApiService {
+  static async getBySubdomain(subdomain: string): Promise<Tenant> {
+    return await fetchApi<Tenant>(`/api/v1/tenants/by-subdomain/${subdomain}`);
+  }
+
   static async getProfile(): Promise<Tenant> {
     return await fetchApi<Tenant>("/api/v1/tenants/profile");
   }
