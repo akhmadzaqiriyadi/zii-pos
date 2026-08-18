@@ -1,4 +1,5 @@
 import {
+  ExternalLink,
   Eye,
   Globe,
   Package,
@@ -24,44 +25,67 @@ export function TenantTableRow({
   onOpenStatusModal,
   onOpenDetailModal,
 }: TenantTableRowProps) {
+  const storeSubdomain = tenant.subdomain
+    ? `${tenant.subdomain}.ziipos.id`
+    : null;
+
   return (
-    <TableRow className="hover:bg-slate-50/70 transition">
-      {/* Merchant / Store */}
-      <TableCell className="py-4">
+    <TableRow className="hover:bg-slate-50/80 transition-colors duration-150 border-b border-slate-100">
+      {/* 1. Merchant / Store Brand & Subdomain */}
+      <TableCell className="py-3.5">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-100 font-extrabold text-slate-700 border border-slate-200">
-            {tenant.name.substring(0, 2).toUpperCase()}
-          </div>
-          <div>
-            <div className="font-bold text-slate-900 text-sm">
+          {tenant.logoUrl ? (
+            <img
+              src={tenant.logoUrl}
+              alt={tenant.name}
+              className="h-10 w-10 shrink-0 object-contain"
+              onError={(e) => {
+                (e.target as HTMLElement).style.display = "none";
+              }}
+            />
+          ) : (
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-100 font-black text-slate-700 text-xs border border-slate-200">
+              {tenant.name.substring(0, 2).toUpperCase()}
+            </div>
+          )}
+
+          <div className="min-w-0">
+            <div className="font-extrabold text-slate-900 text-sm truncate max-w-[200px]">
               {tenant.name}
             </div>
-            <div className="flex items-center gap-1 text-[11px] text-slate-500 mt-0.5">
-              <Globe className="h-3 w-3 text-slate-400" />
-              <span>
-                {tenant.subdomain
-                  ? `${tenant.subdomain}.ziipos.id`
-                  : "Belum set subdomain"}
+            <div className="flex items-center gap-1 text-[11px] font-medium text-slate-500 mt-0.5">
+              <Globe className="h-3 w-3 text-slate-400 shrink-0" />
+              <span className="truncate">
+                {storeSubdomain || "Belum diatur"}
               </span>
             </div>
           </div>
         </div>
       </TableCell>
 
-      {/* Subscription Plan */}
-      <TableCell>
+      {/* 2. Subscription Plan */}
+      <TableCell className="py-3.5">
         {tenant.subscription ? (
           <div className="space-y-1">
             <div className="flex items-center gap-1.5">
-              <Badge variant="blue" className="text-[10px] uppercase font-bold">
+              <Badge
+                variant={
+                  tenant.subscription.planCode === "pro"
+                    ? "emerald"
+                    : tenant.subscription.planCode === "enterprise"
+                      ? "purple"
+                      : "blue"
+                }
+                className="text-[10px] uppercase font-black px-2 py-0.5"
+              >
                 {tenant.subscription.planCode}
               </Badge>
-              <span className="text-xs font-semibold text-slate-800">
+              <span className="text-xs font-bold text-slate-800 truncate">
                 {tenant.subscription.planName}
               </span>
             </div>
-            <p className="text-[11px] text-slate-400">
-              Expired:{" "}
+            <p className="text-[11px] font-medium text-slate-400">
+              Exp:{" "}
               {new Date(tenant.subscription.expiresAt).toLocaleDateString(
                 "id-ID",
                 {
@@ -73,44 +97,46 @@ export function TenantTableRow({
             </p>
           </div>
         ) : (
-          <span className="text-xs text-slate-400 italic">Belum ada paket</span>
+          <span className="text-xs font-medium text-slate-400 italic">
+            Belum ada paket
+          </span>
         )}
       </TableCell>
 
-      {/* Status */}
-      <TableCell>
+      {/* 3. Status Badge */}
+      <TableCell className="py-3.5">
         <TenantStatusBadge status={tenant.status} />
       </TableCell>
 
-      {/* Usage Metrics */}
-      <TableCell>
-        <div className="flex items-center gap-3 text-xs text-slate-600">
+      {/* 4. Usage Metrics */}
+      <TableCell className="py-3.5">
+        <div className="flex items-center gap-2.5 text-xs text-slate-600 font-semibold">
           <div
-            className="flex items-center gap-1"
+            className="flex items-center gap-1 bg-slate-50 px-2 py-1 rounded-lg border border-slate-100"
             title={`Total Kasir: ${tenant.totalUsers}`}
           >
-            <Users className="h-3.5 w-3.5 text-slate-400" />
+            <Users className="h-3.5 w-3.5 text-slate-400 shrink-0" />
             <span>{tenant.totalUsers}</span>
           </div>
           <div
-            className="flex items-center gap-1"
+            className="flex items-center gap-1 bg-slate-50 px-2 py-1 rounded-lg border border-slate-100"
             title={`Total Produk: ${tenant.totalProducts}`}
           >
-            <Package className="h-3.5 w-3.5 text-slate-400" />
+            <Package className="h-3.5 w-3.5 text-slate-400 shrink-0" />
             <span>{tenant.totalProducts}</span>
           </div>
           <div
-            className="flex items-center gap-1"
+            className="flex items-center gap-1 bg-slate-50 px-2 py-1 rounded-lg border border-slate-100"
             title={`Total Transaksi: ${tenant.totalTransactions}`}
           >
-            <ShoppingCart className="h-3.5 w-3.5 text-slate-400" />
+            <ShoppingCart className="h-3.5 w-3.5 text-slate-400 shrink-0" />
             <span>{tenant.totalTransactions}</span>
           </div>
         </div>
       </TableCell>
 
-      {/* Registered Date */}
-      <TableCell className="text-xs text-slate-500">
+      {/* 5. Registered Date */}
+      <TableCell className="py-3.5 text-xs font-medium text-slate-500">
         {new Date(tenant.createdAt).toLocaleDateString("id-ID", {
           day: "numeric",
           month: "short",
@@ -118,14 +144,14 @@ export function TenantTableRow({
         })}
       </TableCell>
 
-      {/* Actions */}
-      <TableCell className="text-right">
-        <div className="flex items-center justify-end gap-2">
+      {/* 6. Action Buttons */}
+      <TableCell className="py-3.5 text-right">
+        <div className="flex items-center justify-end gap-1.5">
           <Button
             variant="outline"
             size="sm"
             onClick={() => onOpenDetailModal(tenant)}
-            className="rounded-xl border-slate-200 hover:border-slate-300 hover:bg-slate-100 text-slate-700 gap-1.5 text-xs font-semibold cursor-pointer shadow-2xs"
+            className="h-8 px-2.5 rounded-xl border-slate-200 hover:border-slate-300 hover:bg-slate-100 text-slate-700 gap-1.5 text-xs font-bold cursor-pointer shadow-2xs transition"
             title="Lihat Detail Lengkap Merchant"
           >
             <Eye className="h-3.5 w-3.5 text-slate-500" />
@@ -136,7 +162,7 @@ export function TenantTableRow({
             variant="outline"
             size="sm"
             onClick={() => onOpenStatusModal(tenant)}
-            className="rounded-xl border-slate-200 hover:border-slate-300 hover:bg-slate-100 text-slate-700 gap-1.5 text-xs font-semibold cursor-pointer shadow-2xs"
+            className="h-8 px-2.5 rounded-xl border-slate-200 hover:border-slate-300 hover:bg-slate-100 text-slate-700 gap-1.5 text-xs font-bold cursor-pointer shadow-2xs transition"
             title="Ubah Status Lisensi Toko"
           >
             <Settings2 className="h-3.5 w-3.5 text-slate-500" />

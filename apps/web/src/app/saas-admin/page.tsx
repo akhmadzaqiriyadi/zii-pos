@@ -1,8 +1,11 @@
 "use client";
 
-import { Crown } from "lucide-react";
+import { Crown, Layers, ShieldCheck } from "lucide-react";
+import Link from "next/link";
 import React from "react";
 import { DashboardLayout } from "../../components/layout/dashboard-layout";
+import { Badge } from "../../components/ui/badge";
+import { Button } from "../../components/ui/button";
 import { SaaSAdminMetricsCards } from "../../features/saas-admin/components/SaaSAdminMetricsCards";
 import { TenantDetailModal } from "../../features/saas-admin/components/TenantDetailModal";
 import { TenantStatusModal } from "../../features/saas-admin/components/TenantStatusModal";
@@ -34,21 +37,46 @@ export default function SaaSAdminPage() {
 
   return (
     <DashboardLayout requiredPermission="saas:admin">
-      <main className="p-4 sm:p-6 lg:p-8 w-full space-y-6">
+      <main className="p-4 sm:p-6 lg:p-8 w-full space-y-6 max-w-7xl mx-auto">
+        {/* Page Header */}
         <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-100 pb-5">
           <div className="space-y-1">
-            <div className="flex items-center gap-2">
-              <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-200 shadow-2xs">
-                <Crown className="h-4 w-4" />
+            <div className="flex items-center gap-2.5">
+              <span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-200/80 shadow-2xs">
+                <Crown className="h-5 w-5" />
               </span>
-              <h1 className="text-2xl font-extrabold text-slate-900">
-                Monitoring Merchant & MRR
-              </h1>
+              <div>
+                <div className="flex items-center gap-2">
+                  <h1 className="text-2xl font-black tracking-tight text-slate-900">
+                    Monitoring Merchant & MRR
+                  </h1>
+                  <Badge
+                    variant="purple"
+                    className="text-[10px] font-black uppercase px-2 py-0.5"
+                  >
+                    SUPER ADMIN
+                  </Badge>
+                </div>
+              </div>
             </div>
-            <p className="text-xs sm:text-sm text-slate-500">
-              Super Admin Portal — Pemantauan performa bisnis SaaS komersial,
-              pendapatan MRR, dan kontrol status lisensi seluruh merchant toko.
+            <p className="text-xs sm:text-sm text-slate-500 max-w-2xl">
+              Portal Kontrol Platform Global — Pemantauan pendapatan bulanan
+              (MRR), performa usaha merchant, dan kendali status lisensi
+              operasional.
             </p>
+          </div>
+
+          <div className="flex items-center gap-2 shrink-0">
+            <Button
+              asChild
+              variant="outline"
+              className="rounded-xl border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:text-emerald-700 font-bold text-xs gap-2 shadow-2xs cursor-pointer h-10 px-4"
+            >
+              <Link href="/saas-admin/plans">
+                <Layers className="h-4 w-4 text-slate-500" />
+                <span>Kelola Paket SaaS</span>
+              </Link>
+            </Button>
           </div>
         </header>
 
