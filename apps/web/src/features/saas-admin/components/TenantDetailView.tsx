@@ -159,6 +159,7 @@ export function TenantDetailView({ tenantId }: TenantDetailViewProps) {
 
       {/* Status Modification Modal */}
       <TenantStatusModal
+        isOpen={isStatusModalOpen}
         tenant={tenantForModal}
         onClose={() => setIsStatusModalOpen(false)}
         onConfirm={(newStatus) => handleStatusChange(newStatus)}

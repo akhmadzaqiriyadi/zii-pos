@@ -103,6 +103,7 @@ export default function SaaSAdminPage() {
 
         {/* 3. Status Modification Modal */}
         <TenantStatusModal
+          isOpen={!!selectedTenantForStatus}
           tenant={selectedTenantForStatus}
           onClose={() => setSelectedTenantForStatus(null)}
           onConfirm={confirmStatusChange}

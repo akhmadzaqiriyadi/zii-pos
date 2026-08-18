@@ -13,6 +13,7 @@ import {
 import type { MerchantTenant } from "../services/saasAdminApi";
 
 interface TenantStatusModalProps {
+  isOpen?: boolean;
   tenant: MerchantTenant | null;
   onClose: () => void;
   onConfirm: (status: "active" | "trial" | "expired" | "suspended") => void;
@@ -20,11 +21,13 @@ interface TenantStatusModalProps {
 }
 
 export function TenantStatusModal({
+  isOpen,
   tenant,
   onClose,
   onConfirm,
   isPending,
 }: TenantStatusModalProps) {
+  const isModalOpen = isOpen !== undefined ? isOpen : !!tenant;
   const [selectedStatus, setSelectedStatus] = useState<
     "active" | "trial" | "expired" | "suspended"
   >(tenant?.status || "active");
@@ -35,7 +38,7 @@ export function TenantStatusModal({
     }
   }, [tenant]);
 
-  if (!tenant) return null;
+  if (!tenant && !isOpen) return null;
 
   const statusOptions: Array<{
     value: "active" | "trial" | "expired" | "suspended";
@@ -73,7 +76,7 @@ export function TenantStatusModal({
   ];
 
   return (
-    <Dialog open={!!tenant} onOpenChange={(open) => !open && onClose()}>
+    <Dialog open={isModalOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="max-w-md p-6 rounded-2xl">
         <DialogHeader className="space-y-2">
           <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-50 text-amber-600 border border-amber-200 shadow-xs">
