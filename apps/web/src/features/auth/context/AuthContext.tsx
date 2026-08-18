@@ -54,12 +54,47 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<AuthUser | null>(null);
-  const [tenant, setTenant] = useState<AuthTenant | null>(null);
-  const [token, setToken] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [user, setUser] = useState<AuthUser | null>(() => {
+    if (typeof window === "undefined") return null;
+    try {
+      const stored = localStorage.getItem("zii_user");
+      return stored ? JSON.parse(stored) : null;
+    } catch {
+      return null;
+    }
+  });
 
-  // Initialize Auth State from Cookies and LocalStorage on mount
+  const [tenant, setTenant] = useState<AuthTenant | null>(() => {
+    if (typeof window === "undefined") return null;
+    try {
+      const stored = localStorage.getItem("zii_tenant");
+      return stored ? JSON.parse(stored) : null;
+    } catch {
+      return null;
+    }
+  });
+
+  const [token, setToken] = useState<string | null>(() => {
+    if (typeof window === "undefined") return null;
+    try {
+      return getCookie("zii_auth_token") || null;
+    } catch {
+      return null;
+    }
+  });
+
+  const [isLoading, setIsLoading] = useState<boolean>(() => {
+    if (typeof window === "undefined") return true;
+    try {
+      const hasUser = !!localStorage.getItem("zii_user");
+      const hasToken = !!getCookie("zii_auth_token");
+      return !(hasUser && hasToken);
+    } catch {
+      return true;
+    }
+  });
+
+  // Verify and sync Auth State from Cookies and LocalStorage on mount
   useEffect(() => {
     try {
       const storedToken = getCookie("zii_auth_token");
@@ -70,7 +105,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setToken(storedToken);
         setUser(JSON.parse(storedUser));
         setTenant(JSON.parse(storedTenant));
-      } else {
+      } else if (!storedToken || !storedUser) {
         // Clear if incomplete
         deleteCookie("zii_auth_token");
         deleteCookie("zii_tenant_id");
@@ -78,6 +113,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         deleteCookie("zii_tenant_subdomain");
         localStorage.removeItem("zii_user");
         localStorage.removeItem("zii_tenant");
+        setToken(null);
+        setUser(null);
+        setTenant(null);
       }
     } catch (error) {
       console.error("Failed to rehydrate auth state:", error);

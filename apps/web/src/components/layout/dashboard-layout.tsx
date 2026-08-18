@@ -1,6 +1,6 @@
 "use client";
 
-import { PanelLeft, Printer, Store } from "lucide-react";
+import { Loader2, PanelLeft, Printer, Store } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
 import { useAuth } from "../../features/auth/hooks/useAuth";
@@ -27,7 +27,7 @@ export function DashboardLayout({
 }: DashboardLayoutProps) {
   const [isSidebarCollapsed, setIsSidebarCollapsed] =
     useState(defaultCollapsed);
-  const { user } = useAuth();
+  const { user, isLoading } = useAuth();
   const { tenant } = useTenant();
   const printer = useThermalPrinter();
 
@@ -120,7 +120,16 @@ export function DashboardLayout({
 
         {/* Content Body or Role Restricted View */}
         <div className="flex-1 overflow-y-auto min-w-0">
-          {!isAuthorized ? (
+          {isLoading ? (
+            <div className="flex h-full w-full items-center justify-center min-h-[400px]">
+              <div className="flex flex-col items-center gap-3 text-slate-400">
+                <Loader2 className="h-8 w-8 animate-spin text-emerald-600" />
+                <span className="text-xs font-semibold text-slate-500">
+                  Memuat sesi & hak akses toko...
+                </span>
+              </div>
+            </div>
+          ) : !isAuthorized ? (
             <RestrictedAccessView
               requiredRole={requiredRole}
               requiredPermission={requiredPermission}
