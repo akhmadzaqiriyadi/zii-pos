@@ -28,24 +28,24 @@ export function LandingHero() {
             <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
             <span className="text-xs font-extrabold text-emerald-800 tracking-wide flex items-center gap-1.5">
               <Sparkles className="h-3.5 w-3.5 text-emerald-600" />
-              ZII POS v2.0 Multi-Tenant Commercial SaaS Ready
+              Aplikasi Kasir Praktis & Modern • Coba Gratis 14 Hari Tanpa Biaya
             </span>
           </div>
 
           {/* Main Headline */}
           <h1 className="text-4xl sm:text-6xl font-black text-slate-900 tracking-tight leading-[1.15]">
-            Aplikasi Kasir POS{" "}
+            Kelola Kasir Jadi Cepat,{" "}
             <span className="bg-linear-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
-              White-Label & Multi-Kasir
-            </span>{" "}
-            untuk Bisnis Modern
+              Laporan Rapi
+            </span>
+            , dan Toko Bebas Bocor Uang
           </h1>
 
           {/* Subtitle */}
           <p className="text-base sm:text-xl text-slate-600 max-w-2xl leading-relaxed font-normal">
-            Kelola transaksi kasir, stok barang & jasa, cetak nota thermal 58mm,
-            kirim struk WhatsApp otomatis, dan buat subdomain toko sendiri hanya
-            dalam 1 menit.
+            Aplikasi kasir online yang bikin transaksi belanja kilat, cetak nota
+            mudah, kirim struk ke WhatsApp pembeli, dan pantau penjualan toko
+            dari mana saja lewat HP atau laptop.
           </p>
 
           {/* Hero CTAs */}
@@ -62,7 +62,7 @@ export function LandingHero() {
                 className="w-full sm:w-auto h-14 px-8 rounded-2xl border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-bold text-base shadow-xs gap-2 cursor-pointer"
               >
                 <Play className="h-4 w-4 text-emerald-600 fill-emerald-600" />
-                <span>Pelajari Fitur</span>
+                <span>Pelajari Manfaat</span>
               </Button>
             </a>
           </div>
@@ -75,15 +75,15 @@ export function LandingHero() {
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
-              <span>Subdomain Toko Terisolasi</span>
+              <span>Bisa Pakai HP, Tablet, & Laptop</span>
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
-              <span>Support WhatsApp 24/7</span>
+              <span>Uang & Data Toko 100% Aman</span>
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
-              <span>Auto-Lock Aman Tanpa Denda</span>
+              <span>Bantuan WhatsApp 24 Jam</span>
             </div>
           </div>
         </div>
