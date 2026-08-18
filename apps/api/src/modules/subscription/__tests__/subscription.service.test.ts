@@ -58,6 +58,7 @@ mock.module("@zii/db", () => ({
       create: async () => mockTenant.subscriptions[0].plan,
     },
     subscription: {
+      findFirst: async () => mockTenant.subscriptions[0],
       create: async (args: { data: Record<string, unknown> }) => ({
         id: "sub-new",
         ...args.data,
@@ -75,6 +76,7 @@ mock.module("@zii/db", () => ({
         }
         return null;
       },
+      findMany: async () => [mockInvoice],
       create: async (args: { data: Record<string, unknown> }) => ({
         id: "inv-new",
         ...args.data,
@@ -86,12 +88,19 @@ mock.module("@zii/db", () => ({
       }),
     },
     user: {
+      count: async () => 2,
       findFirst: async () => ({
         id: "u-01",
         name: "Zaqi Owner",
         email: "zaqi@zii.id",
         role: "owner",
       }),
+    },
+    product: {
+      count: async () => 15,
+    },
+    transaction: {
+      count: async () => 48,
     },
     $transaction: async (queries: unknown[]) => queries,
   },
@@ -128,7 +137,7 @@ describe("SubscriptionService Unit Tests", () => {
     expect(isFalseOnTampered).toBe(false);
   });
 
-  it("should get current subscription and license status with days remaining", async () => {
+  it("should get current subscription and license status with usage & urgency metrics", async () => {
     const current = await SubscriptionService.getCurrentSubscription("t-01");
 
     expect(current.subscriptionId).toBe("sub-01");
@@ -136,6 +145,31 @@ describe("SubscriptionService Unit Tests", () => {
     expect(current.daysRemaining).toBeGreaterThan(0);
     expect(current.isExpired).toBe(false);
     expect(Array.isArray(current.plan.features)).toBe(true);
+    expect(current.usage.activeCashiers).toBe(2);
+    expect(current.usage.maxCashiers).toBe(5);
+    expect(current.usage.cashierUsagePercent).toBe(40);
+    expect(current.urgency.urgencyLevel).toBe("safe");
+  });
+
+  it("should get merchant invoice history with PDF download url", async () => {
+    const invoices = await SubscriptionService.getInvoices("t-01");
+
+    expect(Array.isArray(invoices)).toBe(true);
+    expect(invoices.length).toBe(1);
+    expect(invoices[0].id).toBe("inv-999");
+    expect(invoices[0].amount).toBe(99000);
+    expect(invoices[0].planName).toBe("Pro Merchant White-Label");
+    expect(invoices[0].pdfUrl).toBe(
+      "/api/v1/subscriptions/invoice/inv-999/pdf",
+    );
+  });
+
+  it("should toggle auto-renewal status for subscription", async () => {
+    const result = await SubscriptionService.toggleAutoRenew("t-01", false);
+
+    expect(result.subscriptionId).toBe("sub-01");
+    expect(result.autoRenew).toBe(false);
+    expect(result.message).toContain("dinonaktifkan");
   });
 
   it("should generate checkout invoice and payment details", async () => {

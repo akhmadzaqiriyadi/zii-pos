@@ -31,3 +31,19 @@ subscriptionRouter.post(
   requirePermission("billing:manage"),
   SubscriptionController.checkout,
 );
+
+subscriptionRouter.get(
+  "/invoices",
+  tenantMiddleware,
+  authMiddleware,
+  requirePermission("billing:manage"),
+  SubscriptionController.getInvoices,
+);
+
+subscriptionRouter.patch(
+  "/auto-renew",
+  tenantMiddleware,
+  authMiddleware,
+  requirePermission("billing:manage"),
+  SubscriptionController.toggleAutoRenew,
+);

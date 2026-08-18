@@ -123,4 +123,50 @@ export class SubscriptionController {
       return ApiResponse.error(res, message, error, 404);
     }
   }
+
+  static async getInvoices(req: AuthenticatedRequest, res: Response) {
+    try {
+      const tenantId = req.tenantId || "demo-tenant-01";
+      const invoices = await SubscriptionService.getInvoices(tenantId);
+      return ApiResponse.success(
+        res,
+        "Berhasil mengambil riwayat invoice langganan toko",
+        invoices,
+      );
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Gagal mengambil riwayat invoice";
+      return ApiResponse.error(res, message, error, 500);
+    }
+  }
+
+  static async toggleAutoRenew(req: AuthenticatedRequest, res: Response) {
+    try {
+      const tenantId = req.tenantId || "demo-tenant-01";
+      const { autoRenew } = req.body;
+
+      if (typeof autoRenew !== "boolean") {
+        return ApiResponse.error(
+          res,
+          "Kolom autoRenew (boolean) wajib disertakan.",
+          null,
+          400,
+        );
+      }
+
+      const result = await SubscriptionService.toggleAutoRenew(
+        tenantId,
+        autoRenew,
+      );
+      return ApiResponse.success(res, result.message, result);
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Gagal mengubah status perpanjangan otomatis";
+      return ApiResponse.error(res, message, error, 400);
+    }
+  }
 }

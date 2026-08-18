@@ -199,3 +199,98 @@ registry.registerPath({
     },
   },
 });
+
+export const MerchantInvoiceSchema = z
+  .object({
+    id: z.string().openapi({ example: "inv-123" }),
+    amount: z.number().openapi({ example: 99000 }),
+    paymentMethod: z.string().openapi({ example: "midtrans_qris" }),
+    status: z.string().openapi({ example: "paid" }),
+    paidAt: z
+      .string()
+      .nullable()
+      .openapi({ example: "2026-08-16T12:05:00.000Z" }),
+    createdAt: z.string().openapi({ example: "2026-08-16T12:00:00.000Z" }),
+    planName: z.string().openapi({ example: "Pro Merchant White-Label" }),
+    planCode: z.string().openapi({ example: "pro" }),
+    billingCycle: z.string().openapi({ example: "monthly" }),
+    pdfUrl: z
+      .string()
+      .openapi({ example: "/api/v1/subscriptions/invoice/inv-123/pdf" }),
+  })
+  .openapi("MerchantSubscriptionInvoice");
+
+// GET /api/v1/subscriptions/invoices
+registry.registerPath({
+  method: "get",
+  path: "/api/v1/subscriptions/invoices",
+  summary: "Ambil Riwayat Invoice Pembayaran Lisensi Toko",
+  tags: ["Subscription & Billing"],
+  security: [{ TenantHeader: [] }],
+  responses: {
+    200: {
+      description: "200 OK — Riwayat invoice berhasil diambil",
+      content: {
+        "application/json": {
+          schema: createSuccessResponseSchema(
+            z.array(MerchantInvoiceSchema),
+            "Berhasil mengambil riwayat invoice langganan toko",
+          ),
+        },
+      },
+    },
+    500: {
+      description: "500 Internal Server Error",
+      content: {
+        "application/json": {
+          schema: ErrorResponseSchema,
+        },
+      },
+    },
+  },
+});
+
+// PATCH /api/v1/subscriptions/auto-renew
+registry.registerPath({
+  method: "patch",
+  path: "/api/v1/subscriptions/auto-renew",
+  summary: "Toggle Pengaturan Perpanjangan Lisensi Otomatis (Auto-Renew)",
+  tags: ["Subscription & Billing"],
+  security: [{ TenantHeader: [] }],
+  request: {
+    body: {
+      content: {
+        "application/json": {
+          schema: z.object({
+            autoRenew: z.boolean().openapi({ example: true }),
+          }),
+        },
+      },
+    },
+  },
+  responses: {
+    200: {
+      description: "200 OK — Pengaturan perpanjangan otomatis berhasil diubah",
+      content: {
+        "application/json": {
+          schema: createSuccessResponseSchema(
+            z.object({
+              subscriptionId: z.string(),
+              autoRenew: z.boolean(),
+              message: z.string(),
+            }),
+            "Perpanjangan otomatis berhasil diaktifkan.",
+          ),
+        },
+      },
+    },
+    400: {
+      description: "400 Bad Request",
+      content: {
+        "application/json": {
+          schema: ErrorResponseSchema,
+        },
+      },
+    },
+  },
+});

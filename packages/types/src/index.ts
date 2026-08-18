@@ -153,3 +153,32 @@ export interface SaaSMetrics {
   mrr: number;
   churnRate: number;
 }
+
+export interface MerchantSubscriptionInvoice {
+  id: string;
+  amount: number;
+  paymentMethod: string;
+  status: "paid" | "unpaid" | "failed" | string;
+  paidAt: Date | string | null;
+  createdAt: Date | string;
+  planName: string;
+  planCode: string;
+  billingCycle: string;
+  pdfUrl: string;
+}
+
+export interface SubscriptionUsageMetrics {
+  activeCashiers: number;
+  maxCashiers: number;
+  cashierUsagePercent: number;
+  isCashierLimitReached: boolean;
+  totalProducts: number;
+  totalTransactions: number;
+}
+
+export interface SubscriptionUrgencyInfo {
+  urgencyLevel: "safe" | "expiring_soon" | "critical" | "locked";
+  daysRemaining: number;
+  autoLockAt: Date | string;
+  isGracePeriod: boolean;
+}

@@ -116,6 +116,35 @@ export class SubscriptionService {
       Math.ceil(diffTime / (1000 * 60 * 60 * 24)),
     );
 
+    // Calculate real-time usage metrics
+    const [activeCashiers, totalProducts, totalTransactions] =
+      await Promise.all([
+        db.user.count({ where: { tenantId } }),
+        db.product.count({ where: { tenantId } }),
+        db.transaction.count({ where: { tenantId } }),
+      ]);
+
+    const maxCashiers = subscription.plan.maxCashiers;
+    const cashierUsagePercent = Math.min(
+      100,
+      Math.round((activeCashiers / maxCashiers) * 100),
+    );
+    const isCashierLimitReached = activeCashiers >= maxCashiers;
+
+    // Calculate license status urgency
+    let urgencyLevel: "safe" | "expiring_soon" | "critical" | "locked" = "safe";
+    if (
+      isExpired ||
+      tenant.status === "expired" ||
+      tenant.status === "suspended"
+    ) {
+      urgencyLevel = "locked";
+    } else if (daysRemaining <= 1) {
+      urgencyLevel = "critical";
+    } else if (daysRemaining <= 3) {
+      urgencyLevel = "expiring_soon";
+    }
+
     // Parse features safely
     let features: string[] = [];
     try {
@@ -144,6 +173,20 @@ export class SubscriptionService {
         allowWhiteLabel: subscription.plan.allowWhiteLabel,
         allowExportExcel: subscription.plan.allowExportExcel,
         features,
+      },
+      usage: {
+        activeCashiers,
+        maxCashiers,
+        cashierUsagePercent,
+        isCashierLimitReached,
+        totalProducts,
+        totalTransactions,
+      },
+      urgency: {
+        urgencyLevel,
+        daysRemaining,
+        autoLockAt: subscription.expiresAt,
+        isGracePeriod: false,
       },
     };
   }
@@ -439,5 +482,66 @@ export class SubscriptionService {
       paymentMethod: invoice.paymentGatewayTxId || "MIDTRANS_QRIS",
       expiresAt: invoice.subscription.expiresAt,
     });
+  }
+
+  /**
+   * Mengambil seluruh riwayat invoice pembayaran lisensi milik tenant
+   */
+  static async getInvoices(tenantId: string) {
+    const invoices = await db.subscriptionInvoice.findMany({
+      where: {
+        subscription: {
+          tenantId,
+        },
+      },
+      include: {
+        subscription: {
+          include: {
+            plan: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    return invoices.map((inv) => ({
+      id: inv.id,
+      amount: Number(inv.amount),
+      paymentMethod: inv.paymentGatewayTxId ? "midtrans_qris" : "qris",
+      status: inv.status,
+      paidAt: inv.paidAt,
+      createdAt: inv.createdAt,
+      planName: inv.subscription.plan.name,
+      planCode: inv.subscription.plan.code,
+      billingCycle: inv.subscription.plan.billingCycle,
+      pdfUrl: `/api/v1/subscriptions/invoice/${inv.id}/pdf`,
+    }));
+  }
+
+  /**
+   * Mengatur toggle perpanjangan lisensi otomatis (auto-renew)
+   */
+  static async toggleAutoRenew(tenantId: string, autoRenew: boolean) {
+    const latestSubscription = await db.subscription.findFirst({
+      where: { tenantId },
+      orderBy: { createdAt: "desc" },
+    });
+
+    if (!latestSubscription) {
+      throw new Error("Data langganan tidak ditemukan.");
+    }
+
+    const updated = await db.subscription.update({
+      where: { id: latestSubscription.id },
+      data: { autoRenew },
+    });
+
+    return {
+      subscriptionId: updated.id,
+      autoRenew: updated.autoRenew,
+      message: `Perpanjangan otomatis berhasil ${autoRenew ? "diaktifkan" : "dinonaktifkan"}.`,
+    };
   }
 }
