@@ -1,73 +1,39 @@
-import {
-  ArrowRight,
-  Package,
-  Settings,
-  ShoppingBag,
-  Store,
-} from "lucide-react";
-import Link from "next/link";
-import { Badge } from "../components/ui/badge";
-import { Button } from "../components/ui/button";
+import React from "react";
+import { LandingHero } from "../features/landing/components/LandingHero";
+import { LandingNavbar } from "../features/landing/components/LandingNavbar";
 
 export default function RootHomePage() {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-slate-900 px-4 text-white font-sans">
-      <div className="max-w-2xl text-center space-y-6">
-        <Badge
-          variant="emerald"
-          className="px-4 py-1.5 text-sm bg-emerald-500/20 text-emerald-300 border-emerald-500/30"
-        >
-          <Store className="mr-2 h-4 w-4" /> ZII POS Enterprise Architecture
-        </Badge>
+    <div className="min-h-screen flex flex-col bg-white text-slate-900 font-sans">
+      {/* 1. Header Navigation Bar */}
+      <LandingNavbar />
 
-        <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl">
-          Sistem Kasir <span className="text-emerald-400">White-Label</span>{" "}
-          Modern
-        </h1>
+      {/* 2. Hero Section Draft */}
+      <main className="flex-1">
+        <LandingHero />
+      </main>
 
-        <p className="text-slate-400 text-base leading-relaxed">
-          Dibangun dengan arsitektur **Feature-Driven Monorepo (Bun + Next.js 16
-          + Express TS + Prisma + Custom Radix UI)**.
-        </p>
-
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 pt-4">
-          <Link href="/pos">
-            <Button
-              variant="primary"
-              className="w-full justify-between h-14 px-6 text-sm"
+      {/* 3. Simple Draft Footer */}
+      <footer className="border-t border-slate-200/80 bg-slate-50 py-8 px-4 text-center text-xs text-slate-500">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="font-semibold text-slate-600">
+            &copy; {new Date().getFullYear()} ZII POS Platform. All rights
+            reserved.
+          </p>
+          <div className="flex items-center gap-6 font-semibold">
+            <a
+              href="https://wa.me/6285292677431"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-emerald-600 hover:underline"
             >
-              <span className="flex items-center gap-2">
-                <ShoppingBag className="h-5 w-5" /> Layar Kasir POS
-              </span>
-              <ArrowRight className="h-4 w-4" />
-            </Button>
-          </Link>
-
-          <Link href="/products">
-            <Button
-              variant="outline"
-              className="w-full justify-between h-14 px-6 text-sm bg-slate-800 text-slate-200 border-slate-700 hover:bg-slate-700"
-            >
-              <span className="flex items-center gap-2">
-                <Package className="h-5 w-5" /> Katalog Produk
-              </span>
-              <ArrowRight className="h-4 w-4" />
-            </Button>
-          </Link>
-
-          <Link href="/settings">
-            <Button
-              variant="outline"
-              className="w-full justify-between h-14 px-6 text-sm bg-slate-800 text-slate-200 border-slate-700 hover:bg-slate-700"
-            >
-              <span className="flex items-center gap-2">
-                <Settings className="h-5 w-5" /> Pengaturan Struk
-              </span>
-              <ArrowRight className="h-4 w-4" />
-            </Button>
-          </Link>
+              Support WA 24/7
+            </a>
+            <span className="text-slate-300">•</span>
+            <span>Multi-Tenant White-Label SaaS</span>
+          </div>
         </div>
-      </div>
+      </footer>
     </div>
   );
 }
