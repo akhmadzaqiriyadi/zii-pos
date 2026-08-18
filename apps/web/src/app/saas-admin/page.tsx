@@ -1,13 +1,12 @@
 "use client";
 
-import { Crown, Layers, ShieldCheck } from "lucide-react";
+import { Crown, Layers } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import { DashboardLayout } from "../../components/layout/dashboard-layout";
 import { Badge } from "../../components/ui/badge";
 import { Button } from "../../components/ui/button";
 import { SaaSAdminMetricsCards } from "../../features/saas-admin/components/SaaSAdminMetricsCards";
-import { TenantDetailModal } from "../../features/saas-admin/components/TenantDetailModal";
 import { TenantStatusModal } from "../../features/saas-admin/components/TenantStatusModal";
 import { TenantTable } from "../../features/saas-admin/components/TenantTable";
 import { useSaaSAdminDashboard } from "../../features/saas-admin/hooks/useSaaSAdminDashboard";
@@ -27,8 +26,6 @@ export default function SaaSAdminPage() {
     isLoadingTenants,
     selectedTenantForStatus,
     setSelectedTenantForStatus,
-    selectedTenantForDetail,
-    setSelectedTenantForDetail,
     handleOpenStatusModal,
     handleOpenDetailModal,
     confirmStatusChange,
@@ -110,13 +107,6 @@ export default function SaaSAdminPage() {
           onClose={() => setSelectedTenantForStatus(null)}
           onConfirm={confirmStatusChange}
           isPending={isStatusUpdating}
-        />
-
-        {/* 4. Merchant Detail Modal */}
-        <TenantDetailModal
-          tenant={selectedTenantForDetail}
-          onClose={() => setSelectedTenantForDetail(null)}
-          onOpenStatusModal={handleOpenStatusModal}
         />
       </main>
     </DashboardLayout>

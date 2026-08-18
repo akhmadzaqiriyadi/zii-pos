@@ -7,6 +7,7 @@ import {
   ShoppingCart,
   Users,
 } from "lucide-react";
+import Link from "next/link";
 import React from "react";
 import { Badge } from "../../../components/ui/badge";
 import { Button } from "../../../components/ui/button";
@@ -148,14 +149,16 @@ export function TenantTableRow({
       <TableCell className="py-3.5 text-right">
         <div className="flex items-center justify-end gap-1.5">
           <Button
+            asChild
             variant="outline"
             size="sm"
-            onClick={() => onOpenDetailModal(tenant)}
             className="h-8 px-2.5 rounded-xl border-slate-200 hover:border-slate-300 hover:bg-slate-100 text-slate-700 gap-1.5 text-xs font-bold cursor-pointer shadow-2xs transition"
             title="Lihat Detail Lengkap Merchant"
           >
-            <Eye className="h-3.5 w-3.5 text-slate-500" />
-            <span>Detail</span>
+            <Link href={`/saas-admin/tenants/${tenant.id}`}>
+              <Eye className="h-3.5 w-3.5 text-slate-500" />
+              <span>Detail</span>
+            </Link>
           </Button>
 
           <Button
