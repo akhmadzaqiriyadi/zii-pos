@@ -91,7 +91,7 @@ export class TenantService {
 
     // Check active subscription & plan limit
     const subscription = await db.subscription.findFirst({
-      where: { tenantId, status: "active" },
+      where: { tenantId, status: { in: ["active", "trial"] } },
       include: { plan: true },
       orderBy: { createdAt: "desc" },
     });
@@ -111,7 +111,7 @@ export class TenantService {
   static async createCashier(tenantId: string, input: CreateCashierInput) {
     // 1. Check max cashier quota
     const subscription = await db.subscription.findFirst({
-      where: { tenantId, status: "active" },
+      where: { tenantId, status: { in: ["active", "trial"] } },
       include: { plan: true },
       orderBy: { createdAt: "desc" },
     });
