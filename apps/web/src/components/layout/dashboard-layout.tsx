@@ -1,6 +1,6 @@
 "use client";
 
-import { LogOut, PanelLeft, Printer, Store } from "lucide-react";
+import { PanelLeft, Printer, Store } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
 import { useAuth } from "../../features/auth/hooks/useAuth";
@@ -27,7 +27,7 @@ export function DashboardLayout({
 }: DashboardLayoutProps) {
   const [isSidebarCollapsed, setIsSidebarCollapsed] =
     useState(defaultCollapsed);
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const { tenant } = useTenant();
   const printer = useThermalPrinter();
 
@@ -115,14 +115,6 @@ export function DashboardLayout({
                 {user?.name || "Kasir Utama"} ({user?.role || "kasir"})
               </span>
             </Badge>
-            <button
-              type="button"
-              onClick={logout}
-              className="flex h-8 items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 text-xs font-medium text-slate-600 hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200 transition cursor-pointer"
-            >
-              <LogOut className="h-3.5 w-3.5" />
-              <span className="hidden sm:inline">Keluar</span>
-            </button>
           </div>
         </header>
 

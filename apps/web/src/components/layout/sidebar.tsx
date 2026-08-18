@@ -23,6 +23,7 @@ import React from "react";
 import { useAuth } from "../../features/auth/hooks/useAuth";
 import { useHasPermission } from "../../features/auth/hooks/useHasPermission";
 import { useTenant } from "../../features/tenant/hooks/useTenant";
+import { LogoutConfirmModal } from "../auth/LogoutConfirmModal";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 
@@ -51,6 +52,7 @@ export function AppSidebar({
   const pathname = usePathname();
   const { user, logout } = useAuth();
   const { tenant } = useTenant();
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = React.useState(false);
 
   const isSuperAdmin = useHasPermission("saas:admin", "*");
   const userRole = user?.role || "cashier";
@@ -427,7 +429,7 @@ export function AppSidebar({
         <footer className="border-t border-slate-200 p-3 space-y-2 bg-white">
           <Button
             variant="outline"
-            onClick={logout}
+            onClick={() => setIsLogoutModalOpen(true)}
             className={`flex items-center justify-center rounded-xl border border-slate-200 bg-slate-50 text-xs font-bold text-slate-600 hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200 transition cursor-pointer ${
               isCollapsed
                 ? "h-10 w-10 p-0 mx-auto"
@@ -440,6 +442,13 @@ export function AppSidebar({
           </Button>
         </footer>
       </aside>
+
+      {/* Confirmation Modal Sebelum Keluar Akun */}
+      <LogoutConfirmModal
+        isOpen={isLogoutModalOpen}
+        onOpenChange={setIsLogoutModalOpen}
+        onConfirmLogout={logout}
+      />
     </>
   );
 }
