@@ -113,16 +113,20 @@ export function StepPlanSelection({
                       <span className="text-2xl font-black text-slate-900">
                         {plan.price === 0 ? "Gratis" : formatRupiah(plan.price)}
                       </span>
-                      {plan.price > 0 && (
+                      {plan.price > 0 ? (
                         <span className="text-xs text-slate-400 font-normal">
                           {" "}
                           / bulan
+                        </span>
+                      ) : (
+                        <span className="text-xs font-bold text-amber-600 block mt-1">
+                          14 Hari (Auto-lock jika tidak diperpanjang)
                         </span>
                       )}
                     </div>
                   </header>
 
-                  <div className="flex items-center gap-2 pt-1 pb-2">
+                  <div className="flex flex-wrap items-center gap-2 pt-1 pb-2">
                     <Badge
                       variant="emerald"
                       className="gap-1 text-[11px] py-0.5"
@@ -133,6 +137,14 @@ export function StepPlanSelection({
                         {plan.maxCashiers === 1 ? "Kasir" : "Kasir"}
                       </span>
                     </Badge>
+                    {plan.price === 0 && (
+                      <Badge
+                        variant="amber"
+                        className="text-[10px] py-0.5 font-bold"
+                      >
+                        Trial 14 Hari
+                      </Badge>
+                    )}
                     {plan.allowWhiteLabel && (
                       <Badge variant="blue" className="text-[10px] py-0.5">
                         White-Label

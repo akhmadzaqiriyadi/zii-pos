@@ -145,10 +145,14 @@ export function UpgradePlanGrid({
                           ? "Gratis"
                           : formatRupiah(displayPrice)}
                       </span>
-                      {displayPrice > 0 && (
+                      {displayPrice > 0 ? (
                         <span className="text-xs text-slate-400">
                           {" "}
                           / {selectedCycle === "yearly" ? "tahun" : "bulan"}
+                        </span>
+                      ) : (
+                        <span className="text-xs font-bold text-amber-600 block mt-1">
+                          14 Hari (Auto-lock jika tidak diperpanjang)
                         </span>
                       )}
                     </div>
