@@ -37,8 +37,7 @@ export function evaluateTrialGuard(
 
   const isAuthRoute =
     pathname === "/login" ||
-    pathname === "/register" ||
-    pathname === "/onboarding";
+    pathname === "/register";
 
   // 1. Unauthenticated users trying to access protected routes
   if (isProtectedRoute && !token) {

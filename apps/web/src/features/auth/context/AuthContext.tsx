@@ -229,11 +229,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const logout = () => {
-    // 1. Delete Cookies
-    deleteCookie("zii_auth_token");
-    deleteCookie("zii_tenant_id");
-    deleteCookie("zii_tenant_status");
-    deleteCookie("zii_tenant_subdomain");
+    // 1. Delete Cookies comprehensively across domains
+    const cookieNames = [
+      "zii_auth_token",
+      "zii_tenant_id",
+      "zii_tenant_status",
+      "zii_tenant_subdomain",
+      "zii_has_registered",
+    ];
+
+    for (const name of cookieNames) {
+      deleteCookie(name);
+      deleteCookie(name, ".localhost");
+      deleteCookie(name, "localhost");
+      deleteCookie(name, ".ziipos.com");
+    }
 
     // 2. Clear LocalStorage
     localStorage.removeItem("zii_user");

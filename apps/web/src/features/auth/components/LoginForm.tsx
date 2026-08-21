@@ -70,11 +70,10 @@ export function LoginForm() {
                   type="email"
                   placeholder="nama@email.com"
                   {...register("email")}
-                  className={`bg-slate-50 pl-10 pr-3.5 ${
-                    errors.email
+                  className={`bg-slate-50 pl-10 pr-3.5 ${errors.email
                       ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
                       : "border-slate-200 focus:border-emerald-500 focus:ring-emerald-500/20"
-                  }`}
+                    }`}
                   disabled={isSubmitting}
                 />
               </div>
@@ -92,11 +91,10 @@ export function LoginForm() {
                   type="password"
                   placeholder="••••••••"
                   {...register("password")}
-                  className={`bg-slate-50 pl-10 pr-3.5 ${
-                    errors.password
+                  className={`bg-slate-50 pl-10 pr-3.5 ${errors.password
                       ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
                       : "border-slate-200 focus:border-emerald-500 focus:ring-emerald-500/20"
-                  }`}
+                    }`}
                   disabled={isSubmitting}
                 />
               </div>

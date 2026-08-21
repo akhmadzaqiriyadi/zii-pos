@@ -4,7 +4,6 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
 import { parseApiErrorMessage } from "../../../lib/form-helpers";
-import { SaaSAdminApiService } from "../../saas-admin/services/saasAdminApi";
 import {
   type CheckoutResult,
   SubscriptionApiService,
@@ -17,7 +16,7 @@ export function useMerchantBilling() {
     "monthly" | "yearly"
   >("monthly");
 
-  // 1. Fetch Current Merchant Subscription
+  // 1. Fetch Current Merchant Subscription (Includes Usage & Urgency)
   const {
     data: currentSubscription,
     isLoading: isLoadingSubscription,
@@ -31,7 +30,6 @@ export function useMerchantBilling() {
   const { data: availablePlans = [], isLoading: isLoadingPlans } = useQuery({
     queryKey: ["activePlans"],
     queryFn: async () => {
-      // Use public plans or admin plans
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000"}/api/v1/plans`,
       );
@@ -40,7 +38,43 @@ export function useMerchantBilling() {
     },
   });
 
-  // 3. Checkout Mutation
+  // 3. Fetch Merchant Invoices History
+  const {
+    data: invoices = [],
+    isLoading: isLoadingInvoices,
+    refetch: refetchInvoices,
+  } = useQuery({
+    queryKey: ["merchantInvoices"],
+    queryFn: () => SubscriptionApiService.getInvoices(),
+  });
+
+  // 4. Auto-Renew Mutation
+  const autoRenewMutation = useMutation({
+    mutationFn: (autoRenew: boolean) =>
+      SubscriptionApiService.toggleAutoRenew(autoRenew),
+    onSuccess: (res) => {
+      queryClient.invalidateQueries({ queryKey: ["currentSubscription"] });
+      if (res.autoRenew) {
+        toast.success(
+          res.message || "Perpanjangan otomatis berhasil diaktifkan.",
+        );
+      } else {
+        toast.error(
+          res.message || "Perpanjangan otomatis berhasil dinonaktifkan.",
+        );
+      }
+    },
+    onError: (err: unknown) => {
+      toast.error(
+        parseApiErrorMessage(
+          err,
+          "Gagal mengubah pengaturan perpanjangan otomatis.",
+        ),
+      );
+    },
+  });
+
+  // 5. Checkout Mutation
   const checkoutMutation = useMutation({
     mutationFn: ({
       planId,
@@ -67,17 +101,26 @@ export function useMerchantBilling() {
     });
   };
 
+  const handleToggleAutoRenew = (autoRenew: boolean) => {
+    autoRenewMutation.mutate(autoRenew);
+  };
+
   return {
     currentSubscription,
     isLoadingSubscription,
     availablePlans,
     isLoadingPlans,
+    invoices,
+    isLoadingInvoices,
+    refetchInvoices,
     selectedBillingCycle,
     setSelectedBillingCycle,
     checkoutData,
     setCheckoutData,
     handleCheckout,
     isCheckoutPending: checkoutMutation.isPending,
+    handleToggleAutoRenew,
+    isTogglingAutoRenew: autoRenewMutation.isPending,
     refetchSubscription,
   };
 }
